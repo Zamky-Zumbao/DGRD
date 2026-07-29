@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+
+<!-- Librerías -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<title>GRRD · Salida de Productos · Municipalidad de Las Condes</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+
+<style>
+  /* ===== MANTENEMOS TODO EL CSS EXISTENTE ===== */
+  /* Agregamos solo algunos estilos nuevos para mejoras */
+  
+  :root {
+    --azul: #1664c0;
+    --azul-claro: #4087cf;
+    --azul-oscuro: #0f4a8a;
+    --verde: #2c9e8c;
+    --rojo: #e74c3c;
+    --naranja: #e08e0b;
+    --gris-fondo: #f5f7fc;
+    --blanco: #ffffff;
+    --texto-oscuro: #1a2634;
+    --texto-gris: #4a5a6e;
+    --borde: #e2e8f0;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+    background: var(--gris-fondo);
+    color: var(--texto-oscuro);
+    min-height: 100vh;
+    padding: 0 0 80px 0;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--azul) 0%, var(--azul-oscuro) 100%);
+    padding: 10px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .logo-muni {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-icono {
+    width: 42px;
+    height: 36px;
+    background: var(--blanco);
+    border-radius: 16%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .logo-icono img { width: 100%; height: 100%; object-fit: cover; }
+
+  .logo-texto {
+    font-weight: 700;
+    font-size: 10px;
+    color: white;
+    line-height: 1.2;
+  }
+  .logo-texto small { font-size: 7.5px; font-weight: 400; opacity: 0.85; display: block; }
+
+  .header-titulo {
+    font-size: 14px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+
+  .header-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-sesion {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 30px;
+    padding: 4px 12px;
+    color: white;
+    cursor: pointer;
+    font-size: 10px;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .btn-sesion:hover { background: rgba(255,255,255,0.25); }
+  .btn-sesion .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f87171;
+    margin-right: 4px;
+  }
+  .btn-sesion .status-dot.online { background: #4ade80; }
+
+  .badge-bd {
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 8px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .badge-bd.online { background: rgba(74, 222, 128, 0.3); }
+
+  /* ===== SECCIONES ===== */
+  .section {
+    background: var(--blanco);
+    border-radius: 20px;
+    margin: 10px 14px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--borde);
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--azul);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-left: 3px solid var(--azul);
+    padding-left: 10px;
+  }
+
+  /* ===== TABS ===== */
+  .tabs-familias {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 2px 0 8px 0;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tabs-familias::-webkit-scrollbar { height: 3px; }
+  .tabs-familias::-webkit-scrollbar-thumb { background: var(--azul-claro); border-radius: 10px; }
+
+  .tab-familia {
+    flex: 0 0 auto;
+    padding: 6px 14px;
+    border-radius: 30px;
+    border: 1.5px solid var(--borde);
+    background: #f8fafc;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    color: var(--texto-gris);
+    white-space: nowrap;
+  }
+  .tab-familia.active {
+    background: var(--azul);
+    border-color: var(--azul);
+    color: white;
+    box-shadow: 0 2px 6px rgba(22,100,192,0.25);
+  }
+  .tab-familia:hover:not(.active) {
+    background: #eef2f8;
+    border-color: var(--azul-claro);
+  }
+
+  /* ===== FORMULARIOS ===== */
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--texto-gris);
+    margin-bottom: 4px;
+  }
+  label.required::after { content: " *"; color: var(--rojo); }
+
+  input, select, textarea {
+    width: 100%;
+    background: #ffffff;
+    border: 1.5px solid var(--borde);
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 9px 12px;
+    outline: none;
+    transition: 0.2s;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px rgba(22,100,192,0.12);
+  }
+  input:disabled { background: #f1f5f9; color: var(--texto-gris); }
+
+  .field { margin-bottom: 12px; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* ===== BOTONES ===== */
+  .btn-primario {
+    background: var(--azul);
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 50px;
+    font-weight: 700;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-primario:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-primario:active:not(:disabled) { transform: scale(0.97); }
+  .btn-primario:hover:not(:disabled) { background: var(--azul-oscuro); }
+
+  .btn-secundario {
+    background: #eef2f8;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 50px;
+    font-weight: 600;
+    color: var(--texto-gris);
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .btn-secundario:hover { background: #e2e8f0; }
+  .btn-secundario:active { transform: scale(0.97); }
+
+  .btn-accion {
+    background: var(--azul-claro);
+    border: none;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-weight: 600;
+    color: white;
+    font-size: 11px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .btn-accion:hover { opacity: 0.85; }
+  .btn-accion.verde { background: var(--verde); }
+  .btn-accion.rojo { background: var(--rojo); }
+
+  /* ===== DROPDOWN ===== */
+  .custom-dropdown { position: relative; }
+  .dropdown-input {
+    width: 100%;
+    background: #ffffff;
+    border: 1.5px solid var(--borde);
+    border-radius: 12px;
+    font-size: 14px;
+    padding: 9px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .dropdown-input:focus { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(22,100,192,0.12); }
+  .dropdown-list {
+    background: white;
+    border: 1.5px solid var(--azul);
+    border-radius: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    z-index: 999;
+    display: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  .dropdown-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    border-bottom: 1px solid var(--borde);
+  }
+  .dropdown-item:last-child { border-bottom: none; }
+  .dropdown-item:hover { background: rgba(22,100,192,0.06); }
+  .dropdown-item .stock-info { font-size: 10px; color: var(--texto-gris); }
+
+  /* ===== SELECTOR DE TALLAS ===== */
+  .selector-tallas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .selector-tallas .talla-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 56px;
+    padding: 8px 4px;
+    border-radius: 10px;
+    border: 2px solid var(--borde);
+    background: white;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--texto-oscuro);
+    line-height: 1.2;
+  }
+  .selector-tallas .talla-item .talla-nombre { display: block; font-size: 14px; font-weight: 700; }
+  .selector-tallas .talla-item .talla-stock { display: block; font-size: 9px; color: var(--texto-gris); font-weight: 400; }
+  .selector-tallas .talla-item.sin-stock { opacity: 0.35; cursor: not-allowed; background: #f5f5f5; border-color: #ddd; }
+  .selector-tallas .talla-item.sin-stock .talla-stock { color: var(--rojo); }
+  .selector-tallas .talla-item.con-stock { cursor: pointer; }
+  .selector-tallas .talla-item.con-stock:hover { border-color: var(--azul); background: #f0f5ff; transform: scale(1.02); }
+  .selector-tallas .talla-item.active { border-color: var(--azul); background: var(--azul); color: white; }
+  .selector-tallas .talla-item.active .talla-stock { color: rgba(255,255,255,0.8); }
+  .selector-tallas .talla-item.stock-bajo { border-color: var(--naranja); }
+  .selector-tallas .talla-item.stock-bajo.active { background: var(--naranja); border-color: var(--naranja); }
+
+  /* ===== PRODUCTO SELECCIONADO ===== */
+  .producto-seleccionado {
+    background: #f0f5ff;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border: 1px solid var(--azul-claro);
+    display: none;
+  }
+  .producto-seleccionado .prod-subtitulo { font-size: 11px; font-weight: 600; color: var(--texto-gris); margin-bottom: 2px; }
+
+  /* ===== KIT ===== */
+  .kit-categoria {
+    font-weight: 700;
+    color: var(--azul);
+    margin-top: 6px;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--borde);
+  }
+  .kit-componentes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+  @media (max-width: 600px) {
+    .kit-componentes-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ===== COMPROBANTE ===== */
+  .ticket {
+    background: #fafcfd;
+    border: 2px dashed var(--azul-claro);
+    border-radius: 16px;
+    padding: 16px;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    margin: 8px 0;
+  }
+  .ticket .ticket-header { text-align: center; border-bottom: 1px dashed #aaa; padding-bottom: 8px; margin-bottom: 8px; }
+  .ticket .ticket-header h3 { font-size: 13px; color: var(--azul); }
+  .ticket .ticket-fila { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dotted #eee; }
+  .ticket .ticket-fila .label { color: var(--texto-gris); font-weight: 500; }
+  .ticket .ticket-fila .valor { font-weight: 700; }
+  .ticket .ticket-firma { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #aaa; }
+  .ticket .ticket-firma .firma-linea { text-align: center; flex: 1; }
+  .ticket .ticket-firma .firma-linea .linea { border-top: 1px solid #333; width: 80%; margin: 6px auto 2px; }
+  .ticket .ticket-footer { text-align: center; font-size: 8px; color: var(--texto-gris); margin-top: 8px; border-top: 1px dashed #aaa; padding-top: 8px; }
+
+  /* ===== RECEPTORES ===== */
+  .receptor-card {
+    background: #f8fafc;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .receptor-card .btn-eliminar { position: absolute; top: 6px; right: 8px; background: none; border: none; color: var(--rojo); cursor: pointer; font-size: 14px; font-weight: 700; }
+  .receptor-card .btn-eliminar:hover { opacity: 0.7; }
+  .receptor-card .receptor-nombre { font-weight: 600; font-size: 13px; }
+  .receptor-card .receptor-email { font-size: 11px; color: var(--texto-gris); }
+
+  .btn-agregar-receptor {
+    background: transparent;
+    border: 1.5px dashed var(--azul);
+    color: var(--azul);
+    font-weight: 600;
+    border-radius: 30px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.2s;
+    width: 100%;
+    margin-top: 6px;
+  }
+  .btn-agregar-receptor:hover { background: rgba(22,100,192,0.05); }
+  .btn-agregar-receptor:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ===== USUARIO INFO ===== */
+  .usuario-info {
+    background: #e8f0fe;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border: 1px solid var(--azul-claro);
+    display: none;
+  }
+  .usuario-info .label { font-size: 10px; color: var(--texto-gris); text-transform: uppercase; letter-spacing: 0.5px; }
+  .usuario-info .valor { font-weight: 600; font-size: 14px; color: var(--azul); }
+
+  /* ===== RESUMEN ===== */
+  .resumen-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .resumen-card {
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 10px 8px;
+    text-align: center;
+    border: 1px solid var(--borde);
+  }
+  .resumen-card .num { font-size: 22px; font-weight: 800; color: var(--azul); }
+  .resumen-card .lbl { font-size: 8.5px; color: var(--texto-gris); text-transform: uppercase; letter-spacing: 0.3px; }
+  .resumen-card.rojo .num { color: var(--rojo); }
+  .resumen-card.verde .num { color: var(--verde); }
+  .resumen-card.naranja .num { color: var(--naranja); }
+
+  /* ===== FOTOS ===== */
+  .foto-upload {
+    border: 1.5px dashed var(--azul);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+    background: #fafcff;
+  }
+  .foto-upload input[type="file"] { font-size: 13px; margin-bottom: 8px; padding: 6px; cursor: pointer; }
+  .foto-upload input[type="file"]::-webkit-file-upload-button {
+    background: var(--azul);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  .foto-upload input[type="file"]::-webkit-file-upload-button:hover { background: var(--azul-claro); }
+  .foto-preview { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; justify-content: center; }
+  .foto-preview .preview-item { position: relative; width: 80px; height: 80px; border-radius: 10px; overflow: hidden; border: 1px solid var(--borde); }
+  .foto-preview .preview-item img { width: 100%; height: 100%; object-fit: cover; }
+  .foto-preview .preview-item button { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 10px; }
+
+  .btn-camara { background: var(--verde); color: white; border: none; border-radius: 30px; padding: 8px 16px; font-weight: 600; font-size: 12px; cursor: pointer; margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-camara:hover { opacity: 0.85; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    align-items: flex-end;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: white;
+    max-height: 92vh;
+    border-radius: 28px 28px 0 0;
+    overflow: auto;
+    padding: 18px 16px 30px;
+    width: 100%;
+  }
+  .modal .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .modal .modal-header h2 { font-size: 16px; }
+
+  .btn-cerrar-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--texto-gris);
+  }
+
+  /* ===== TOAST ===== */
+  #toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a2634;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 40px;
+    opacity: 0;
+    transition: 0.3s;
+    pointer-events: none;
+    z-index: 300;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    max-width: 90%;
+    text-align: center;
+  }
+  #toast.show { opacity: 1; }
+
+  /* ===== LOADING ===== */
+  .loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s ease-in-out infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ===== OTROS ===== */
+  .badge-familia { display: inline-block; font-size: 8px; background: var(--borde); padding: 1px 8px; border-radius: 20px; color: var(--texto-gris); font-weight: 600; }
+  .empty-state { text-align: center; color: var(--texto-gris); font-size: 12px; padding: 20px 0; }
+  .text-center { text-align: center; }
+  .mt-8 { margin-top: 8px; }
+  .mb-8 { margin-bottom: 8px; }
+
+  footer { text-align: center; color: var(--texto-gris); font-size: 9px; padding: 16px 16px 30px; opacity: 0.7; }
+
+  @media (max-width: 600px) {
+    .header-titulo { font-size: 12px; }
+    .logo-texto { font-size: 8px; }
+    .resumen-grid { grid-template-columns: 1fr 1fr; }
+    .row-2 { grid-template-columns: 1fr; }
+    .section { margin: 8px 10px; padding: 12px; }
+    .ticket { font-size: 10px; }
+    .btn-sesion { max-width: 100px; font-size: 8px; padding: 3px 8px; }
+    .foto-upload input[type="file"] { font-size: 12px; }
+    .selector-tallas .talla-item { min-width: 48px; padding: 6px 2px; font-size: 12px; }
+    .badge-bd { display: none; }
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--gris-fondo); }
+  ::-webkit-scrollbar-thumb { background: var(--azul-claro); border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo-muni">
+      <div class="logo-icono">
+        <img src="https://i.postimg.cc/MGhWmdq0/LC.jpg" alt="LC">
+      </div>
+      <div class="logo-texto">
+        MUNICIPALIDAD DE LAS CONDES
+        <small>Depto. Gestión de Riesgos y Desastres</small>
+      </div>
+    </div>
+    <div class="header-titulo">🚚 SALIDA DE PRODUCTOS</div>
+    <div class="header-status">
+      <span class="badge-bd" id="bd-status">☁️ Conectando...</span>
+      <button id="btn-sesion" class="btn-sesion">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="btn-sesion-texto">Iniciar sesión</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RESUMEN ===== -->
+<div class="section">
+  <div class="section-label">📊 Resumen del día</div>
+  <div class="resumen-grid">
+    <div class="resumen-card"><div class="num" id="res-salidas-hoy">0</div><div class="lbl">Salidas hoy</div></div>
+    <div class="resumen-card rojo"><div class="num" id="res-unidades-hoy">0</div><div class="lbl">Unidades entregadas</div></div>
+    <div class="resumen-card verde"><div class="num" id="res-productos-unicos">0</div><div class="lbl">Productos distintos</div></div>
+    <div class="resumen-card naranja"><div class="num" id="res-kits-hoy">0</div><div class="lbl">Kits entregados</div></div>
+  </div>
+</div>
+
+<!-- ===== REGISTRAR SALIDA ===== -->
+<div class="section">
+  <div class="section-label">⬆️ Nueva Salida</div>
+
+  <!-- USUARIO QUE ENTREGA -->
+  <div id="usuario-info" class="usuario-info">
+    <div class="label">👤 Entregado por</div>
+    <div class="valor" id="usuario-nombre">--</div>
+    <div style="font-size:11px; color:var(--texto-gris);" id="usuario-email">--</div>
+  </div>
+
+  <!-- TABS: Productos + Kit -->
+  <div class="field">
+    <label>📂 Tipo de registro</label>
+    <div class="tabs-familias" id="tabs-familias">
+      <div class="tab-familia active" data-familia="epp_basico" onclick="seleccionarFamilia('epp_basico')">🛡️ EPP Básico</div>
+      <div class="tab-familia" data-familia="epp_climatico" onclick="seleccionarFamilia('epp_climatico')">🌧️ EPP Climático</div>
+      <div class="tab-familia" data-familia="epp_especial" onclick="seleccionarFamilia('epp_especial')">🧥 EPP Especial</div>
+      <div class="tab-familia" data-familia="maquinarias" onclick="seleccionarFamilia('maquinarias')">🔧 Maquinarias</div>
+      <div class="tab-familia" data-familia="herramientas" onclick="seleccionarFamilia('herramientas')">🔩 Herramientas</div>
+      <div class="tab-familia" data-familia="kit" onclick="seleccionarFamilia('kit')">🧰 Kit Vehicular</div>
+      <div class="tab-familia" data-familia="todas" onclick="seleccionarFamilia('todas')">📦 Todas</div>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN PRODUCTOS ===== -->
+  <div id="seccion-productos">
+    <!-- Selección de producto -->
+    <div class="field">
+      <label class="required">Producto</label>
+      <div class="custom-dropdown">
+        <input type="text" id="prod-trigger" class="dropdown-input" placeholder="Buscar producto..." readonly>
+        <div class="dropdown-list" id="prod-list"></div>
+      </div>
+    </div>
+
+    <!-- Producto seleccionado - TALLAS -->
+    <div id="producto-seleccionado-container" class="producto-seleccionado">
+      <div id="selector-tallas-container" style="display:none;">
+        <div class="prod-subtitulo">📏 Selecciona una talla:</div>
+        <div class="selector-tallas" id="selector-tallas"></div>
+        <div id="talla-seleccionada-info" style="font-size:10px; color:var(--texto-gris); margin-top:6px;"></div>
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="field">
+        <label class="required">Cantidad</label>
+        <input type="number" id="salida-cantidad" min="1" placeholder="0">
+      </div>
+      <div class="field">
+        <label>Unidad</label>
+        <input type="text" id="salida-unidad" disabled style="background:#f1f5f9;">
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN KIT ===== -->
+  <div id="seccion-kit" style="display: none;">
+    <div class="section-label" style="border-left-color: var(--naranja);">🧰 Kit de Fiscalización Vehicular</div>
+
+    <div class="field">
+      <label class="required">Tipo de Kit</label>
+      <select id="kit-tipo">
+        <option value="">Selecciona un kit...</option>
+        <option value="Kit Básico Inspector">Kit Básico Inspector</option>
+        <option value="Kit Control de Tránsito">Kit Control de Tránsito</option>
+        <option value="Kit Fiscalización Obras">Kit Fiscalización Obras</option>
+        <option value="Kit Fiscalización Ambiental">Kit Fiscalización Ambiental</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+
+    <div class="field" id="kit-otro-container" style="display: none;">
+      <label>Nombre del Kit (Otro)</label>
+      <input type="text" id="kit-otro-nombre" placeholder="Ej: Kit de Emergencia Invernal">
+    </div>
+
+    <div class="row-2">
+      <div class="field">
+        <label class="required">N° Inventario del Kit</label>
+        <input type="text" id="kit-inventario" placeholder="Ej: KIT-2024-001">
+      </div>
+      <div class="field">
+        <label class="required">Patente del Vehículo</label>
+        <input type="text" id="kit-patente" placeholder="Ej: AB-CD-12">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="required">Responsable del Vehículo</label>
+      <input type="text" id="kit-responsable" placeholder="Nombre del funcionario">
+    </div>
+
+    <div class="field">
+      <label>Componentes del Kit</label>
+      <div id="kit-componentes" style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px; max-height: 350px; overflow-y: auto; padding: 8px; border: 1px solid var(--borde); border-radius: 12px; background: #fafcff;">
+        
+        <div class="kit-categoria">📋 Herramientas de Fiscalización</div>
+        <div class="kit-componentes-grid">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Tablero de fiscalización" class="kit-herramienta"> Tablero de fiscalización
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Kit de escritorio (lápices, marcadores, formularios)" class="kit-herramienta"> Kit de escritorio
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Cargador de vehículo (USB)" class="kit-herramienta"> Cargador vehículo USB
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Linterna de mano recargable" class="kit-herramienta"> Linterna recargable
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Cinta métrica de 5m" class="kit-herramienta"> Cinta métrica 5m
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Cámara fotográfica digital" class="kit-herramienta"> Cámara fotográfica
+          </label>
+        </div>
+
+        <div class="kit-categoria">🦺 Elementos de Seguridad Personal</div>
+        <div class="kit-componentes-grid">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Chaleco reflectivo" class="kit-herramienta"> Chaleco reflectivo
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Funda para carnet con cordón" class="kit-herramienta"> Funda carnet
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Guantes de seguridad (talla única)" class="kit-herramienta"> Guantes seguridad
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Botiquín básico" class="kit-herramienta"> Botiquín básico
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Protector solar y repelente" class="kit-herramienta"> Protector solar/repelente
+          </label>
+        </div>
+
+        <div class="kit-categoria">🚦 Control y Señalización Vial</div>
+        <div class="kit-componentes-grid">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Conos de tránsito (2 unidades)" class="kit-herramienta"> Conos de tránsito (2)
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Baliza portátil (luz intermitente)" class="kit-herramienta"> Baliza portátil
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Placa señalización fiscalización" class="kit-herramienta"> Placa fiscalización
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Cinta de peligro" class="kit-herramienta"> Cinta de peligro
+          </label>
+        </div>
+
+        <div class="kit-categoria">🔧 Herramientas Manuales</div>
+        <div class="kit-componentes-grid">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Multiherramienta (navaja, alicate, destornillador)" class="kit-herramienta"> Multiherramienta
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Cuchillo multiusos con seguro" class="kit-herramienta"> Cuchillo multiusos
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Martillo de inspección" class="kit-herramienta"> Martillo inspección
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+            <input type="checkbox" value="Cinta aisladora y de amarre" class="kit-herramienta"> Cinta aisladora/amarre
+          </label>
+        </div>
+      </div>
+    </div>
+    <div style="font-size: 10px; color: var(--texto-gris); margin-top: -6px; margin-bottom: 8px;">
+      ✅ Selecciona las herramientas que componen el kit entregado
+    </div>
+  </div>
+
+  <!-- ===== RECEPTORES ===== -->
+  <div class="field">
+    <label class="required">Persona que recibe</label>
+    <div class="row-2">
+      <div class="field" style="margin-bottom:0;">
+        <label>Nombre completo</label>
+        <input type="text" id="receptor-nombre" placeholder="Ej: Juan Pérez">
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Correo electrónico</label>
+        <input type="email" id="receptor-email" placeholder="Ej: juan@lascondes.cl">
+      </div>
+    </div>
+    <button class="btn-agregar-receptor" id="btn-agregar-receptor" onclick="agregarReceptor()">+ Agregar receptor</button>
+    <div id="receptor-error" style="color:var(--rojo); font-size:11px; margin-top:4px; display:none;"></div>
+  </div>
+
+  <div class="field">
+    <label>Receptores agregados (<span id="receptor-count">0</span>/10)</label>
+    <div id="receptores-container"></div>
+  </div>
+
+  <!-- ===== OBSERVACIÓN ===== -->
+  <div class="field">
+    <label>Observación (opcional)</label>
+    <textarea id="salida-obs" rows="2" placeholder="Motivo de la salida, proyecto, etc."></textarea>
+  </div>
+
+  <!-- ===== FOTOS ===== -->
+  <div class="field">
+    <label>📷 Fotografía (opcional)</label>
+    <div class="foto-upload">
+      <input type="file" id="foto-input" accept="image/*" capture="environment" multiple onchange="previewFotos()">
+      <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+        <button type="button" class="btn-camara" onclick="abrirCamara()">📸 Tomar foto con cámara</button>
+        <button type="button" class="btn-camara" style="background:var(--azul);" onclick="abrirGaleria()">🖼️ Elegir de galería</button>
+      </div>
+      <div id="foto-preview" class="foto-preview"></div>
+      <div id="foto-placeholder" style="font-size:10px; color:var(--texto-gris); margin-top:6px;">Subir foto(s) del producto o entrega</div>
+    </div>
+  </div>
+
+  <!-- ===== BOTON REGISTRAR ===== -->
+  <div class="btn-fila">
+    <button class="btn-primario" id="btn-registrar" onclick="registrarSalida()" disabled>🔒 Inicia sesión para registrar</button>
+  </div>
+  <div style="display: flex; gap: 8px; margin-top: 8px;">
+    <button class="btn-secundario" onclick="mostrarComprobanteUltima()" style="flex:1;">📋 Ver último comprobante</button>
+    <button class="btn-secundario" onclick="sincronizarBD()" style="flex:1; background: var(--verde); color: white;" id="btn-sincronizar">🔄 Sincronizar</button>
+  </div>
+</div>
+
+<footer>Municipalidad de Las Condes · GRRD · Datos en la nube con Supabase</footer>
+
+<!-- ===== MODAL COMPROBANTE ===== -->
+<div class="modal-overlay" id="modal-comprobante">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>🧾 Comprobante de Salida</h2>
+      <button class="btn-cerrar-modal" onclick="cerrarModalComprobante()">✕</button>
+    </div>
+    <div id="ticket-content" class="ticket"></div>
+    <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+      <button class="btn-primario" style="flex:1;" onclick="imprimirComprobante()">🖨️ Imprimir</button>
+      <button class="btn-primario" style="flex:1; background:var(--verde);" onclick="descargarPDFComprobante()">📄 PDF</button>
+      <button class="btn-secundario" style="flex:1;" onclick="cerrarModalComprobante()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div id="toast"></div>
+
+<!-- ============================================================ -->
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+// ================================================================
+// 1. CONFIGURACIÓN SUPABASE
+// ================================================================
+const SUPABASE_URL = 'TU_SUPABASE_URL';  // ← REEMPLAZAR
+const SUPABASE_KEY = 'TU_SUPABASE_ANON_KEY';  // ← REEMPLAZAR
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let bdConectada = false;
+
+// ================================================================
+// 2. CONFIGURACIÓN MSAL (Azure AD)
+// ================================================================
+const msalConfig = {
+  auth: {
+    clientId: '6df07a31-a9f8-4102-9e07-77266295b619',
+    authority: 'https://login.microsoftonline.com/3b2a8aaa-7404-4137-8bae-cbd67f7003c2',
+    redirectUri: window.location.origin
+  },
+  cache: { cacheLocation: 'localStorage' }
+};
+
+const msalInstance = new msal.PublicClientApplication(msalConfig);
+let usuarioAutenticado = null;
+let usuarioDominioValido = false;
+let receptoresAgregados = [];
+
+// ================================================================
+// 3. CONFIGURACIÓN EMAILJS
+// ================================================================
+emailjs.init('tJ1jLx0YD2ifJfsW-');
+
+// ================================================================
+// 4. FUNCIONES DE UTILIDAD
+// ================================================================
+function generarId() { return Date.now().toString(36) + Math.random().toString(36).substring(2, 7); }
+
+function fechaHoraActual() {
+  const now = new Date();
+  const dd = now.getDate().toString().padStart(2, '0');
+  const mm = (now.getMonth() + 1).toString().padStart(2, '0');
+  const yyyy = now.getFullYear();
+  const hh = now.getHours().toString().padStart(2, '0');
+  const min = now.getMinutes().toString().padStart(2, '0');
+  return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+}
+
+function esHoy(fechaStr) {
+  const hoy = new Date();
+  const ddHoy = hoy.getDate().toString().padStart(2, '0');
+  const mmHoy = (now.getMonth() + 1).toString().padStart(2, '0');
+  const yyyyHoy = hoy.getFullYear();
+  return fechaStr.startsWith(`${ddHoy}/${mmHoy}/${yyyyHoy}`);
+}
+
+function validarDominioLasCondes(email) {
+  if (!email) return false;
+  return email.toLowerCase().endsWith('@lascondes.cl');
+}
+
+function mostrarToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// ================================================================
+// 5. FUNCIONES DE AUTENTICACIÓN (Azure AD)
+// ================================================================
+async function obtenerToken() {
+  try {
+    const account = msalInstance.getAllAccounts()[0];
+    if (!account) return null;
+    const response = await msalInstance.acquireTokenSilent({ account: account, scopes: ['user.read'] });
+    return response.accessToken;
+  } catch (error) { return null; }
+}
+
+async function iniciarSesionMicrosoft() {
+  try {
+    const accounts = msalInstance.getAllAccounts();
+    if (accounts.length > 0) {
+      usuarioAutenticado = accounts[0];
+      const email = usuarioAutenticado.username;
+      if (validarDominioLasCondes(email)) {
+        usuarioDominioValido = true;
+        await obtenerToken();
+        mostrarToast(`✅ Bienvenido, ${email}`);
+        actualizarEstadoSesion(true);
+        return usuarioAutenticado;
+      } else {
+        mostrarToast(`❌ Debes usar una cuenta @lascondes.cl. Usaste: ${email}`);
+        usuarioDominioValido = false;
+        actualizarEstadoSesion(false);
+        await cerrarSesionMicrosoft();
+        return null;
+      }
+    }
+    await msalInstance.loginRedirect({ scopes: ['user.read'] });
+    return null;
+  } catch (error) {
+    mostrarToast('❌ Error al iniciar sesión');
+    return null;
+  }
+}
+
+async function cerrarSesionMicrosoft() {
+  try { await msalInstance.logoutRedirect(); } catch (e) { msalInstance.setActiveAccount(null); }
+  usuarioAutenticado = null;
+  usuarioDominioValido = false;
+  actualizarEstadoSesion(false);
+  mostrarToast('🔓 Sesión cerrada');
+}
+
+async function handleRedirectResponse() {
+  try {
+    const response = await msalInstance.handleRedirectPromise();
+    if (response && response.account) {
+      usuarioAutenticado = response.account;
+      const email = usuarioAutenticado.username;
+      if (validarDominioLasCondes(email)) {
+        usuarioDominioValido = true;
+        await obtenerToken();
+        mostrarToast(`✅ Bienvenido, ${email}`);
+        actualizarEstadoSesion(true);
+      } else {
+        usuarioDominioValido = false;
+        actualizarEstadoSesion(false);
+        await cerrarSesionMicrosoft();
+      }
+    }
+  } catch (error) { console.error('Error en redirect:', error); }
+}
+
+async function verificarSesion() {
+  await handleRedirectResponse();
+  const accounts = msalInstance.getAllAccounts();
+  if (accounts.length > 0) {
+    usuarioAutenticado = accounts[0];
+    const email = usuarioAutenticado.username;
+    if (validarDominioLasCondes(email)) {
+      usuarioDominioValido = true;
+      await obtenerToken();
+      actualizarEstadoSesion(true);
+    } else {
+      usuarioDominioValido = false;
+      actualizarEstadoSesion(false);
+      await cerrarSesionMicrosoft();
+    }
+  } else {
+    actualizarEstadoSesion(false);
+  }
+}
+
+function actualizarEstadoSesion(autenticado) {
+  const btn = document.getElementById('btn-sesion');
+  const texto = document.getElementById('btn-sesion-texto');
+  const dot = document.getElementById('status-dot');
+  const btnRegistrar = document.getElementById('btn-registrar');
+  const usuarioInfo = document.getElementById('usuario-info');
+  const usuarioNombre = document.getElementById('usuario-nombre');
+  const usuarioEmail = document.getElementById('usuario-email');
+
+  if (autenticado && usuarioDominioValido && usuarioAutenticado) {
+    const email = usuarioAutenticado.username;
+    const nombre = email.split('@')[0];
+    texto.textContent = `👤 ${nombre}`;
+    dot.className = 'status-dot online';
+    btn.title = 'Cerrar sesión';
+    btn.onclick = cerrarSesionMicrosoft;
+    btnRegistrar.disabled = false;
+    btnRegistrar.textContent = '✅ Registrar Salida';
+    
+    usuarioInfo.style.display = 'block';
+    usuarioNombre.textContent = nombre;
+    usuarioEmail.textContent = email;
+  } else {
+    texto.textContent = 'Iniciar sesión';
+    dot.className = 'status-dot';
+    btn.title = 'Iniciar sesión con cuenta @lascondes.cl';
+    btn.onclick = iniciarSesionMicrosoft;
+    btnRegistrar.disabled = true;
+    btnRegistrar.textContent = '🔒 Inicia sesión para registrar';
+    usuarioInfo.style.display = 'none';
+  }
+}
+
+// ================================================================
+// 6. FAMILIAS Y PRODUCTOS
+// ================================================================
+const FAMILIAS = {
+  epp_basico: {
+    label: 'EPP Básico',
+    icono: '🛡️',
+    productos: [
+      { nombre: 'Casco de Seguridad', tallas: null },
+      { nombre: 'Guante de Seguridad', tallas: null },
+      { nombre: 'Botín de Seguridad', tallas: ['40', '41', '42', '43', '44', '45'] },
+      { nombre: 'Zapato de Seguridad', tallas: ['40', '41', '42', '43', '44', '45'] },
+      { nombre: 'Lentes de Seguridad', tallas: null },
+      { nombre: 'Antiparras', tallas: null },
+      { nombre: 'Protector Auditivo', tallas: null }
+    ]
+  },
+  epp_climatico: {
+    label: 'EPP Climático',
+    icono: '🌧️',
+    productos: [
+      { nombre: 'Bota de Seguridad', tallas: ['40', '41', '42', '43', '44', '45'] },
+      { nombre: 'Capa de Agua', tallas: null },
+      { nombre: 'Traje de Agua', tallas: null },
+      { nombre: 'Pantalón de Agua', tallas: null },
+      { nombre: 'Cubrebotas', tallas: null },
+      { nombre: 'Jardinera', tallas: null },
+      { nombre: 'Chaqueta Impermeable', tallas: null },
+      { nombre: 'Traje de Lluvia', tallas: null }
+    ]
+  },
+  epp_especial: {
+    label: 'EPP Especial',
+    icono: '🧥',
+    productos: [
+      { nombre: 'Parka Térmica', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Overol de Trabajo', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Chaqueta Softshell', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Chaqueta Polar', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Pantalón de Trabajo', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Camisa de Trabajo', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Polera Térmica', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Ropa Ignífuga', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Malla de Seguridad', tallas: null }
+    ]
+  },
+  maquinarias: {
+    label: 'Maquinarias',
+    icono: '🔧',
+    productos: [
+      { nombre: 'Motobomba de Agua', tallas: null },
+      { nombre: 'Bomba Periférica', tallas: null },
+      { nombre: 'Bomba Sumergible', tallas: null },
+      { nombre: 'Bomba Pozo Profundo', tallas: null },
+      { nombre: 'Generador Eléctrico', tallas: null },
+      { nombre: 'Esmeril Angular', tallas: null },
+      { nombre: 'Taladro Percutor', tallas: null },
+      { nombre: 'Martillo Demoledor', tallas: null },
+      { nombre: 'Sierra Circular', tallas: null },
+      { nombre: 'Soldadora Inverter', tallas: null },
+      { nombre: 'Compresor de Aire', tallas: null },
+      { nombre: 'Rotomartillo', tallas: null }
+    ]
+  },
+  herramientas: {
+    label: 'Herramientas',
+    icono: '🔩',
+    productos: [
+      { nombre: 'Herramienta 01', tallas: null },
+      { nombre: 'Herramienta 02', tallas: null },
+      { nombre: 'Herramienta 03', tallas: null },
+      { nombre: 'Herramienta 04', tallas: null },
+      { nombre: 'Herramienta 05', tallas: null },
+      { nombre: 'Herramienta 06', tallas: null },
+      { nombre: 'Herramienta 07', tallas: null },
+      { nombre: 'Herramienta 08', tallas: null }
+    ]
+  }
+};
+
+const STORAGE_KEY = 'inv_items_salidas_v8';
+let items = [];
+let salidas = [];
+let productoSeleccionadoId = null;
+let tallaSeleccionada = null;
+let ultimoComprobante = null;
+let familiaSeleccionada = 'epp_basico';
+let modoKit = false;
+
+// ================================================================
+// 7. FUNCIONES DE BASE DE DATOS (Supabase)
+// ================================================================
+
+// Verificar conexión a Supabase
+async function verificarConexionBD() {
+  try {
+    const { data, error } = await supabase.from('productos').select('count', { count: 'exact', head: true });
+    if (error) throw error;
+    bdConectada = true;
+    document.getElementById('bd-status').textContent = '☁️ Conectado';
+    document.getElementById('bd-status').className = 'badge-bd online';
+    return true;
+  } catch (error) {
+    bdConectada = false;
+    document.getElementById('bd-status').textContent = '⚠️ Offline';
+    document.getElementById('bd-status').className = 'badge-bd';
+    console.error('Error conectando a Supabase:', error);
+    return false;
+  }
+}
+
+// Cargar productos desde Supabase
+async function cargarProductosBD() {
+  try {
+    const { data, error } = await supabase
+      .from('productos')
+      .select('*')
+      .order('nombre');
+    
+    if (error) throw error;
+    
+    if (data && data.length > 0) {
+      items = data;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      return items;
+    } else {
+      // Si no hay productos, inicializar
+      await inicializarProductosBD();
+      return items;
+    }
+  } catch (error) {
+    console.error('Error cargando productos:', error);
+    // Fallback a localStorage
+    const localItems = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    if (localItems && localItems.length > 0) {
+      items = localItems;
+      return items;
+    }
+    return [];
+  }
+}
+
+// Inicializar productos en Supabase
+async function inicializarProductosBD() {
+  try {
+    // Generar productos iniciales
+    const nuevosItems = [];
+    let idCounter = 0;
+    const STOCK_INICIAL = 10;
+    
+    Object.entries(FAMILIAS).forEach(([familiaKey, familia]) => {
+      familia.productos.forEach(prod => {
+        const tieneTalla = prod.tallas && prod.tallas.length > 0;
+        if (tieneTalla) {
+          prod.tallas.forEach(talla => {
+            nuevosItems.push({
+              nombre: prod.nombre,
+              familia: familiaKey,
+              categoria: familia.label,
+              tiene_talla: true,
+              talla: talla,
+              codigo: '',
+              unidad: 'Unidad',
+              stock: STOCK_INICIAL,
+              stock_min: 2,
+              ubicacion: 'Bodega GRRD',
+              estado: 'Operativo',
+              foto: null
+            });
+          });
+        } else {
+          nuevosItems.push({
+            nombre: prod.nombre,
+            familia: familiaKey,
+            categoria: familia.label,
+            tiene_talla: false,
+            talla: null,
+            codigo: '',
+            unidad: 'Unidad',
+            stock: STOCK_INICIAL,
+            stock_min: 2,
+            ubicacion: 'Bodega GRRD',
+            estado: 'Operativo',
+            foto: null
+          });
+        }
+      });
+    });
+    
+    // Insertar en Supabase
+    const { data, error } = await supabase
+      .from('productos')
+      .insert(nuevosItems)
+      .select();
+    
+    if (error) throw error;
+    
+    items = data;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    return items;
+  } catch (error) {
+    console.error('Error inicializando productos:', error);
+    // Fallback a localStorage
+    return generarItemsInicialesLocal();
+  }
+}
+
+// Generar items iniciales localmente (fallback)
+function generarItemsInicialesLocal() {
+  const nuevos = [];
+  let idCounter = 0;
+  const STOCK_INICIAL = 10;
+  
+  Object.entries(FAMILIAS).forEach(([familiaKey, familia]) => {
+    familia.productos.forEach(prod => {
+      const tieneTalla = prod.tallas && prod.tallas.length > 0;
+      if (tieneTalla) {
+        prod.tallas.forEach(talla => {
+          nuevos.push({
+            id: 'i' + (++idCounter).toString().padStart(4, '0'),
+            nombre: prod.nombre,
+            familia: familiaKey,
+            categoria: familia.label,
+            tieneTalla: true,
+            talla: talla,
+            codigo: '',
+            unidad: 'Unidad',
+            stock: STOCK_INICIAL,
+            stockMin: 2,
+            ubicacion: 'Bodega GRRD',
+            estado: 'Operativo',
+            foto: null,
+            fechaIngreso: fechaHoraActual()
+          });
+        });
+      } else {
+        nuevos.push({
+          id: 'i' + (++idCounter).toString().padStart(4, '0'),
+          nombre: prod.nombre,
+          familia: familiaKey,
+          categoria: familia.label,
+          tieneTalla: false,
+          talla: null,
+          codigo: '',
+          unidad: 'Unidad',
+          stock: STOCK_INICIAL,
+          stockMin: 2,
+          ubicacion: 'Bodega GRRD',
+          estado: 'Operativo',
+          foto: null,
+          fechaIngreso: fechaHoraActual()
+        });
+      }
+    });
+  });
+  return nuevos;
+}
+
+// Guardar salida en Supabase
+async function guardarSalidaBD(salidaData) {
+  try {
+    // Si es un kit, guardar en tabla kits
+    if (salidaData.tipo === 'kit') {
+      const { data, error } = await supabase
+        .from('kits')
+        .insert([{
+          tipo: salidaData.kitTipo,
+          inventario: salidaData.kitInventario,
+          patente: salidaData.kitPatente,
+          responsable: salidaData.kitResponsable,
+          herramientas: salidaData.kitHerramientas,
+          salida_id: salidaData.id
+        }])
+        .select();
+      
+      if (error) throw error;
+    }
+    
+    // Guardar en tabla salidas
+    const { data, error } = await supabase
+      .from('salidas')
+      .insert([{
+        id: salidaData.id,
+        producto_id: salidaData.productoId || null,
+        producto_nombre: salidaData.productoNombre,
+        talla: salidaData.talla || null,
+        cantidad: salidaData.cantidad,
+        unidad: salidaData.unidad || 'Unidad',
+        receptores: salidaData.receptores,
+        observacion: salidaData.observacion || '',
+        responsable: salidaData.responsable,
+        responsable_email: salidaData.responsableEmail,
+        fecha: new Date().toISOString(),
+        fotos: salidaData.fotos || [],
+        numero_lc: salidaData.numeroLC,
+        tipo: salidaData.tipo || 'producto',
+        kit_info: salidaData.kitInfo || null
+      }])
+      .select();
+    
+    if (error) throw error;
+    
+    // Actualizar stock del producto
+    if (salidaData.tipo !== 'kit' && salidaData.productoId) {
+      const { error: stockError } = await supabase
+        .from('productos')
+        .update({ stock: salidaData.nuevoStock })
+        .eq('id', salidaData.productoId);
+      
+      if (stockError) throw stockError;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Error guardando salida:', error);
+    throw error;
+  }
+}
+
+// Cargar salidas desde Supabase
+async function cargarSalidasBD() {
+  try {
+    const { data, error } = await supabase
+      .from('salidas')
+      .select('*')
+      .order('fecha', { ascending: false });
+    
+    if (error) throw error;
+    
+    salidas = data || [];
+    localStorage.setItem('salidas_registradas_v8', JSON.stringify(salidas));
+    return salidas;
+  } catch (error) {
+    console.error('Error cargando salidas:', error);
+    const localSalidas = JSON.parse(localStorage.getItem('salidas_registradas_v8') || '[]');
+    salidas = localSalidas;
+    return salidas;
+  }
+}
+
+// Sincronizar todo
+async function sincronizarBD() {
+  const btn = document.getElementById('btn-sincronizar');
+  btn.disabled = true;
+  btn.textContent = '⏳ Sincronizando...';
+  
+  try {
+    await verificarConexionBD();
+    await cargarProductosBD();
+    await cargarSalidasBD();
+    poblarDropdownProductos();
+    actualizarDashboard();
+    mostrarToast('✅ Sincronización completa');
+  } catch (error) {
+    mostrarToast('⚠️ Error en sincronización');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔄 Sincronizar';
+  }
+}
+
+// ================================================================
+// 8. FUNCIONES DE RECEPTORES
+// ================================================================
+function agregarReceptor() {
+  const nombre = document.getElementById('receptor-nombre').value.trim();
+  const email = document.getElementById('receptor-email').value.trim();
+  const error = document.getElementById('receptor-error');
+
+  if (!nombre) {
+    error.textContent = '⚠️ Ingresa el nombre completo';
+    error.style.display = 'block';
+    return;
+  }
+
+  if (!email) {
+    error.textContent = '⚠️ Ingresa el correo electrónico';
+    error.style.display = 'block';
+    return;
+  }
+
+  if (!email.includes('@')) {
+    error.textContent = '⚠️ Correo electrónico no válido';
+    error.style.display = 'block';
+    return;
+  }
+
+  if (receptoresAgregados.length >= 10) {
+    error.textContent = '⚠️ Máximo 10 receptores permitidos';
+    error.style.display = 'block';
+    return;
+  }
+
+  if (receptoresAgregados.some(r => r.email === email)) {
+    error.textContent = '⚠️ Este correo ya está agregado';
+    error.style.display = 'block';
+    return;
+  }
+
+  error.style.display = 'none';
+  receptoresAgregados.push({ nombre, email });
+  renderReceptores();
+
+  document.getElementById('receptor-nombre').value = '';
+  document.getElementById('receptor-email').value = '';
+  document.getElementById('receptor-nombre').focus();
+}
+
+function eliminarReceptor(email) {
+  receptoresAgregados = receptoresAgregados.filter(r => r.email !== email);
+  renderReceptores();
+}
+
+function renderReceptores() {
+  const container = document.getElementById('receptores-container');
+  const count = document.getElementById('receptor-count');
+  const btn = document.getElementById('btn-agregar-receptor');
+
+  count.textContent = receptoresAgregados.length;
+
+  if (receptoresAgregados.length === 0) {
+    container.innerHTML = '<div class="empty-state">No hay receptores agregados</div>';
+    btn.disabled = false;
+    btn.textContent = '+ Agregar receptor';
+    return;
+  }
+
+  container.innerHTML = receptoresAgregados.map(p => `
+    <div class="receptor-card">
+      <button class="btn-eliminar" onclick="eliminarReceptor('${p.email}')">✕</button>
+      <div class="receptor-nombre">${p.nombre}</div>
+      <div class="receptor-email">${p.email}</div>
+    </div>
+  `).join('');
+
+  if (receptoresAgregados.length >= 10) {
+    btn.disabled = true;
+    btn.textContent = '🔒 Máximo 10 receptores';
+  } else {
+    btn.disabled = false;
+    btn.textContent = '+ Agregar receptor';
+  }
+}
+
+// ================================================================
+// 9. FUNCIONES DE FAMILIAS Y PRODUCTOS (UI)
+// ================================================================
+function seleccionarFamilia(familia) {
+  if (familia === 'kit') {
+    modoKit = true;
+    document.getElementById('seccion-productos').style.display = 'none';
+    document.getElementById('seccion-kit').style.display = 'block';
+    document.getElementById('producto-seleccionado-container').style.display = 'none';
+  } else {
+    modoKit = false;
+    document.getElementById('seccion-productos').style.display = 'block';
+    document.getElementById('seccion-kit').style.display = 'none';
+    familiaSeleccionada = familia;
+  }
+  
+  document.querySelectorAll('.tab-familia').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.familia === familia);
+  });
+  
+  if (!modoKit) {
+    poblarDropdownProductos();
+    limpiarSeleccionProducto();
+  }
+}
+
+function limpiarSeleccionProducto() {
+  document.getElementById('prod-trigger').value = '';
+  productoSeleccionadoId = null;
+  tallaSeleccionada = null;
+  document.getElementById('salida-unidad').value = '';
+  document.getElementById('salida-cantidad').value = '';
+  document.getElementById('salida-cantidad').max = '';
+  const container = document.getElementById('producto-seleccionado-container');
+  container.style.display = 'none';
+  document.getElementById('selector-tallas-container').style.display = 'none';
+  document.getElementById('selector-tallas').innerHTML = '';
+  document.getElementById('talla-seleccionada-info').textContent = '';
+}
+
+function mostrarProductoSeleccionado(producto) {
+  const container = document.getElementById('producto-seleccionado-container');
+  const selectorContainer = document.getElementById('selector-tallas-container');
+  const selector = document.getElementById('selector-tallas');
+  container.style.display = 'block';
+  const itemsProducto = items.filter(i => i.nombre === producto.nombre && i.familia === producto.familia);
+  const tieneTallas = itemsProducto.some(i => i.tiene_talla);
+
+  if (tieneTallas && itemsProducto.length > 0) {
+    selectorContainer.style.display = 'block';
+    selector.innerHTML = '';
+    const tallasOrdenadas = itemsProducto.map(i => i.talla).sort((a, b) => {
+      const aNum = parseFloat(a), bNum = parseFloat(b);
+      if (!isNaN(aNum) && !isNaN(bNum)) return aNum - bNum;
+      return a.localeCompare(b);
+    });
+    tallasOrdenadas.forEach(talla => {
+      const item = itemsProducto.find(i => i.talla === talla);
+      const div = document.createElement('div');
+      div.className = 'talla-item';
+      div.dataset.talla = talla;
+      if (item && item.stock > 0) {
+        div.classList.add('con-stock');
+        if (item.stock <= item.stock_min) div.classList.add('stock-bajo');
+        div.innerHTML = `<span class="talla-nombre">${talla}</span><span class="talla-stock">${item.stock} disp.</span>`;
+        div.onclick = () => seleccionarTallaProducto(talla, item);
+      } else {
+        div.classList.add('sin-stock');
+        div.innerHTML = `<span class="talla-nombre">${talla}</span><span class="talla-stock">agotado</span>`;
+      }
+      selector.appendChild(div);
+    });
+    tallaSeleccionada = null;
+    document.getElementById('talla-seleccionada-info').textContent = '👆 Selecciona una talla disponible';
+    document.getElementById('salida-cantidad').value = '';
+    document.getElementById('salida-cantidad').max = '';
+  } else {
+    selectorContainer.style.display = 'none';
+    tallaSeleccionada = null;
+    const itemUnico = itemsProducto[0];
+    if (itemUnico) {
+      document.getElementById('salida-cantidad').max = itemUnico.stock;
+      document.getElementById('salida-unidad').value = itemUnico.unidad || 'Unidad';
+      document.getElementById('talla-seleccionada-info').textContent = `Stock disponible: ${itemUnico.stock} unidades`;
+    }
+  }
+}
+
+function seleccionarTallaProducto(talla, item) {
+  tallaSeleccionada = talla;
+  document.querySelectorAll('.talla-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.talla === talla);
+  });
+  document.getElementById('talla-seleccionada-info').textContent = `✅ Talla ${talla} seleccionada · Stock: ${item.stock} ${item.unidad}(s)`;
+  document.getElementById('salida-cantidad').max = item.stock;
+  document.getElementById('salida-cantidad').value = '';
+  document.getElementById('salida-unidad').value = item.unidad || 'Unidad';
+}
+
+function poblarDropdownProductos() {
+  const list = document.getElementById('prod-list');
+  const input = document.getElementById('prod-trigger');
+  list.innerHTML = '';
+
+  let productosFiltrados = items.slice();
+  if (familiaSeleccionada !== 'todas') {
+    productosFiltrados = productosFiltrados.filter(i => i.familia === familiaSeleccionada);
+  }
+
+  if (productosFiltrados.length === 0) {
+    input.value = '';
+    productoSeleccionadoId = null;
+    const div = document.createElement('div');
+    div.className = 'dropdown-item';
+    div.textContent = 'No hay productos en esta familia';
+    list.appendChild(div);
+    return;
+  }
+
+  const agrupados = {};
+  productosFiltrados.forEach(item => {
+    const key = item.nombre + '|' + item.familia;
+    if (!agrupados[key]) agrupados[key] = [];
+    agrupados[key].push(item);
+  });
+
+  Object.keys(agrupados).sort().forEach(key => {
+    const grupo = agrupados[key];
+    const primerItem = grupo[0];
+    const div = document.createElement('div');
+    div.className = 'dropdown-item';
+    const icono = FAMILIAS[primerItem.familia]?.icono || '📦';
+    let stockTotal = grupo.reduce((a, i) => a + i.stock, 0);
+    div.innerHTML = `${icono} ${primerItem.nombre} <span class="stock-info">(stock: ${stockTotal})</span>`;
+    div.onclick = function() {
+      input.value = primerItem.nombre;
+      productoSeleccionadoId = primerItem.id;
+      list.style.display = 'none';
+      mostrarProductoSeleccionado(primerItem);
+    };
+    list.appendChild(div);
+  });
+
+  input.onclick = function() {
+    if (list.style.display === 'block') list.style.display = 'none';
+    else { list.style.display = 'block'; }
+  };
+}
+
+// ================================================================
+// 10. FUNCIONES DE FOTOS
+// ================================================================
+function abrirCamara() {
+  const input = document.getElementById('foto-input');
+  input.setAttribute('capture', 'environment');
+  input.click();
+}
+
+function abrirGaleria() {
+  const input = document.getElementById('foto-input');
+  input.removeAttribute('capture');
+  input.click();
+  setTimeout(() => input.setAttribute('capture', 'environment'), 100);
+}
+
+function previewFotos() {
+  const input = document.getElementById('foto-input');
+  const preview = document.getElementById('foto-preview');
+  const placeholder = document.getElementById('foto-placeholder');
+  preview.innerHTML = '';
+  if (input.files && input.files.length > 0) {
+    placeholder.style.display = 'none';
+    Array.from(input.files).forEach((file, index) => {
+      const reader = new FileReader();
+      const div = document.createElement('div');
+      div.className = 'preview-item';
+      reader.onload = function(e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        div.appendChild(img);
+        const btn = document.createElement('button');
+        btn.textContent = '✕';
+        btn.onclick = function() {
+          const dt = new DataTransfer();
+          const remaining = Array.from(input.files).filter((f, i) => i !== index);
+          remaining.forEach(f => dt.items.add(f));
+          input.files = dt.files;
+          previewFotos();
+        };
+        div.appendChild(btn);
+      };
+      reader.readAsDataURL(file);
+      preview.appendChild(div);
+    });
+  } else {
+    placeholder.style.display = 'block';
+  }
+}
+
+function comprimirImagen(file, calidad = 0.7, maxWidth = 800) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        let width = img.width, height = img.height;
+        if (width > maxWidth) { height = (height * maxWidth) / width; width = maxWidth; }
+        canvas.width = width; canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', calidad));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ================================================================
+// 11. REGISTRAR SALIDA
+// ================================================================
+async function registrarSalida() {
+  if (!usuarioAutenticado || !usuarioDominioValido) {
+    mostrarToast('❌ Debes iniciar sesión con @lascondes.cl para registrar salidas');
+    return;
+  }
+
+  if (receptoresAgregados.length === 0) {
+    mostrarToast('❌ Agrega al menos una persona que recibe');
+    return;
+  }
+
+  const obs = document.getElementById('salida-obs').value.trim();
+  const fotoInput = document.getElementById('foto-input');
+  let fotosData = [];
+
+  // ===== MODO KIT =====
+  if (modoKit) {
+    const kitTipo = document.getElementById('kit-tipo').value;
+    const kitInventario = document.getElementById('kit-inventario').value.trim();
+    const kitPatente = document.getElementById('kit-patente').value.trim().toUpperCase();
+    const kitResponsable = document.getElementById('kit-responsable').value.trim();
+    const kitOtroNombre = document.getElementById('kit-otro-nombre').value.trim();
+    
+    if (!kitTipo) { mostrarToast('❌ Selecciona el tipo de kit'); return; }
+    if (!kitInventario) { mostrarToast('❌ Ingresa el número de inventario'); return; }
+    if (!kitPatente) { mostrarToast('❌ Ingresa la patente del vehículo'); return; }
+    if (!kitResponsable) { mostrarToast('❌ Ingresa el responsable del vehículo'); return; }
+    
+    // Obtener herramientas seleccionadas
+    const herramientasSeleccionadas = [];
+    document.querySelectorAll('.kit-herramienta:checked').forEach(cb => {
+      herramientasSeleccionadas.push(cb.value);
+    });
+    
+    if (herramientasSeleccionadas.length === 0) {
+      mostrarToast('❌ Selecciona al menos una herramienta del kit');
+      return;
+    }
+    
+    // Procesar fotos
+    if (fotoInput.files && fotoInput.files.length > 0) {
+      for (let i = 0; i < fotoInput.files.length; i++) {
+        fotosData.push(await comprimirImagen(fotoInput.files[i], 0.6));
+      }
+    }
+    
+    const nombreKit = kitTipo === 'Otro' ? kitOtroNombre : kitTipo;
+    const numeroLC = `LC-KIT-${String(salidas.filter(s => s.tipo === 'kit').length + 1).padStart(4, '0')}`;
+    
+    const salida = {
+      id: generarId(),
+      productoNombre: `🧰 Kit: ${nombreKit}`,
+      cantidad: 1,
+      unidad: 'Kit',
+      receptores: receptoresAgregados.map(r => ({ nombre: r.nombre, email: r.email })),
+      observacion: obs || `Kit asignado al vehículo ${kitPatente}`,
+      responsable: usuarioAutenticado ? usuarioAutenticado.username : 'Personal GRRD',
+      responsableNombre: usuarioAutenticado ? usuarioAutenticado.username.split('@')[0] : 'Personal GRRD',
+      responsableEmail: usuarioAutenticado ? usuarioAutenticado.username : '',
+      fecha: fechaHoraActual(),
+      timestamp: Date.now(),
+      fotos: fotosData,
+      numeroLC: numeroLC,
+      tipo: 'kit',
+      kitInfo: {
+        tipo: nombreKit,
+        inventario: kitInventario,
+        patente: kitPatente,
+        responsable: kitResponsable,
+        herramientas: herramientasSeleccionadas
+      }
+    };
+    
+    // Guardar en BD
+    try {
+      await guardarSalidaBD(salida);
+      salidas.unshift(salida);
+      localStorage.setItem('salidas_registradas_v8', JSON.stringify(salidas));
+      ultimoComprobante = salida;
+      
+      // Limpiar
+      document.getElementById('kit-tipo').value = '';
+      document.getElementById('kit-inventario').value = '';
+      document.getElementById('kit-patente').value = '';
+      document.getElementById('kit-responsable').value = '';
+      document.querySelectorAll('.kit-herramienta:checked').forEach(cb => cb.checked = false);
+      document.getElementById('foto-input').value = '';
+      document.getElementById('foto-preview').innerHTML = '';
+      document.getElementById('foto-placeholder').style.display = 'block';
+      
+      const receptoresCopia = [...receptoresAgregados];
+      receptoresAgregados = [];
+      renderReceptores();
+      
+      mostrarComprobante(salida);
+      enviarCorreoComprobante(salida);
+      mostrarToast(`✅ Kit registrado: ${nombreKit} para vehículo ${kitPatente}`);
+      actualizarDashboard();
+      
+    } catch (error) {
+      mostrarToast('❌ Error al guardar el kit en la base de datos');
+    }
+    return;
+  }
+
+  // ===== MODO PRODUCTO =====
+  const productoBase = items.find(i => i.id === productoSeleccionadoId);
+  const cantidad = parseInt(document.getElementById('salida-cantidad').value);
+
+  if (!productoBase) { mostrarToast('❌ Seleccione un producto'); return; }
+  if (isNaN(cantidad) || cantidad <= 0) { mostrarToast('❌ Ingrese una cantidad válida'); return; }
+
+  let productoStock = null;
+  let tallaUsada = null;
+  const itemsProducto = items.filter(i => i.nombre === productoBase.nombre && i.familia === productoBase.familia);
+  const tieneTallas = itemsProducto.some(i => i.tiene_talla);
+
+  if (tieneTallas) {
+    if (!tallaSeleccionada) { mostrarToast('❌ Seleccione una talla'); return; }
+    tallaUsada = tallaSeleccionada;
+    productoStock = items.find(i => i.nombre === productoBase.nombre && i.talla === tallaSeleccionada && i.familia === productoBase.familia);
+    if (!productoStock) { mostrarToast('❌ No hay stock para esta talla'); return; }
+    if (cantidad > productoStock.stock) { mostrarToast(`❌ Stock insuficiente para talla ${tallaSeleccionada}. Disponible: ${productoStock.stock}`); return; }
+  } else {
+    productoStock = itemsProducto[0];
+    if (!productoStock) { mostrarToast('❌ Producto no encontrado'); return; }
+    if (cantidad > productoStock.stock) { mostrarToast(`❌ Stock insuficiente. Disponible: ${productoStock.stock}`); return; }
+  }
+
+  const nuevoStock = productoStock.stock - cantidad;
+  productoStock.stock = nuevoStock;
+
+  if (fotoInput.files && fotoInput.files.length > 0) {
+    for (let i = 0; i < fotoInput.files.length; i++) {
+      fotosData.push(await comprimirImagen(fotoInput.files[i], 0.6));
+    }
+  }
+
+  const numComprobante = String(salidas.filter(s => s.tipo !== 'kit').length + 1).padStart(4, '0');
+  const numeroLC = `LC${numComprobante}`;
+
+  const salida = {
+    id: generarId(),
+    productoId: productoStock.id,
+    productoNombre: productoBase.nombre,
+    talla: tallaUsada,
+    categoria: productoBase.categoria,
+    familia: productoBase.familia,
+    cantidad,
+    unidad: productoStock.unidad || 'Unidad',
+    receptores: receptoresAgregados.map(r => ({ nombre: r.nombre, email: r.email })),
+    observacion: obs,
+    responsable: usuarioAutenticado ? usuarioAutenticado.username : 'Personal GRRD',
+    responsableNombre: usuarioAutenticado ? usuarioAutenticado.username.split('@')[0] : 'Personal GRRD',
+    responsableEmail: usuarioAutenticado ? usuarioAutenticado.username : '',
+    fecha: fechaHoraActual(),
+    timestamp: Date.now(),
+    fotos: fotosData,
+    numeroLC: numeroLC,
+    tipo: 'producto',
+    nuevoStock: nuevoStock
+  };
+
+  try {
+    await guardarSalidaBD(salida);
+    salidas.unshift(salida);
+    localStorage.setItem('salidas_registradas_v8', JSON.stringify(salidas));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    ultimoComprobante = salida;
+
+    limpiarSeleccionProducto();
+    document.getElementById('salida-obs').value = '';
+    document.getElementById('foto-input').value = '';
+    document.getElementById('foto-preview').innerHTML = '';
+    document.getElementById('foto-placeholder').style.display = 'block';
+    
+    const receptoresCopia = [...receptoresAgregados];
+    receptoresAgregados = [];
+    renderReceptores();
+
+    mostrarComprobante(salida);
+    enviarCorreoComprobante(salida);
+    mostrarToast(`✅ Salida registrada: ${cantidad} ${salida.unidad}(s) de ${productoBase.nombre}${tallaUsada ? ' (talla ' + tallaUsada + ')' : ''}`);
+    actualizarDashboard();
+    poblarDropdownProductos();
+
+  } catch (error) {
+    mostrarToast('❌ Error al guardar la salida en la base de datos');
+  }
+}
+
+// ================================================================
+// 12. ENVÍO DE CORREO
+// ================================================================
+function enviarCorreoComprobante(salida) {
+  const numTicket = salida.numeroLC || String(salidas.length).padStart(4, '0');
+  const receptores = salida.receptores || [];
+  
+  if (receptores.length === 0) return;
+  
+  let esKit = salida.tipo === 'kit';
+  let productoInfo = salida.productoNombre;
+  if (esKit && salida.kitInfo) {
+    productoInfo = `${salida.productoNombre} (Patente: ${salida.kitInfo.patente}, Responsable: ${salida.kitInfo.responsable})`;
+  }
+  
+  receptores.forEach((receptor) => {
+    const templateParams = {
+      to_email: receptor.email,
+      to_name: receptor.nombre,
+      from_name: salida.responsableNombre || 'Personal GRRD',
+      producto: productoInfo,
+      cantidad: salida.cantidad + ' ' + salida.unidad + (salida.cantidad > 1 ? 's' : ''),
+      observacion: salida.observacion || 'Ninguna',
+      fecha: salida.fecha,
+      numero: numTicket,
+      tipo: esKit ? 'Kit' : 'Producto'
+    };
+    
+    emailjs.send('service_snitcew', 'template_x195qwc', templateParams)
+      .then(() => {
+        console.log(`✅ Correo enviado a ${receptor.nombre} (${receptor.email})`);
+      })
+      .catch((error) => {
+        console.error('Error al enviar correo a', receptor.email, error);
+      });
+  });
+}
+
+// ================================================================
+// 13. COMPROBANTE
+// ================================================================
+function mostrarComprobante(salida) {
+  const modal = document.getElementById('modal-comprobante');
+  const content = document.getElementById('ticket-content');
+  const numTicket = salida.numeroLC || String(salidas.length).padStart(4, '0');
+  const receptoresText = salida.receptores ? salida.receptores.map(r => r.nombre).join(', ') : 'No especificado';
+  
+  let fotosHTML = '';
+  if (salida.fotos && salida.fotos.length > 0) {
+    fotosHTML = `<div style="margin-top:8px; border-top:1px dashed #aaa; padding-top:8px; text-align:center; font-size:9px; color:var(--texto-gris);">📷 ${salida.fotos.length} foto(s) adjunta(s)</div>`;
+  }
+
+  let kitInfoHTML = '';
+  if (salida.tipo === 'kit' && salida.kitInfo) {
+    const herramientasList = salida.kitInfo.herramientas.map(h => `• ${h}`).join('<br>');
+    kitInfoHTML = `
+      <div class="ticket-fila"><span class="label">Kit</span><span class="valor">${salida.kitInfo.tipo}</span></div>
+      <div class="ticket-fila"><span class="label">N° Inventario</span><span class="valor">${salida.kitInfo.inventario}</span></div>
+      <div class="ticket-fila"><span class="label">Patente</span><span class="valor">${salida.kitInfo.patente}</span></div>
+      <div class="ticket-fila"><span class="label">Responsable Vehículo</span><span class="valor">${salida.kitInfo.responsable}</span></div>
+      <div class="ticket-fila" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <span class="label">Herramientas incluidas:</span>
+        <span class="valor" style="font-weight:400; font-size:10px;">${herramientasList}</span>
+      </div>
+    `;
+  }
+
+  const tipoLabel = salida.tipo === 'kit' ? '🧰 KIT' : '📦 PRODUCTO';
+
+  content.innerHTML = `
+    <div class="ticket-header">
+      <h3>🏛️ MUNICIPALIDAD DE LAS CONDES</h3>
+      <div style="font-size:9px;">Depto. Gestión de Riesgos y Desastres</div>
+      <div style="font-weight:700; font-size:14px; margin-top:4px;">COMPROBANTE DE ${tipoLabel} N° ${numTicket}</div>
+    </div>
+    <div class="ticket-fila"><span class="label">Fecha</span><span class="valor">${salida.fecha}</span></div>
+    <div class="ticket-fila"><span class="label">Producto/Kit</span><span class="valor">${salida.productoNombre}</span></div>
+    ${salida.talla ? `<div class="ticket-fila"><span class="label">Talla</span><span class="valor">${salida.talla}</span></div>` : ''}
+    <div class="ticket-fila"><span class="label">Cantidad</span><span class="valor">${salida.cantidad} ${salida.unidad}(s)</span></div>
+    ${kitInfoHTML}
+    <div class="ticket-fila"><span class="label">Recibe</span><span class="valor">${receptoresText}</span></div>
+    ${salida.observacion ? `<div class="ticket-fila"><span class="label">Observación</span><span class="valor">${salida.observacion}</span></div>` : ''}
+    <div class="ticket-fila"><span class="label">Entregado por</span><span class="valor">${salida.responsableNombre || 'Personal GRRD'}</span></div>
+    ${fotosHTML}
+    <div class="ticket-firma">
+      <div class="firma-linea"><div>Entregado por</div><div class="linea"></div></div>
+      <div class="firma-linea"><div>Recibido por</div><div class="linea"></div></div>
+    </div>
+    <div class="ticket-footer">Este comprobante es de carácter informativo.<br>${salida.fecha}</div>
+  `;
+
+  modal.classList.add('visible');
+  ultimoComprobante = salida;
+}
+
+function mostrarComprobanteUltima() {
+  if (!ultimoComprobante) {
+    if (salidas.length === 0) { mostrarToast('❌ No hay salidas registradas'); return; }
+    ultimoComprobante = salidas[0];
+  }
+  mostrarComprobante(ultimoComprobante);
+}
+
+function cerrarModalComprobante() {
+  document.getElementById('modal-comprobante').classList.remove('visible');
+}
+
+function imprimirComprobante() {
+  const content = document.getElementById('ticket-content').innerHTML;
+  const ventana = window.open('', '_blank');
+  ventana.document.write(`
+    <html><head><title>Comprobante de Salida</title>
+    <style>
+      body { font-family: 'Courier New', monospace; padding: 20px; max-width: 350px; margin: 0 auto; }
+      .ticket { background: white; border: 2px dashed #1664c0; border-radius: 12px; padding: 16px; }
+      .ticket-header { text-align: center; border-bottom: 1px dashed #aaa; padding-bottom: 8px; margin-bottom: 8px; }
+      .ticket-header h3 { font-size: 14px; color: #1664c0; margin:0; }
+      .ticket-fila { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dotted #eee; }
+      .ticket-fila .label { color: #666; font-weight: 500; }
+      .ticket-fila .valor { font-weight: 700; }
+      .ticket-firma { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #aaa; }
+      .ticket-firma .firma-linea { text-align: center; flex: 1; }
+      .ticket-firma .firma-linea .linea { border-top: 1px solid #333; width: 80%; margin: 6px auto 2px; }
+      .ticket-footer { text-align: center; font-size: 8px; color: #666; margin-top: 8px; border-top: 1px dashed #aaa; padding-top: 8px; }
+    </style>
+    </head><body>
+    <div class="ticket">${content}</div>
+    <p style="text-align:center; font-size:10px; color:#999; margin-top:12px;">Municipalidad de Las Condes · GRRD</p>
+    <script>window.onload = function() { window.print(); }<\/script>
+    </body></html>
+  `);
+  ventana.document.close();
+}
+
+function descargarPDFComprobante() {
+  if (!ultimoComprobante) { mostrarToast('❌ No hay comprobante'); return; }
+  const { jsPDF } = window.jspdf;
+  const s = ultimoComprobante;
+  const num = s.numeroLC || String(salidas.indexOf(s) + 1).padStart(4, '0');
+  const totalFotos = (s.fotos && s.fotos.length) || 0;
+  const paginasFotos = Math.ceil(totalFotos / 2);
+  const totalPaginas = 1 + paginasFotos;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const margin = 15;
+  
+  // PÁGINA 1: COMPROBANTE
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.text('MUNICIPALIDAD DE LAS CONDES', pageW/2, 15, { align: 'center' });
+  doc.setFontSize(6);
+  doc.text('Depto. Gestión de Riesgos y Desastres', pageW/2, 20, { align: 'center' });
+  doc.setFontSize(8);
+  const tipoLabel = s.tipo === 'kit' ? 'KIT' : 'PRODUCTO';
+  doc.text(`COMPROBANTE DE ${tipoLabel} N° ${num}`, pageW/2, 28, { align: 'center' });
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  let y = 38;
+  const receptoresText = s.receptores ? s.receptores.map(r => r.nombre).join(', ') : 'No especificado';
+  
+  let lines = [
+    ['Fecha', s.fecha],
+    [s.tipo === 'kit' ? 'Kit' : 'Producto', s.productoNombre]
+  ];
+  if (s.talla) lines.push(['Talla', s.talla]);
+  lines.push(['Cantidad', `${s.cantidad} ${s.unidad}(s)`]);
+  
+  if (s.tipo === 'kit' && s.kitInfo) {
+    lines.push(['N° Inventario', s.kitInfo.inventario]);
+    lines.push(['Patente', s.kitInfo.patente]);
+    lines.push(['Responsable Vehículo', s.kitInfo.responsable]);
+    lines.push(['Herramientas', s.kitInfo.herramientas.join(', ')]);
+  }
+  
+  lines.push(['Recibe', receptoresText]);
+  if (s.observacion) lines.push(['Observación', s.observacion]);
+  lines.push(['Entregado por', s.responsableNombre || 'Personal GRRD']);
+
+  lines.forEach(([label, value]) => {
+    doc.setFont('helvetica', 'bold');
+    doc.text(label + ':', margin, y);
+    doc.setFont('helvetica', 'normal');
+    const v = value.length > 40 ? value.substring(0, 39) + '…' : value;
+    doc.text(v, margin + 35, y);
+    y += 7;
+    if (y > pageH - 20) { doc.addPage(); y = 15; }
+  });
+
+  y += 4;
+  doc.line(margin, y, pageW - margin, y);
+  y += 5;
+  doc.setFontSize(7);
+  doc.text('Entregado por', margin + 20, y);
+  doc.text('Recibido por', margin + 80, y);
+  y += 5;
+  doc.line(margin + 10, y, margin + 45, y);
+  doc.line(margin + 70, y, margin + 105, y);
+
+  y += 8;
+  doc.setFontSize(6);
+  doc.text('Este comprobante es de carácter informativo', pageW/2, y, { align: 'center' });
+  if (totalFotos > 0) {
+    doc.setFontSize(7);
+    doc.text(`Fotos adjuntas: ${totalFotos}`, pageW/2, y + 6, { align: 'center' });
+  }
+
+  // PÁGINAS DE FOTOS
+  if (totalFotos > 0) {
+    let fotoIndex = 0;
+    let paginaActual = 1;
+    while (fotoIndex < totalFotos) {
+      doc.addPage();
+      paginaActual++;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(22, 100, 192);
+      doc.text(`REGISTRO FOTOGRÁFICO - Pág. ${paginaActual}/${totalPaginas}`, pageW/2, 15, { align: 'center' });
+      const fotosEnPagina = Math.min(2, totalFotos - fotoIndex);
+      const anchoFoto = (pageW - margin * 3) / 2;
+      const altoFoto = anchoFoto * 0.75;
+      const yFoto = 30;
+      for (let i = 0; i < fotosEnPagina; i++) {
+        try {
+          doc.addImage(s.fotos[fotoIndex + i], 'JPEG', margin + i * (anchoFoto + margin), yFoto, anchoFoto, altoFoto);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(7);
+          doc.setTextColor(80, 80, 80);
+          doc.text(`Figura ${fotoIndex + i + 1}`, margin + i * (anchoFoto + margin) + anchoFoto/2, yFoto + altoFoto + 5, { align: 'center' });
+        } catch(e) { console.error('Error al agregar foto:', e); }
+      }
+      fotoIndex += fotosEnPagina;
+    }
+  }
+
+  doc.save(`Comprobante_Salida_${s.id}.pdf`);
+  mostrarToast('✅ PDF descargado');
+}
+
+// ================================================================
+// 14. DASHBOARD
+// ================================================================
+function actualizarDashboard() {
+  const hoy = salidas.filter(s => esHoy(s.fecha));
+  const kitsHoy = hoy.filter(s => s.tipo === 'kit');
+  const productosHoy = hoy.filter(s => s.tipo !== 'kit');
+  
+  document.getElementById('res-salidas-hoy').textContent = hoy.length;
+  document.getElementById('res-unidades-hoy').textContent = productosHoy.reduce((a, s) => a + s.cantidad, 0);
+  const productosUnicos = new Set(productosHoy.map(s => s.productoId));
+  document.getElementById('res-productos-unicos').textContent = productosUnicos.size;
+  document.getElementById('res-kits-hoy').textContent = kitsHoy.length;
+}
+
+// ================================================================
+// 15. INICIALIZACIÓN
+// ================================================================
+document.addEventListener('DOMContentLoaded', function() {
+  renderReceptores();
+  
+  // Evento para mostrar/ocultar campo "Otro" en kit
+  document.getElementById('kit-tipo').addEventListener('change', function() {
+    const otroContainer = document.getElementById('kit-otro-container');
+    if (this.value === 'Otro') {
+      otroContainer.style.display = 'block';
+    } else {
+      otroContainer.style.display = 'none';
+    }
+  });
+  
+  // Seleccionar pestaña inicial
+  document.querySelectorAll('.tab-familia').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.familia === 'epp_basico');
+  });
+  
+  // Cargar datos
+  verificarConexionBD().then(() => {
+    cargarProductosBD().then(() => {
+      cargarSalidasBD().then(() => {
+        poblarDropdownProductos();
+        actualizarDashboard();
+        verificarSesion();
+      });
+    });
+  });
+
+  // Cerrar dropdown al hacer clic fuera
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.custom-dropdown')) {
+      document.querySelectorAll('.dropdown-list').forEach(l => l.style.display = 'none');
+    }
+  });
+});
+</script>
+</body>
+</html>
