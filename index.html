@@ -824,13 +824,12 @@
 <!-- ===== JAVASCRIPT ===== -->
 <script>
 // ================================================================
-// 1. CONFIGURACIÓN SUPABASE
+// 1. CONFIGURACIÓN SUPABASE - REEMPLAZA CON TUS VALORES
 // ================================================================
-// ⚠️ REEMPLAZA CON TUS VALORES REALES ⚠️
 const SUPABASE_URL = 'https://pmcmcbxyxqynzhkachyiz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_bDmWdJFLX_91u9CIEyaaw_NFBsg...'; // ← COPIA TU CLAVE COMPLETA
 
-// Crear cliente de Supabase (usando nombre diferente para evitar conflictos)
+// Crear cliente de Supabase
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let bdConectada = false;
 
@@ -1448,12 +1447,13 @@ function renderReceptores() {
 }
 
 // ================================================================
-// 10. FUNCIONES DE FAMILIAS Y PRODUCTOS (UI)
+// 10. FUNCIONES DE FAMILIAS Y PRODUCTOS (UI) - ¡CORREGIDAS!
 // ================================================================
 
 function seleccionarFamilia(familia) {
   console.log('🔄 Cambiando a:', familia);
   
+  // 1. Actualizar la pestaña activa
   document.querySelectorAll('.tab-familia').forEach(tab => {
     tab.classList.remove('active');
     if (tab.dataset.familia === familia) {
@@ -1461,6 +1461,7 @@ function seleccionarFamilia(familia) {
     }
   });
   
+  // 2. Si es "kit", mostrar sección de kit
   if (familia === 'kit') {
     modoKit = true;
     document.getElementById('seccion-productos').style.display = 'none';
@@ -1469,12 +1470,21 @@ function seleccionarFamilia(familia) {
     return;
   }
   
+  // 3. Si no es kit, mostrar productos
   modoKit = false;
   document.getElementById('seccion-productos').style.display = 'block';
   document.getElementById('seccion-kit').style.display = 'none';
+  
+  // 4. Guardar la familia seleccionada
   familiaSeleccionada = familia;
+  
+  // 5. Actualizar el dropdown de productos
   poblarDropdownProductos();
+  
+  // 6. Limpiar selección anterior
   limpiarSeleccionProducto();
+  
+  console.log('✅ Familia seleccionada:', familiaSeleccionada);
 }
 
 function limpiarSeleccionProducto() {
@@ -2134,41 +2144,73 @@ function actualizarDashboard() {
 }
 
 // ================================================================
-// 16. INICIALIZACIÓN
+// 16. INICIALIZACIÓN - ¡CORREGIDA!
 // ================================================================
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 Iniciando aplicación GRRD...');
   
+  // 1. Inicializar receptores
   renderReceptores();
   
-  // Evento para mostrar/ocultar campo "Otro" en kit
-  document.getElementById('kit-tipo').addEventListener('change', function() {
-    const otroContainer = document.getElementById('kit-otro-container');
-    if (this.value === 'Otro') {
-      otroContainer.style.display = 'block';
-    } else {
-      otroContainer.style.display = 'none';
-    }
-  });
+  // 2. Evento para mostrar/ocultar "Otro" en kit
+  const kitTipo = document.getElementById('kit-tipo');
+  if (kitTipo) {
+    kitTipo.addEventListener('change', function() {
+      const otroContainer = document.getElementById('kit-otro-container');
+      if (this.value === 'Otro') {
+        otroContainer.style.display = 'block';
+      } else {
+        otroContainer.style.display = 'none';
+      }
+    });
+  }
   
-  // Cargar datos
+  // 3. Cargar datos
   verificarConexionBD().then(() => {
     cargarProductosBD().then(() => {
       cargarSalidasBD().then(() => {
         poblarDropdownProductos();
         actualizarDashboard();
         verificarSesion();
+        
+        // ✅ FORZAR PESTAÑA EPP BÁSICO AL INICIO
+        seleccionarFamilia('epp_basico');
+        
         console.log('✅ Aplicación lista!');
+        console.log('📦 Productos cargados:', items.length);
+        console.log('📋 Salidas cargadas:', salidas.length);
       });
     });
   });
 
-  // Cerrar dropdown al hacer clic fuera
+  // 4. EVENT LISTENERS PARA PESTAÑAS (SOLUCIÓN ROBUSTA)
+  const tabs = document.querySelectorAll('.tab-familia');
+  console.log('🔘 Pestañas encontradas:', tabs.length);
+  
+  tabs.forEach(tab => {
+    // Eliminar cualquier evento anterior
+    tab.removeEventListener('click', tab._clickHandler);
+    
+    // Crear nuevo handler
+    const handler = function(e) {
+      e.preventDefault();
+      const familia = this.dataset.familia;
+      console.log('🔘 Click en pestaña:', familia);
+      seleccionarFamilia(familia);
+    };
+    
+    tab.addEventListener('click', handler);
+    tab._clickHandler = handler;
+  });
+
+  // 5. Cerrar dropdown al hacer clic fuera
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.custom-dropdown')) {
       document.querySelectorAll('.dropdown-list').forEach(l => l.style.display = 'none');
     }
   });
+  
+  console.log('✅ Event listeners registrados');
 });
 </script>
 </body>
