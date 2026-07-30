@@ -15,9 +15,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
 
 <style>
-  /* ===== MANTENEMOS TODO EL CSS EXISTENTE ===== */
-  /* Agregamos solo algunos estilos nuevos para mejoras */
-  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
   :root {
     --azul: #1664c0;
     --azul-claro: #4087cf;
@@ -43,7 +42,6 @@
     padding: 0 0 80px 0;
   }
 
-  /* ===== HEADER ===== */
   .header {
     background: linear-gradient(135deg, var(--azul) 0%, var(--azul-oscuro) 100%);
     padding: 10px 16px;
@@ -141,7 +139,6 @@
   }
   .badge-bd.online { background: rgba(74, 222, 128, 0.3); }
 
-  /* ===== SECCIONES ===== */
   .section {
     background: var(--blanco);
     border-radius: 20px;
@@ -165,7 +162,6 @@
     padding-left: 10px;
   }
 
-  /* ===== TABS ===== */
   .tabs-familias {
     display: flex;
     gap: 4px;
@@ -173,6 +169,7 @@
     padding: 2px 0 8px 0;
     scrollbar-width: thin;
     -webkit-overflow-scrolling: touch;
+    flex-wrap: wrap;
   }
   .tabs-familias::-webkit-scrollbar { height: 3px; }
   .tabs-familias::-webkit-scrollbar-thumb { background: var(--azul-claro); border-radius: 10px; }
@@ -201,7 +198,6 @@
     border-color: var(--azul-claro);
   }
 
-  /* ===== FORMULARIOS ===== */
   label {
     display: block;
     font-size: 11px;
@@ -231,7 +227,6 @@
   .field { margin-bottom: 12px; }
   .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  /* ===== BOTONES ===== */
   .btn-primario {
     background: var(--azul);
     border: none;
@@ -267,22 +262,6 @@
   .btn-secundario:hover { background: #e2e8f0; }
   .btn-secundario:active { transform: scale(0.97); }
 
-  .btn-accion {
-    background: var(--azul-claro);
-    border: none;
-    padding: 6px 16px;
-    border-radius: 30px;
-    font-weight: 600;
-    color: white;
-    font-size: 11px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .btn-accion:hover { opacity: 0.85; }
-  .btn-accion.verde { background: var(--verde); }
-  .btn-accion.rojo { background: var(--rojo); }
-
-  /* ===== DROPDOWN ===== */
   .custom-dropdown { position: relative; }
   .dropdown-input {
     width: 100%;
@@ -318,7 +297,6 @@
   .dropdown-item:hover { background: rgba(22,100,192,0.06); }
   .dropdown-item .stock-info { font-size: 10px; color: var(--texto-gris); }
 
-  /* ===== SELECTOR DE TALLAS ===== */
   .selector-tallas {
     display: flex;
     flex-wrap: wrap;
@@ -354,7 +332,6 @@
   .selector-tallas .talla-item.stock-bajo { border-color: var(--naranja); }
   .selector-tallas .talla-item.stock-bajo.active { background: var(--naranja); border-color: var(--naranja); }
 
-  /* ===== PRODUCTO SELECCIONADO ===== */
   .producto-seleccionado {
     background: #f0f5ff;
     border-radius: 12px;
@@ -365,7 +342,6 @@
   }
   .producto-seleccionado .prod-subtitulo { font-size: 11px; font-weight: 600; color: var(--texto-gris); margin-bottom: 2px; }
 
-  /* ===== KIT ===== */
   .kit-categoria {
     font-weight: 700;
     color: var(--azul);
@@ -384,7 +360,6 @@
     }
   }
 
-  /* ===== COMPROBANTE ===== */
   .ticket {
     background: #fafcfd;
     border: 2px dashed var(--azul-claro);
@@ -404,7 +379,6 @@
   .ticket .ticket-firma .firma-linea .linea { border-top: 1px solid #333; width: 80%; margin: 6px auto 2px; }
   .ticket .ticket-footer { text-align: center; font-size: 8px; color: var(--texto-gris); margin-top: 8px; border-top: 1px dashed #aaa; padding-top: 8px; }
 
-  /* ===== RECEPTORES ===== */
   .receptor-card {
     background: #f8fafc;
     border: 1px solid var(--borde);
@@ -434,7 +408,6 @@
   .btn-agregar-receptor:hover { background: rgba(22,100,192,0.05); }
   .btn-agregar-receptor:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* ===== USUARIO INFO ===== */
   .usuario-info {
     background: #e8f0fe;
     border-radius: 12px;
@@ -446,7 +419,6 @@
   .usuario-info .label { font-size: 10px; color: var(--texto-gris); text-transform: uppercase; letter-spacing: 0.5px; }
   .usuario-info .valor { font-weight: 600; font-size: 14px; color: var(--azul); }
 
-  /* ===== RESUMEN ===== */
   .resumen-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -465,7 +437,6 @@
   .resumen-card.verde .num { color: var(--verde); }
   .resumen-card.naranja .num { color: var(--naranja); }
 
-  /* ===== FOTOS ===== */
   .foto-upload {
     border: 1.5px dashed var(--azul);
     border-radius: 12px;
@@ -494,7 +465,6 @@
   .btn-camara { background: var(--verde); color: white; border: none; border-radius: 30px; padding: 8px 16px; font-weight: 600; font-size: 12px; cursor: pointer; margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; }
   .btn-camara:hover { opacity: 0.85; }
 
-  /* ===== MODAL ===== */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -523,7 +493,6 @@
     color: var(--texto-gris);
   }
 
-  /* ===== TOAST ===== */
   #toast {
     position: fixed;
     bottom: 20px;
@@ -545,27 +514,7 @@
   }
   #toast.show { opacity: 1; }
 
-  /* ===== LOADING ===== */
-  .loading-spinner {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 0.8s ease-in-out infinite;
-  }
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  /* ===== OTROS ===== */
-  .badge-familia { display: inline-block; font-size: 8px; background: var(--borde); padding: 1px 8px; border-radius: 20px; color: var(--texto-gris); font-weight: 600; }
   .empty-state { text-align: center; color: var(--texto-gris); font-size: 12px; padding: 20px 0; }
-  .text-center { text-align: center; }
-  .mt-8 { margin-top: 8px; }
-  .mb-8 { margin-bottom: 8px; }
-
   footer { text-align: center; color: var(--texto-gris); font-size: 9px; padding: 16px 16px 30px; opacity: 0.7; }
 
   @media (max-width: 600px) {
@@ -579,6 +528,7 @@
     .foto-upload input[type="file"] { font-size: 12px; }
     .selector-tallas .talla-item { min-width: 48px; padding: 6px 2px; font-size: 12px; }
     .badge-bd { display: none; }
+    .tabs-familias { flex-wrap: wrap; }
   }
 
   ::-webkit-scrollbar { width: 4px; }
@@ -637,19 +587,18 @@
   <div class="field">
     <label>📂 Tipo de registro</label>
     <div class="tabs-familias" id="tabs-familias">
-      <div class="tab-familia active" data-familia="epp_basico" onclick="seleccionarFamilia('epp_basico')">🛡️ EPP Básico</div>
-      <div class="tab-familia" data-familia="epp_climatico" onclick="seleccionarFamilia('epp_climatico')">🌧️ EPP Climático</div>
-      <div class="tab-familia" data-familia="epp_especial" onclick="seleccionarFamilia('epp_especial')">🧥 EPP Especial</div>
-      <div class="tab-familia" data-familia="maquinarias" onclick="seleccionarFamilia('maquinarias')">🔧 Maquinarias</div>
-      <div class="tab-familia" data-familia="herramientas" onclick="seleccionarFamilia('herramientas')">🔩 Herramientas</div>
-      <div class="tab-familia" data-familia="kit" onclick="seleccionarFamilia('kit')">🧰 Kit Vehicular</div>
-      <div class="tab-familia" data-familia="todas" onclick="seleccionarFamilia('todas')">📦 Todas</div>
+      <div class="tab-familia active" data-familia="epp_basico">🛡️ EPP Básico</div>
+      <div class="tab-familia" data-familia="epp_climatico">🌧️ EPP Climático</div>
+      <div class="tab-familia" data-familia="epp_especial">🧥 EPP Especial</div>
+      <div class="tab-familia" data-familia="maquinarias">🔧 Maquinarias</div>
+      <div class="tab-familia" data-familia="herramientas">🔩 Herramientas</div>
+      <div class="tab-familia" data-familia="kit">🧰 Kit Vehicular</div>
+      <div class="tab-familia" data-familia="todas">📦 Todas</div>
     </div>
   </div>
 
   <!-- ===== SECCIÓN PRODUCTOS ===== -->
   <div id="seccion-productos">
-    <!-- Selección de producto -->
     <div class="field">
       <label class="required">Producto</label>
       <div class="custom-dropdown">
@@ -658,7 +607,6 @@
       </div>
     </div>
 
-    <!-- Producto seleccionado - TALLAS -->
     <div id="producto-seleccionado-container" class="producto-seleccionado">
       <div id="selector-tallas-container" style="display:none;">
         <div class="prod-subtitulo">📏 Selecciona una talla:</div>
@@ -878,11 +826,12 @@
 // ================================================================
 // 1. CONFIGURACIÓN SUPABASE
 // ================================================================
-const SUPABASE_URL = 'TU_SUPABASE_URL';  // ← REEMPLAZAR
-const SUPABASE_KEY = 'TU_SUPABASE_ANON_KEY';  // ← REEMPLAZAR
+// ⚠️ REEMPLAZA CON TUS VALORES REALES ⚠️
+const SUPABASE_URL = 'https://pmcmcbxyxqynzhkachyiz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_bDmWdJFLX_91u9CIEyaaw_NFBsg...'; // ← COPIA TU CLAVE COMPLETA
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+// Crear cliente de Supabase (usando nombre diferente para evitar conflictos)
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let bdConectada = false;
 
 // ================================================================
@@ -908,7 +857,20 @@ let receptoresAgregados = [];
 emailjs.init('tJ1jLx0YD2ifJfsW-');
 
 // ================================================================
-// 4. FUNCIONES DE UTILIDAD
+// 4. VARIABLES GLOBALES
+// ================================================================
+let items = [];
+let salidas = [];
+let productoSeleccionadoId = null;
+let tallaSeleccionada = null;
+let ultimoComprobante = null;
+let familiaSeleccionada = 'epp_basico';
+let modoKit = false;
+
+const STORAGE_KEY = 'inv_items_salidas_v8';
+
+// ================================================================
+// 5. FUNCIONES DE UTILIDAD
 // ================================================================
 function generarId() { return Date.now().toString(36) + Math.random().toString(36).substring(2, 7); }
 
@@ -923,9 +885,10 @@ function fechaHoraActual() {
 }
 
 function esHoy(fechaStr) {
+  if (!fechaStr) return false;
   const hoy = new Date();
   const ddHoy = hoy.getDate().toString().padStart(2, '0');
-  const mmHoy = (now.getMonth() + 1).toString().padStart(2, '0');
+  const mmHoy = (hoy.getMonth() + 1).toString().padStart(2, '0');
   const yyyyHoy = hoy.getFullYear();
   return fechaStr.startsWith(`${ddHoy}/${mmHoy}/${yyyyHoy}`);
 }
@@ -944,7 +907,7 @@ function mostrarToast(msg) {
 }
 
 // ================================================================
-// 5. FUNCIONES DE AUTENTICACIÓN (Azure AD)
+// 6. FUNCIONES DE AUTENTICACIÓN (Azure AD)
 // ================================================================
 async function obtenerToken() {
   try {
@@ -1065,7 +1028,7 @@ function actualizarEstadoSesion(autenticado) {
 }
 
 // ================================================================
-// 6. FAMILIAS Y PRODUCTOS
+// 7. FAMILIAS Y PRODUCTOS
 // ================================================================
 const FAMILIAS = {
   epp_basico: {
@@ -1144,23 +1107,13 @@ const FAMILIAS = {
   }
 };
 
-const STORAGE_KEY = 'inv_items_salidas_v8';
-let items = [];
-let salidas = [];
-let productoSeleccionadoId = null;
-let tallaSeleccionada = null;
-let ultimoComprobante = null;
-let familiaSeleccionada = 'epp_basico';
-let modoKit = false;
-
 // ================================================================
-// 7. FUNCIONES DE BASE DE DATOS (Supabase)
+// 8. FUNCIONES DE BASE DE DATOS (Supabase)
 // ================================================================
 
-// Verificar conexión a Supabase
 async function verificarConexionBD() {
   try {
-    const { data, error } = await supabase.from('productos').select('count', { count: 'exact', head: true });
+    const { data, error } = await supabaseClient.from('productos').select('count', { count: 'exact', head: true });
     if (error) throw error;
     bdConectada = true;
     document.getElementById('bd-status').textContent = '☁️ Conectado';
@@ -1175,10 +1128,9 @@ async function verificarConexionBD() {
   }
 }
 
-// Cargar productos desde Supabase
 async function cargarProductosBD() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('productos')
       .select('*')
       .order('nombre');
@@ -1190,13 +1142,11 @@ async function cargarProductosBD() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
       return items;
     } else {
-      // Si no hay productos, inicializar
       await inicializarProductosBD();
       return items;
     }
   } catch (error) {
     console.error('Error cargando productos:', error);
-    // Fallback a localStorage
     const localItems = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
     if (localItems && localItems.length > 0) {
       items = localItems;
@@ -1206,10 +1156,8 @@ async function cargarProductosBD() {
   }
 }
 
-// Inicializar productos en Supabase
 async function inicializarProductosBD() {
   try {
-    // Generar productos iniciales
     const nuevosItems = [];
     let idCounter = 0;
     const STOCK_INICIAL = 10;
@@ -1253,8 +1201,7 @@ async function inicializarProductosBD() {
       });
     });
     
-    // Insertar en Supabase
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('productos')
       .insert(nuevosItems)
       .select();
@@ -1266,12 +1213,10 @@ async function inicializarProductosBD() {
     return items;
   } catch (error) {
     console.error('Error inicializando productos:', error);
-    // Fallback a localStorage
     return generarItemsInicialesLocal();
   }
 }
 
-// Generar items iniciales localmente (fallback)
 function generarItemsInicialesLocal() {
   const nuevos = [];
   let idCounter = 0;
@@ -1322,19 +1267,17 @@ function generarItemsInicialesLocal() {
   return nuevos;
 }
 
-// Guardar salida en Supabase
 async function guardarSalidaBD(salidaData) {
   try {
-    // Si es un kit, guardar en tabla kits
-    if (salidaData.tipo === 'kit') {
-      const { data, error } = await supabase
+    if (salidaData.tipo === 'kit' && salidaData.kitInfo) {
+      const { data, error } = await supabaseClient
         .from('kits')
         .insert([{
-          tipo: salidaData.kitTipo,
-          inventario: salidaData.kitInventario,
-          patente: salidaData.kitPatente,
-          responsable: salidaData.kitResponsable,
-          herramientas: salidaData.kitHerramientas,
+          tipo: salidaData.kitInfo.tipo,
+          inventario: salidaData.kitInfo.inventario,
+          patente: salidaData.kitInfo.patente,
+          responsable: salidaData.kitInfo.responsable,
+          herramientas: salidaData.kitInfo.herramientas,
           salida_id: salidaData.id
         }])
         .select();
@@ -1342,8 +1285,7 @@ async function guardarSalidaBD(salidaData) {
       if (error) throw error;
     }
     
-    // Guardar en tabla salidas
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('salidas')
       .insert([{
         id: salidaData.id,
@@ -1355,7 +1297,7 @@ async function guardarSalidaBD(salidaData) {
         receptores: salidaData.receptores,
         observacion: salidaData.observacion || '',
         responsable: salidaData.responsable,
-        responsable_email: salidaData.responsableEmail,
+        responsable_email: salidaData.responsableEmail || '',
         fecha: new Date().toISOString(),
         fotos: salidaData.fotos || [],
         numero_lc: salidaData.numeroLC,
@@ -1366,9 +1308,8 @@ async function guardarSalidaBD(salidaData) {
     
     if (error) throw error;
     
-    // Actualizar stock del producto
     if (salidaData.tipo !== 'kit' && salidaData.productoId) {
-      const { error: stockError } = await supabase
+      const { error: stockError } = await supabaseClient
         .from('productos')
         .update({ stock: salidaData.nuevoStock })
         .eq('id', salidaData.productoId);
@@ -1383,10 +1324,9 @@ async function guardarSalidaBD(salidaData) {
   }
 }
 
-// Cargar salidas desde Supabase
 async function cargarSalidasBD() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('salidas')
       .select('*')
       .order('fecha', { ascending: false });
@@ -1404,7 +1344,6 @@ async function cargarSalidasBD() {
   }
 }
 
-// Sincronizar todo
 async function sincronizarBD() {
   const btn = document.getElementById('btn-sincronizar');
   btn.disabled = true;
@@ -1426,7 +1365,7 @@ async function sincronizarBD() {
 }
 
 // ================================================================
-// 8. FUNCIONES DE RECEPTORES
+// 9. FUNCIONES DE RECEPTORES
 // ================================================================
 function agregarReceptor() {
   const nombre = document.getElementById('receptor-nombre').value.trim();
@@ -1509,29 +1448,33 @@ function renderReceptores() {
 }
 
 // ================================================================
-// 9. FUNCIONES DE FAMILIAS Y PRODUCTOS (UI)
+// 10. FUNCIONES DE FAMILIAS Y PRODUCTOS (UI)
 // ================================================================
+
 function seleccionarFamilia(familia) {
+  console.log('🔄 Cambiando a:', familia);
+  
+  document.querySelectorAll('.tab-familia').forEach(tab => {
+    tab.classList.remove('active');
+    if (tab.dataset.familia === familia) {
+      tab.classList.add('active');
+    }
+  });
+  
   if (familia === 'kit') {
     modoKit = true;
     document.getElementById('seccion-productos').style.display = 'none';
     document.getElementById('seccion-kit').style.display = 'block';
     document.getElementById('producto-seleccionado-container').style.display = 'none';
-  } else {
-    modoKit = false;
-    document.getElementById('seccion-productos').style.display = 'block';
-    document.getElementById('seccion-kit').style.display = 'none';
-    familiaSeleccionada = familia;
+    return;
   }
   
-  document.querySelectorAll('.tab-familia').forEach(tab => {
-    tab.classList.toggle('active', tab.dataset.familia === familia);
-  });
-  
-  if (!modoKit) {
-    poblarDropdownProductos();
-    limpiarSeleccionProducto();
-  }
+  modoKit = false;
+  document.getElementById('seccion-productos').style.display = 'block';
+  document.getElementById('seccion-kit').style.display = 'none';
+  familiaSeleccionada = familia;
+  poblarDropdownProductos();
+  limpiarSeleccionProducto();
 }
 
 function limpiarSeleccionProducto() {
@@ -1542,7 +1485,7 @@ function limpiarSeleccionProducto() {
   document.getElementById('salida-cantidad').value = '';
   document.getElementById('salida-cantidad').max = '';
   const container = document.getElementById('producto-seleccionado-container');
-  container.style.display = 'none';
+  if (container) container.style.display = 'none';
   document.getElementById('selector-tallas-container').style.display = 'none';
   document.getElementById('selector-tallas').innerHTML = '';
   document.getElementById('talla-seleccionada-info').textContent = '';
@@ -1552,6 +1495,12 @@ function mostrarProductoSeleccionado(producto) {
   const container = document.getElementById('producto-seleccionado-container');
   const selectorContainer = document.getElementById('selector-tallas-container');
   const selector = document.getElementById('selector-tallas');
+  
+  if (!container || !selectorContainer || !selector) {
+    console.error('❌ Elementos del producto no encontrados');
+    return;
+  }
+  
   container.style.display = 'block';
   const itemsProducto = items.filter(i => i.nombre === producto.nombre && i.familia === producto.familia);
   const tieneTallas = itemsProducto.some(i => i.tiene_talla);
@@ -1610,37 +1559,51 @@ function seleccionarTallaProducto(talla, item) {
 function poblarDropdownProductos() {
   const list = document.getElementById('prod-list');
   const input = document.getElementById('prod-trigger');
+  
+  if (!list || !input) {
+    console.error('❌ Elementos del dropdown no encontrados');
+    return;
+  }
+  
   list.innerHTML = '';
-
+  
+  if (!items || items.length === 0) {
+    input.value = '';
+    const div = document.createElement('div');
+    div.className = 'dropdown-item';
+    div.textContent = 'No hay productos disponibles';
+    list.appendChild(div);
+    return;
+  }
+  
   let productosFiltrados = items.slice();
   if (familiaSeleccionada !== 'todas') {
     productosFiltrados = productosFiltrados.filter(i => i.familia === familiaSeleccionada);
   }
-
+  
   if (productosFiltrados.length === 0) {
     input.value = '';
-    productoSeleccionadoId = null;
     const div = document.createElement('div');
     div.className = 'dropdown-item';
     div.textContent = 'No hay productos en esta familia';
     list.appendChild(div);
     return;
   }
-
+  
   const agrupados = {};
   productosFiltrados.forEach(item => {
     const key = item.nombre + '|' + item.familia;
     if (!agrupados[key]) agrupados[key] = [];
     agrupados[key].push(item);
   });
-
+  
   Object.keys(agrupados).sort().forEach(key => {
     const grupo = agrupados[key];
     const primerItem = grupo[0];
     const div = document.createElement('div');
     div.className = 'dropdown-item';
     const icono = FAMILIAS[primerItem.familia]?.icono || '📦';
-    let stockTotal = grupo.reduce((a, i) => a + i.stock, 0);
+    let stockTotal = grupo.reduce((a, i) => a + (i.stock || 0), 0);
     div.innerHTML = `${icono} ${primerItem.nombre} <span class="stock-info">(stock: ${stockTotal})</span>`;
     div.onclick = function() {
       input.value = primerItem.nombre;
@@ -1650,7 +1613,7 @@ function poblarDropdownProductos() {
     };
     list.appendChild(div);
   });
-
+  
   input.onclick = function() {
     if (list.style.display === 'block') list.style.display = 'none';
     else { list.style.display = 'block'; }
@@ -1658,7 +1621,7 @@ function poblarDropdownProductos() {
 }
 
 // ================================================================
-// 10. FUNCIONES DE FOTOS
+// 11. FUNCIONES DE FOTOS
 // ================================================================
 function abrirCamara() {
   const input = document.getElementById('foto-input');
@@ -1728,7 +1691,7 @@ function comprimirImagen(file, calidad = 0.7, maxWidth = 800) {
 }
 
 // ================================================================
-// 11. REGISTRAR SALIDA
+// 12. REGISTRAR SALIDA
 // ================================================================
 async function registrarSalida() {
   if (!usuarioAutenticado || !usuarioDominioValido) {
@@ -1758,7 +1721,6 @@ async function registrarSalida() {
     if (!kitPatente) { mostrarToast('❌ Ingresa la patente del vehículo'); return; }
     if (!kitResponsable) { mostrarToast('❌ Ingresa el responsable del vehículo'); return; }
     
-    // Obtener herramientas seleccionadas
     const herramientasSeleccionadas = [];
     document.querySelectorAll('.kit-herramienta:checked').forEach(cb => {
       herramientasSeleccionadas.push(cb.value);
@@ -1769,7 +1731,6 @@ async function registrarSalida() {
       return;
     }
     
-    // Procesar fotos
     if (fotoInput.files && fotoInput.files.length > 0) {
       for (let i = 0; i < fotoInput.files.length; i++) {
         fotosData.push(await comprimirImagen(fotoInput.files[i], 0.6));
@@ -1803,14 +1764,12 @@ async function registrarSalida() {
       }
     };
     
-    // Guardar en BD
     try {
       await guardarSalidaBD(salida);
       salidas.unshift(salida);
       localStorage.setItem('salidas_registradas_v8', JSON.stringify(salidas));
       ultimoComprobante = salida;
       
-      // Limpiar
       document.getElementById('kit-tipo').value = '';
       document.getElementById('kit-inventario').value = '';
       document.getElementById('kit-patente').value = '';
@@ -1922,7 +1881,7 @@ async function registrarSalida() {
 }
 
 // ================================================================
-// 12. ENVÍO DE CORREO
+// 13. ENVÍO DE CORREO
 // ================================================================
 function enviarCorreoComprobante(salida) {
   const numTicket = salida.numeroLC || String(salidas.length).padStart(4, '0');
@@ -1960,7 +1919,7 @@ function enviarCorreoComprobante(salida) {
 }
 
 // ================================================================
-// 13. COMPROBANTE
+// 14. COMPROBANTE
 // ================================================================
 function mostrarComprobante(salida) {
   const modal = document.getElementById('modal-comprobante');
@@ -2068,7 +2027,6 @@ function descargarPDFComprobante() {
   const pageH = doc.internal.pageSize.getHeight();
   const margin = 15;
   
-  // PÁGINA 1: COMPROBANTE
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.text('MUNICIPALIDAD DE LAS CONDES', pageW/2, 15, { align: 'center' });
@@ -2129,7 +2087,6 @@ function descargarPDFComprobante() {
     doc.text(`Fotos adjuntas: ${totalFotos}`, pageW/2, y + 6, { align: 'center' });
   }
 
-  // PÁGINAS DE FOTOS
   if (totalFotos > 0) {
     let fotoIndex = 0;
     let paginaActual = 1;
@@ -2162,7 +2119,7 @@ function descargarPDFComprobante() {
 }
 
 // ================================================================
-// 14. DASHBOARD
+// 15. DASHBOARD
 // ================================================================
 function actualizarDashboard() {
   const hoy = salidas.filter(s => esHoy(s.fecha));
@@ -2177,9 +2134,11 @@ function actualizarDashboard() {
 }
 
 // ================================================================
-// 15. INICIALIZACIÓN
+// 16. INICIALIZACIÓN
 // ================================================================
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 Iniciando aplicación GRRD...');
+  
   renderReceptores();
   
   // Evento para mostrar/ocultar campo "Otro" en kit
@@ -2192,11 +2151,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Seleccionar pestaña inicial
-  document.querySelectorAll('.tab-familia').forEach(tab => {
-    tab.classList.toggle('active', tab.dataset.familia === 'epp_basico');
-  });
-  
   // Cargar datos
   verificarConexionBD().then(() => {
     cargarProductosBD().then(() => {
@@ -2204,6 +2158,7 @@ document.addEventListener('DOMContentLoaded', function() {
         poblarDropdownProductos();
         actualizarDashboard();
         verificarSesion();
+        console.log('✅ Aplicación lista!');
       });
     });
   });
