@@ -824,10 +824,14 @@
 <!-- ===== JAVASCRIPT ===== -->
 <script>
 // ================================================================
-// 1. CONFIGURACIÓN SUPABASE - REEMPLAZA CON TUS VALORES
+// 1. CONFIGURACIÓN SUPABASE - ¡CORREGIDA CON TU URL!
 // ================================================================
+
+// ✅ URL CORRECTA (de tu imagen en Settings → General)
 const SUPABASE_URL = 'https://pmcmcbxyxqynzhkachyiz.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_bDmWdJFLX_91u9CIEyaaw_NFBsg...'; // ← COPIA TU CLAVE COMPLETA
+
+// ✅ TU CLAVE PUBLISHABLE (de Settings → API)
+const SUPABASE_KEY = 'sb_publishable_bDmWdJFLX_9l3u9CIEyaaw_NFBsgwYk';
 
 // Crear cliente de Supabase
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1447,13 +1451,12 @@ function renderReceptores() {
 }
 
 // ================================================================
-// 10. FUNCIONES DE FAMILIAS Y PRODUCTOS (UI) - ¡CORREGIDAS!
+// 10. FUNCIONES DE FAMILIAS Y PRODUCTOS (UI)
 // ================================================================
 
 function seleccionarFamilia(familia) {
   console.log('🔄 Cambiando a:', familia);
   
-  // 1. Actualizar la pestaña activa
   document.querySelectorAll('.tab-familia').forEach(tab => {
     tab.classList.remove('active');
     if (tab.dataset.familia === familia) {
@@ -1461,7 +1464,6 @@ function seleccionarFamilia(familia) {
     }
   });
   
-  // 2. Si es "kit", mostrar sección de kit
   if (familia === 'kit') {
     modoKit = true;
     document.getElementById('seccion-productos').style.display = 'none';
@@ -1470,21 +1472,12 @@ function seleccionarFamilia(familia) {
     return;
   }
   
-  // 3. Si no es kit, mostrar productos
   modoKit = false;
   document.getElementById('seccion-productos').style.display = 'block';
   document.getElementById('seccion-kit').style.display = 'none';
-  
-  // 4. Guardar la familia seleccionada
   familiaSeleccionada = familia;
-  
-  // 5. Actualizar el dropdown de productos
   poblarDropdownProductos();
-  
-  // 6. Limpiar selección anterior
   limpiarSeleccionProducto();
-  
-  console.log('✅ Familia seleccionada:', familiaSeleccionada);
 }
 
 function limpiarSeleccionProducto() {
@@ -2144,15 +2137,13 @@ function actualizarDashboard() {
 }
 
 // ================================================================
-// 16. INICIALIZACIÓN - ¡CORREGIDA!
+// 16. INICIALIZACIÓN
 // ================================================================
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 Iniciando aplicación GRRD...');
   
-  // 1. Inicializar receptores
   renderReceptores();
   
-  // 2. Evento para mostrar/ocultar "Otro" en kit
   const kitTipo = document.getElementById('kit-tipo');
   if (kitTipo) {
     kitTipo.addEventListener('change', function() {
@@ -2165,17 +2156,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // 3. Cargar datos
   verificarConexionBD().then(() => {
     cargarProductosBD().then(() => {
       cargarSalidasBD().then(() => {
         poblarDropdownProductos();
         actualizarDashboard();
         verificarSesion();
-        
-        // ✅ FORZAR PESTAÑA EPP BÁSICO AL INICIO
         seleccionarFamilia('epp_basico');
-        
         console.log('✅ Aplicación lista!');
         console.log('📦 Productos cargados:', items.length);
         console.log('📋 Salidas cargadas:', salidas.length);
@@ -2183,27 +2170,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 4. EVENT LISTENERS PARA PESTAÑAS (SOLUCIÓN ROBUSTA)
-  const tabs = document.querySelectorAll('.tab-familia');
-  console.log('🔘 Pestañas encontradas:', tabs.length);
-  
-  tabs.forEach(tab => {
-    // Eliminar cualquier evento anterior
-    tab.removeEventListener('click', tab._clickHandler);
-    
-    // Crear nuevo handler
-    const handler = function(e) {
+  document.querySelectorAll('.tab-familia').forEach(tab => {
+    tab.addEventListener('click', function(e) {
       e.preventDefault();
       const familia = this.dataset.familia;
       console.log('🔘 Click en pestaña:', familia);
       seleccionarFamilia(familia);
-    };
-    
-    tab.addEventListener('click', handler);
-    tab._clickHandler = handler;
+    });
   });
 
-  // 5. Cerrar dropdown al hacer clic fuera
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.custom-dropdown')) {
       document.querySelectorAll('.dropdown-list').forEach(l => l.style.display = 'none');
