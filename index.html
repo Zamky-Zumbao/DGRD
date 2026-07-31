@@ -793,6 +793,8 @@
   <div class="btn-fila">
     <button class="btn-primario" id="btn-registrar" onclick="registrarSalida()" disabled>🔒 Inicia sesión para registrar</button>
   </div>
+  
+  <!-- ===== BOTONES SECUNDARIOS ===== -->
   <div style="display: flex; gap: 8px; margin-top: 8px;">
     <button class="btn-secundario" onclick="mostrarComprobanteUltima()" style="flex:1;">📋 Ver último comprobante</button>
     <button class="btn-secundario" onclick="sincronizarBD()" style="flex:1; background: var(--verde); color: white;" id="btn-sincronizar">🔄 Sincronizar</button>
@@ -824,13 +826,13 @@
 <!-- ===== JAVASCRIPT ===== -->
 <script>
 // ================================================================
-// 1. CONFIGURACIÓN SUPABASE - CORREGIDA
+// 1. CONFIGURACIÓN SUPABASE
 // ================================================================
 
-// ✅ URL CORRECTA (de tu proyecto en Settings → General)
-const SUPABASE_URL = 'https://pmcmcbxyxqynzhkachyiz.supabase.co';
+// ✅ URL CORRECTA (con una sola b)
+const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
 
-// ✅ TU CLAVE PUBLISHABLE (de Settings → API)
+// ✅ CLAVE PUBLISHABLE
 const SUPABASE_KEY = 'sb_publishable_bDmWdJFLX_9l3u9CIEyaaw_NFBsgwYk';
 
 // Crear cliente de Supabase
@@ -838,11 +840,12 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let bdConectada = false;
 
 // ================================================================
-// 2. CONFIGURACIÓN MSAL (Azure AD)
+// 2. CONFIGURACIÓN MSAL (Azure AD) - NUEVO CLIENT ID
 // ================================================================
+
 const msalConfig = {
   auth: {
-    clientId: '6df07a31-a9f8-4102-9e07-77266295b619',
+    clientId: '60ad5c04-ca7f-44b7-898e-ba5942588578', // ✅ NUEVO CLIENT ID
     authority: 'https://login.microsoftonline.com/3b2a8aaa-7404-4137-8bae-cbd67f7003c2',
     redirectUri: window.location.origin
   },
