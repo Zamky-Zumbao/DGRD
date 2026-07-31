@@ -829,18 +829,19 @@
 // 1. CONFIGURACIÓN SUPABASE - CORREGIDA
 // ================================================================
 
-// ✅ URL CORRECTA
-const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
+// ✅ URL CORRECTA (de tu proyecto)
+const SUPABASE_URL = 'https://pmcmcbxyxqynzhkachyiz.supabase.co';
 
-// ✅ CLAVE ANON (LEGACY) - CORRECTA
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtY21jYnl4cXluemhrYWNoeWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzNTMwNjEsImV4cCI6MjEwMDkyOTA2MX0.NRLgNctjDGHY71FcZK3gWU576xzRxV10qx_FuQm_jrw';
+// ✅ CLAVE PUBLISHABLE (desde Settings → API)
+// ⚠️ REEMPLAZA con la clave completa que copiaste de Supabase
+const SUPABASE_KEY = 'sb_publishable_bDmWdJFLX_913u9CIEyaaw_NFBsg...'; // ← COPIA LA CLAVE COMPLETA
 
 // Crear cliente de Supabase
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let bdConectada = false;
 
 // ================================================================
-// 2. CONFIGURACIÓN MSAL (Azure AD)
+// 2. CONFIGURACIÓN MSAL (Azure AD) - SPA
 // ================================================================
 
 const msalConfig = {
