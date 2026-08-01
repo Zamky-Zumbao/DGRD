@@ -56,7 +56,7 @@ input:disabled{background:#f1f5f9;color:var(--texto-gris)}
 .btn-secundario:hover{background:#e2e8f0}
 .btn-secundario:active{transform:scale(.97)}
 .custom-dropdown{position:relative}
-.dropdown-input{width:100%;background:#fff;border:1.5px solid var(--borde);border-radius:12px;font-size:14px;padding:9px 12px;outline:none;cursor:pointer;transition:.2s}
+.dropdown-input{width:100%;background:#fff;border:1.5px solid var(--borde);border-radius:12px;font-size:14px;padding:9px 12px;outline:none;cursor:text;transition:.2s}
 .dropdown-input:focus{border-color:var(--azul);box-shadow:0 0 0 3px rgba(22,100,192,0.12)}
 .dropdown-list{background:#fff;border:1.5px solid var(--azul);border-radius:12px;max-height:200px;overflow-y:auto;position:absolute;width:100%;z-index:999;display:none;box-shadow:0 4px 16px rgba(0,0,0,0.12)}
 .dropdown-item{padding:8px 12px;cursor:pointer;font-size:12px;border-bottom:1px solid var(--borde)}
@@ -210,6 +210,10 @@ footer{text-align:center;color:var(--texto-gris);font-size:9px;padding:16px 16px
     <button class="btn-agregar-receptor" id="btn-agregar-receptor" onclick="agregarReceptor()">+ Verificar receptor</button>
     <div id="receptor-error" style="color:var(--rojo);font-size:11px;margin-top:4px;display:none"></div>
     <div class="receptor-agregado-msg" id="receptor-agregado-msg">Receptor <strong id="receptor-agregado-nombre"></strong> agregado para esta entrega.</div>
+    <div style="margin-top:8px">
+      <label>Receptor de la entrega (<span id="receptor-count">0</span>)</label>
+      <div id="receptores-container"><div class="empty-state">No hay receptores agregados</div></div>
+    </div>
   </div>
 
   <div class="historial-container" id="historial-container">
@@ -236,7 +240,7 @@ footer{text-align:center;color:var(--texto-gris);font-size:9px;padding:16px 16px
     </div>
 
     <div id="seccion-productos">
-      <div class="field"><label class="required">Producto</label><div class="custom-dropdown"><input type="text" id="prod-trigger" class="dropdown-input" placeholder="Buscar producto..." readonly><div class="dropdown-list" id="prod-list"></div></div></div>
+      <div class="field"><label class="required">Producto</label><div class="custom-dropdown"><input type="text" id="prod-trigger" class="dropdown-input" placeholder="Buscar producto..." autocomplete="off"><div class="dropdown-list" id="prod-list"></div></div></div>
       <div id="producto-seleccionado-container" class="producto-seleccionado"><div id="selector-tallas-container" style="display:none"><div class="prod-subtitulo">Selecciona una talla:</div><div class="selector-tallas" id="selector-tallas"></div><div id="talla-seleccionada-info" style="font-size:10px;color:var(--texto-gris);margin-top:6px"></div></div></div>
       <div class="row-2"><div class="field"><label class="required">Cantidad</label><input type="number" id="salida-cantidad" min="1" placeholder="0"></div><div class="field"><label>Unidad</label><input type="text" id="salida-unidad" disabled style="background:#f1f5f9"></div></div>
     </div>
@@ -340,7 +344,11 @@ footer{text-align:center;color:var(--texto-gris);font-size:9px;padding:16px 16px
 // ================================================================
 const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtY21jYnl4cXluemhrYWNoeWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzNTMwNjEsImV4cCI6MjEwMDkyOTA2MX0.NRLgNctjDGHY71FcZK3gWU576xzRxV10qx_FuQm_jrw';
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let supabaseClient = null;
+try {
+  if(typeof window.supabase==='undefined') throw new Error('Libreria Supabase no cargo (revisa conexion/bloqueo de red a cdn.jsdelivr.net)');
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+} catch(e){ console.error('Error inicializando Supabase:',e); }
 let bdConectada = false;
 
 // ================================================================
@@ -354,7 +362,11 @@ const msalConfig = {
   },
   cache: { cacheLocation: 'localStorage' }
 };
-const msalInstance = new msal.PublicClientApplication(msalConfig);
+let msalInstance = null;
+try {
+  if(typeof msal==='undefined') throw new Error('Libreria MSAL no cargo (revisa conexion/bloqueo de red a alcdn.msauth.net)');
+  msalInstance = new msal.PublicClientApplication(msalConfig);
+} catch(e){ console.error('Error inicializando MSAL:',e); }
 let usuarioAutenticado = null;
 let usuarioDominioValido = false;
 let receptoresAgregados = [];
@@ -362,7 +374,12 @@ let receptoresAgregados = [];
 // ================================================================
 // 3. EMAILJS
 // ================================================================
-emailjs.init('tJ1jLx0YD2ifJfsW-');
+let emailjsListo = false;
+try {
+  if(typeof emailjs==='undefined') throw new Error('Libreria EmailJS no cargo (revisa conexion/bloqueo de red a cdn.jsdelivr.net)');
+  emailjs.init('tJ1jLx0YD2ifJfsW-');
+  emailjsListo = true;
+} catch(e){ console.error('Error inicializando EmailJS:',e); }
 
 // ================================================================
 // 4. VARIABLES
@@ -434,9 +451,11 @@ function formatearRUT(rut) {
 // 7. AUTENTICACION
 // ================================================================
 async function obtenerToken() {
+  if(!msalInstance) return null;
   try { var account = msalInstance.getAllAccounts()[0]; if(!account) return null; var response = await msalInstance.acquireTokenSilent({ account:account, scopes:['user.read'] }); return response.accessToken; } catch(e){ return null; }
 }
 async function iniciarSesionMicrosoft() {
+  if(!msalInstance){ mostrarToast('El servicio de inicio de sesion no esta disponible (revisa tu conexion e intenta recargar)'); return null; }
   try {
     var accounts = msalInstance.getAllAccounts();
     if(accounts.length>0){
@@ -449,11 +468,13 @@ async function iniciarSesionMicrosoft() {
     return null;
   } catch(e){ mostrarToast('Error al iniciar sesion'); return null; }
 }
-async function cerrarSesionMicrosoft() { try{ await msalInstance.logoutRedirect(); }catch(e){ msalInstance.setActiveAccount(null); } usuarioAutenticado=null; usuarioDominioValido=false; actualizarEstadoSesion(false); mostrarToast('Sesion cerrada'); }
+async function cerrarSesionMicrosoft() { if(msalInstance){ try{ await msalInstance.logoutRedirect(); }catch(e){ msalInstance.setActiveAccount(null); } } usuarioAutenticado=null; usuarioDominioValido=false; actualizarEstadoSesion(false); mostrarToast('Sesion cerrada'); }
 async function handleRedirectResponse() {
+  if(!msalInstance) return;
   try { var response = await msalInstance.handleRedirectPromise(); if(response && response.account){ usuarioAutenticado=response.account; var email=usuarioAutenticado.username; if(validarDominioLasCondes(email)){ usuarioDominioValido=true; await obtenerToken(); mostrarToast('Bienvenido, '+email); actualizarEstadoSesion(true); } else { usuarioDominioValido=false; actualizarEstadoSesion(false); await cerrarSesionMicrosoft(); } } } catch(e){ console.error('Error en redirect:',e); }
 }
 async function verificarSesion() {
+  if(!msalInstance){ actualizarEstadoSesion(false); document.getElementById('btn-sesion-texto').textContent='Login no disponible'; return; }
   await handleRedirectResponse();
   var accounts = msalInstance.getAllAccounts();
   if(accounts.length>0){ usuarioAutenticado=accounts[0]; var email=usuarioAutenticado.username; if(validarDominioLasCondes(email)){ usuarioDominioValido=true; await obtenerToken(); actualizarEstadoSesion(true); } else { usuarioDominioValido=false; actualizarEstadoSesion(false); await cerrarSesionMicrosoft(); } }
@@ -522,7 +543,18 @@ async function guardarEntregaBD(entregaData, detalles, fotos) {
     var entregaId = result1.data[0].id;
     for(var detalle of detalles){ var result2 = await supabaseClient.from('detalles_entrega').insert([{ entrega_id:entregaId, producto_id:detalle.productoId||null, producto_nombre:detalle.nombre, talla:detalle.talla||null, cantidad:detalle.cantidad, unidad:detalle.unidad||'Unidad' }]); if(result2.error) throw result2.error; }
     if(fotos && fotos.length>0){ for(var j=0;j<fotos.length;j++){ var result3 = await supabaseClient.from('fotos_entrega').insert([{ entrega_id:entregaId, foto_data:fotos[j], orden:j+1 }]); if(result3.error) throw result3.error; } }
-    for(var detalle of detalles){ if(detalle.productoId){ var producto = items.find(function(i){ return i.id===detalle.productoId; }); if(producto){ var nuevoStock = producto.stock - detalle.cantidad; var result4 = await supabaseClient.from('productos').update({ stock:nuevoStock }).eq('id',detalle.productoId); if(result4.error) throw result4.error; producto.stock = nuevoStock; } } }
+    for(var detalle of detalles){
+      if(detalle.productoId){
+        var producto = items.find(function(i){ return i.id===detalle.productoId; });
+        if(producto){
+          var nuevoStock = producto.stock - detalle.cantidad;
+          var result4 = await supabaseClient.from('productos').update({ stock:nuevoStock }).eq('id',detalle.productoId).gte('stock',detalle.cantidad).select();
+          if(result4.error) throw result4.error;
+          if(!result4.data || result4.data.length===0){ throw new Error('Stock insuficiente o modificado por otra entrega para: '+detalle.nombre); }
+          producto.stock = nuevoStock;
+        }
+      }
+    }
     return entregaId;
   } catch(e){ console.error('Error guardando entrega:',e); throw e; }
 }
@@ -561,16 +593,27 @@ async function agregarReceptor() {
   if(!resultadoRUT.valido){ error.textContent=resultadoRUT.mensaje; error.style.display='block'; return; }
   if(!email || !email.includes('@')){ error.textContent='Ingresa un correo electronico valido'; error.style.display='block'; return; }
   error.style.display='none';
-  var entregas = await verificarHistorialReceptor(resultadoRUT.rut);
-  receptoresAgregados = [{ nombre:nombre, rut:resultadoRUT.rutFormateado, rutLimpio:resultadoRUT.rut, email:email }];
-  renderReceptores();
-  bloquearCamposReceptor(true);
-  mostrarHistorial(entregas, nombre);
-  msg.style.display='block';
-  document.getElementById('receptor-agregado-nombre').textContent=nombre;
-  document.getElementById('receptor-nombre').value='';
-  document.getElementById('receptor-rut').value='';
-  document.getElementById('receptor-email').value='';
+  var btnAgregar=document.getElementById('btn-agregar-receptor');
+  btnAgregar.disabled=true;
+  var textoOriginal=btnAgregar.textContent;
+  btnAgregar.textContent='Verificando...';
+  try {
+    var entregas = await verificarHistorialReceptor(resultadoRUT.rut);
+    receptoresAgregados = [{ nombre:nombre, rut:resultadoRUT.rutFormateado, rutLimpio:resultadoRUT.rut, email:email }];
+    renderReceptores();
+    bloquearCamposReceptor(true);
+    mostrarHistorial(entregas, nombre);
+    msg.style.display='block';
+    document.getElementById('receptor-agregado-nombre').textContent=nombre;
+    document.getElementById('receptor-nombre').value='';
+    document.getElementById('receptor-rut').value='';
+    document.getElementById('receptor-email').value='';
+  } catch(e){
+    console.error('Error al verificar receptor:',e);
+    mostrarToast('No se pudo verificar el receptor, intenta nuevamente');
+    btnAgregar.disabled=false;
+    btnAgregar.textContent=textoOriginal;
+  }
 }
 function mostrarHistorial(entregas, nombre) {
   var container=document.getElementById('historial-container');
@@ -691,15 +734,17 @@ function seleccionarTallaProducto(talla, item) {
   document.getElementById('salida-cantidad').max=item.stock; document.getElementById('salida-cantidad').value=''; document.getElementById('salida-cantidad').placeholder='Max: '+item.stock; document.getElementById('salida-unidad').value=item.unidad||'Unidad';
   var stockMessage=document.getElementById('stock-message'); if(stockMessage) stockMessage.remove();
 }
-function poblarDropdownProductos() {
+function poblarDropdownProductos(textoBusqueda) {
   var list=document.getElementById('prod-list');
   var input=document.getElementById('prod-trigger');
   if(!list || !input){ console.error('Dropdown no encontrado'); return; }
   list.innerHTML='';
-  if(!items || items.length===0){ input.value=''; var div=document.createElement('div'); div.className='dropdown-item'; div.textContent='No hay productos disponibles'; list.appendChild(div); return; }
+  if(!items || items.length===0){ var div0=document.createElement('div'); div0.className='dropdown-item'; div0.textContent='No hay productos disponibles'; list.appendChild(div0); return; }
   var productosFiltrados = items.slice();
   if(familiaSeleccionada!=='todas') productosFiltrados = productosFiltrados.filter(function(i){ return i.familia===familiaSeleccionada; });
-  if(productosFiltrados.length===0){ input.value=''; var div=document.createElement('div'); div.className='dropdown-item'; div.textContent='No hay productos en esta familia'; list.appendChild(div); return; }
+  var busqueda = (textoBusqueda||'').trim().toLowerCase();
+  if(busqueda){ productosFiltrados = productosFiltrados.filter(function(i){ return i.nombre.toLowerCase().indexOf(busqueda)!==-1; }); }
+  if(productosFiltrados.length===0){ var div1=document.createElement('div'); div1.className='dropdown-item'; div1.textContent=busqueda?'Sin resultados para "'+textoBusqueda+'"':'No hay productos en esta familia'; list.appendChild(div1); return; }
   var agrupados={};
   productosFiltrados.forEach(function(item){ var key=item.nombre+'|'+item.familia; if(!agrupados[key]) agrupados[key]=[]; agrupados[key].push(item); });
   Object.keys(agrupados).sort().forEach(function(key){
@@ -710,7 +755,8 @@ function poblarDropdownProductos() {
     div.onclick=function(){ input.value=primerItem.nombre; productoSeleccionadoId=primerItem.id; list.style.display='none'; mostrarProductoSeleccionado(primerItem); };
     list.appendChild(div);
   });
-  input.onclick=function(){ if(list.style.display==='block') list.style.display='none'; else list.style.display='block'; };
+  input.onclick=function(){ list.style.display='block'; };
+  input.oninput=function(){ productoSeleccionadoId=null; poblarDropdownProductos(input.value); list.style.display='block'; };
 }
 
 // ================================================================
@@ -795,6 +841,7 @@ function enviarCorreoComprobante(entrega) {
   var receptorEmail=entrega.receptorEmail||'No especificado';
   receptores.forEach(function(receptor){
     var templateParams = { to_email:receptor.email, to_name:receptor.nombre, numero_entrega:entrega.numeroEntrega, fecha:entrega.fecha, observacion:entrega.observacion||'Ninguna', responsable_nombre:responsableNombre, responsable_email:responsableEmail, receptor_nombre:receptorNombre, receptor_rut:receptorRut, receptor_email:receptorEmail, productos_lista:productosList, total_unidades:totalUnidades };
+    if(!emailjsListo){ console.error('EmailJS no esta disponible, no se pudo enviar el correo a',receptor.email); return; }
     emailjs.send('service_snitcew','template_entrega_mejorado',templateParams).then(function(){ console.log('Correo enviado a '+receptor.nombre); }).catch(function(error){ console.error('Error al enviar correo a',receptor.email,error); });
   });
 }
@@ -802,21 +849,38 @@ function enviarCorreoComprobante(entrega) {
 // ================================================================
 // 15. FINALIZAR ENTREGA
 // ================================================================
+let finalizandoEntrega = false;
+async function generarNumeroEntrega() {
+  try {
+    var result = await supabaseClient.from('entregas').select('id',{ count:'exact', head:true });
+    if(result.error) throw result.error;
+    var siguiente = (result.count||0)+1;
+    return 'ENT-'+String(siguiente).padStart(4,'0');
+  } catch(e){
+    console.error('No se pudo consultar el correlativo en la BD, usando respaldo local:',e);
+    return 'ENT-'+String(salidas.length+1).padStart(4,'0');
+  }
+}
 async function finalizarEntrega() {
+  if(finalizandoEntrega) return;
   if(!usuarioAutenticado || !usuarioDominioValido){ mostrarToast('Debes iniciar sesion con @lascondes.cl'); return; }
   if(carrito.length===0){ mostrarToast('Agrega al menos un producto al carrito'); return; }
   if(receptoresAgregados.length===0){ mostrarToast('Agrega al menos una persona que recibe'); return; }
   var receptor = receptoresAgregados[0];
   var obs = document.getElementById('salida-obs').value.trim();
-  var numEntrega = String(salidas.length+1).padStart(4,'0');
-  var numeroEntrega = 'ENT-'+numEntrega;
-  var totalUnidades=0; var detalles=[];
-  for(var item of carrito){
-    if(item.esKit){ totalUnidades+=1; detalles.push({ productoId:null, nombre:item.nombre, talla:null, cantidad:1, unidad:'Kit', kitInfo:{ tipo:item.kitTipo, inventario:item.kitInventario, patente:item.kitPatente, responsable:item.kitResponsable, herramientas:item.kitHerramientas } }); }
-    else { totalUnidades+=item.cantidad; detalles.push({ productoId:item.productoId, nombre:item.nombre, talla:item.talla||null, cantidad:item.cantidad, unidad:item.unidad||'Unidad' }); }
-  }
-  var entregaData = { numeroEntrega:numeroEntrega, responsable:usuarioAutenticado.username, responsableEmail:usuarioAutenticado.username, receptorNombre:receptor.nombre, receptorRut:receptor.rutLimpio, receptorEmail:receptor.email, observacion:obs, totalUnidades:totalUnidades };
+  var btnFinalizar = document.getElementById('btn-finalizar');
+  finalizandoEntrega = true;
+  btnFinalizar.disabled = true;
+  var textoOriginalBtn = btnFinalizar.textContent;
+  btnFinalizar.textContent = 'Guardando...';
   try {
+    var numeroEntrega = await generarNumeroEntrega();
+    var totalUnidades=0; var detalles=[];
+    for(var item of carrito){
+      if(item.esKit){ totalUnidades+=1; detalles.push({ productoId:null, nombre:item.nombre, talla:null, cantidad:1, unidad:'Kit', kitInfo:{ tipo:item.kitTipo, inventario:item.kitInventario, patente:item.kitPatente, responsable:item.kitResponsable, herramientas:item.kitHerramientas } }); }
+      else { totalUnidades+=item.cantidad; detalles.push({ productoId:item.productoId, nombre:item.nombre, talla:item.talla||null, cantidad:item.cantidad, unidad:item.unidad||'Unidad' }); }
+    }
+    var entregaData = { numeroEntrega:numeroEntrega, responsable:usuarioAutenticado.username, responsableEmail:usuarioAutenticado.username, receptorNombre:receptor.nombre, receptorRut:receptor.rutLimpio, receptorEmail:receptor.email, observacion:obs, totalUnidades:totalUnidades };
     var entregaId = await guardarEntregaBD(entregaData, detalles, fotosData);
     salidas.unshift({ id:entregaId, numero_entrega:numeroEntrega, fecha:new Date().toISOString(), receptor_nombre:receptor.nombre, receptor_rut:receptor.rutLimpio, receptor_email:receptor.email, total_unidades:totalUnidades, observacion:obs, responsable:usuarioAutenticado.username, tipo:'entrega_multiple', detalles:detalles });
     localStorage.setItem('salidas_registradas_v8',JSON.stringify(salidas));
@@ -831,6 +895,11 @@ async function finalizarEntrega() {
     actualizarDashboard();
     mostrarToast('Entrega '+numeroEntrega+' registrada');
   } catch(error){ mostrarToast('Error al guardar la entrega'); console.error(error); }
+  finally {
+    finalizandoEntrega = false;
+    btnFinalizar.disabled = carrito.length===0;
+    btnFinalizar.textContent = textoOriginalBtn;
+  }
 }
 
 // ================================================================
@@ -858,7 +927,7 @@ function cerrarModalComprobante(){ document.getElementById('modal-comprobante').
 function imprimirComprobante() {
   var content=document.getElementById('ticket-content').innerHTML;
   var ventana=window.open('','_blank');
-  ventana.document.write('<html><head><title>Comprobante</title><style>body{font-family:"Courier New",monospace;padding:20px;max-width:800px;margin:0 auto}.ticket{background:#fff;border:2px dashed #1664c0;border-radius:12px;padding:20px;margin-bottom:20px;page-break-after:always}.ticket-header{text-align:center;border-bottom:1px dashed #aaa;padding-bottom:8px;margin-bottom:8px}.ticket-header h3{font-size:16px;color:#1664c0;margin:0}.ticket-header .subtitulo{font-size:10px;color:#666}.ticket-fila{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dotted #eee}.ticket-fila .label{color:#666;font-weight:500}.ticket-fila .valor{font-weight:700}.ticket-firma{display:flex;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px dashed #aaa}.ticket-firma .firma-linea{text-align:center;flex:1}.ticket-firma .firma-linea .linea{border-top:1px solid #333;width:80%;margin:6px auto 2px}.ticket-firma .firma-linea .label-firma{font-size:8px;color:#666}.ticket-footer{text-align:center;font-size:8px;color:#666;margin-top:8px;border-top:1px dashed #aaa;padding-top:8px}@media print{body{padding:0}.ticket{border:1px solid #aaa;page-break-after:always}}</style></head><body>'+content+'<script>window.onload=function(){setTimeout(function(){window.print();},500)}</script></body></html>');
+  ventana.document.write('<html><head><title>Comprobante</title><style>body{font-family:"Courier New",monospace;padding:20px;max-width:800px;margin:0 auto}.ticket{background:#fff;border:2px dashed #1664c0;border-radius:12px;padding:20px;margin-bottom:20px;page-break-after:always}.ticket-header{text-align:center;border-bottom:1px dashed #aaa;padding-bottom:8px;margin-bottom:8px}.ticket-header h3{font-size:16px;color:#1664c0;margin:0}.ticket-header .subtitulo{font-size:10px;color:#666}.ticket-fila{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dotted #eee}.ticket-fila .label{color:#666;font-weight:500}.ticket-fila .valor{font-weight:700}.ticket-firma{display:flex;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px dashed #aaa}.ticket-firma .firma-linea{text-align:center;flex:1}.ticket-firma .firma-linea .linea{border-top:1px solid #333;width:80%;margin:6px auto 2px}.ticket-firma .firma-linea .label-firma{font-size:8px;color:#666}.ticket-footer{text-align:center;font-size:8px;color:#666;margin-top:8px;border-top:1px dashed #aaa;padding-top:8px}@media print{body{padding:0}.ticket{border:1px solid #aaa;page-break-after:always}}</style></head><body>'+content+'<script>window.onload=function(){setTimeout(function(){window.print();},500)}<\/script></body></html>');
   ventana.document.close();
 }
 function descargarPDFComprobante() {
@@ -934,12 +1003,22 @@ function actualizarDashboard() {
 // ================================================================
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Iniciando aplicacion GRRD...');
-  renderReceptores(); renderCarrito();
-  var kitTipo=document.getElementById('kit-tipo');
-  if(kitTipo){ kitTipo.addEventListener('change',function(){ var otroContainer=document.getElementById('kit-otro-container'); if(this.value==='Otro') otroContainer.style.display='block'; else otroContainer.style.display='none'; }); }
-  verificarConexionBD().then(function(){ cargarProductosBD().then(function(){ cargarEntregasBD().then(function(){ poblarDropdownProductos(); actualizarDashboard(); verificarSesion(); seleccionarFamilia('epp_basico'); console.log('Aplicacion lista!'); console.log('Productos cargados:',items.length); console.log('Entregas cargadas:',salidas.length); }); }); });
-  document.querySelectorAll('.tab-familia').forEach(function(tab){ tab.addEventListener('click',function(e){ e.preventDefault(); var familia=this.dataset.familia; console.log('Click en pestaña:',familia); seleccionarFamilia(familia); }); });
-  document.addEventListener('click',function(e){ if(!e.target.closest('.custom-dropdown')){ document.querySelectorAll('.dropdown-list').forEach(function(l){ l.style.display='none'; }); } });
+  try { renderReceptores(); } catch(e){ console.error('Error en renderReceptores:',e); }
+  try { renderCarrito(); } catch(e){ console.error('Error en renderCarrito:',e); }
+  try {
+    var kitTipo=document.getElementById('kit-tipo');
+    if(kitTipo){ kitTipo.addEventListener('change',function(){ var otroContainer=document.getElementById('kit-otro-container'); if(this.value==='Otro') otroContainer.style.display='block'; else otroContainer.style.display='none'; }); }
+  } catch(e){ console.error('Error configurando kit-tipo:',e); }
+  try {
+    document.querySelectorAll('.tab-familia').forEach(function(tab){ tab.addEventListener('click',function(e){ e.preventDefault(); var familia=this.dataset.familia; console.log('Click en pestaña:',familia); seleccionarFamilia(familia); }); });
+  } catch(e){ console.error('Error configurando pestañas:',e); }
+  try {
+    document.addEventListener('click',function(e){ if(!e.target.closest('.custom-dropdown')){ document.querySelectorAll('.dropdown-list').forEach(function(l){ l.style.display='none'; }); } });
+  } catch(e){ console.error('Error configurando cierre de dropdown:',e); }
+  verificarConexionBD().then(function(){ return cargarProductosBD(); }).then(function(){ return cargarEntregasBD(); }).then(function(){
+    poblarDropdownProductos(); actualizarDashboard(); verificarSesion(); seleccionarFamilia('epp_basico');
+    console.log('Aplicacion lista!'); console.log('Productos cargados:',items.length); console.log('Entregas cargadas:',salidas.length);
+  }).catch(function(e){ console.error('Error durante la carga inicial de datos:',e); mostrarToast('Hubo un problema cargando los datos, revisa tu conexion'); });
   console.log('Event listeners registrados');
 });
 </script>
