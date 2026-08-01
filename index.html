@@ -826,22 +826,21 @@
 <!-- ===== JAVASCRIPT ===== -->
 <script>
 // ================================================================
-// 1. CONFIGURACIÓN SUPABASE - CORREGIDA
+// 1. CONFIGURACIÓN SUPABASE - CON TUS NUEVAS CLAVES
 // ================================================================
 
-// ✅ URL CORRECTA (de tu proyecto)
-const SUPABASE_URL = 'https://pmcmcbxyxqynzhkachyiz.supabase.co';
+// ✅ URL CORRECTA
+const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
 
-// ✅ CLAVE PUBLISHABLE (desde Settings → API)
-// ⚠️ REEMPLAZA con la clave completa que copiaste de Supabase
-const SUPABASE_KEY = 'sb_publishable_bDmWdJFLX_913u9CIEyaaw_NFBsg...'; // ← COPIA LA CLAVE COMPLETA
+// ✅ TU NUEVA CLAVE PUBLISHABLE
+const SUPABASE_KEY = 'sb_publishable_Vc7-e-AjorgMgj45SmAL5g_Xr0glJjx';
 
 // Crear cliente de Supabase
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let bdConectada = false;
 
 // ================================================================
-// 2. CONFIGURACIÓN MSAL (Azure AD) - SPA
+// 2. CONFIGURACIÓN MSAL (Azure AD)
 // ================================================================
 
 const msalConfig = {
