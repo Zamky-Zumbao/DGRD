@@ -947,7 +947,7 @@ function mostrarComprobanteUltima() {
 function cerrarModalComprobante(){ document.getElementById('modal-comprobante').classList.remove('visible'); }
 
 // ================================================================
-// 17. IMPRESION Y PDF (CON LOGO Y FIRMAS CORREGIDAS)
+// 17. IMPRESION Y PDF - FORMATO ORIGINAL
 // ================================================================
 function imprimirComprobante() {
   var content=document.getElementById('ticket-content').innerHTML;
@@ -956,9 +956,6 @@ function imprimirComprobante() {
   ventana.document.close();
 }
 
-// ================================================================
-// 18. GENERADOR DE DOCUMENTO
-// ================================================================
 function generarDocPDF(entrega, incluirFotos) {
   incluirFotos = incluirFotos !== false;
   const { jsPDF } = window.jspdf;
@@ -1117,7 +1114,7 @@ function generarDocPDF(entrega, incluirFotos) {
   }
 
   // ================================================================
-  // FIRMAS (COMO ESTABA ANTES - LÍNEA ARRIBA, DATOS DEBAJO)
+  // FIRMAS (LÍNEA ARRIBA, DATOS DEBAJO - AL FINAL)
   // ================================================================
 
   // Forzar espacio al final de la página
@@ -1128,19 +1125,27 @@ function generarDocPDF(entrega, incluirFotos) {
     y = margin;
   }
 
+  // Línea separadora antes de firmas
   doc.setDrawColor(200, 200, 200);
   doc.line(margin, y, pageW - margin, y);
   y += 8;
 
-  // FIRMA IZQUIERDA
+  // ================================================================
+  // FIRMA IZQUIERDA (Entregado por)
+  // ================================================================
   var firmaX = margin + 10;
   var firmaY = y;
+  
+  // Línea de firma (ARRIBA)
+  doc.setDrawColor(0);
   doc.line(firmaX, firmaY, firmaX + 50, firmaY);
   firmaY += 3;
   doc.setFontSize(7);
   doc.setTextColor(100);
   doc.text('Firma', firmaX + 25, firmaY, { align: 'center' });
   firmaY += 6;
+  
+  // Datos (DEBAJO - centrados)
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(22, 100, 192);
@@ -1153,15 +1158,21 @@ function generarDocPDF(entrega, incluirFotos) {
   firmaY += 3;
   doc.text(entrega.fecha, firmaX + 25, firmaY, { align: 'center' });
 
-  // FIRMA DERECHA
+  // ================================================================
+  // FIRMA DERECHA (Recibido por)
+  // ================================================================
   var firmaXDer = pageW - margin - 60;
   var firmaYDer = y;
+  
+  // Línea de firma (ARRIBA)
   doc.line(firmaXDer, firmaYDer, firmaXDer + 50, firmaYDer);
   firmaYDer += 3;
   doc.setFontSize(7);
   doc.setTextColor(100);
   doc.text('Firma', firmaXDer + 25, firmaYDer, { align: 'center' });
   firmaYDer += 6;
+  
+  // Datos (DEBAJO - centrados)
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(22, 100, 192);
@@ -1176,7 +1187,9 @@ function generarDocPDF(entrega, incluirFotos) {
 
   y = Math.max(firmaY, firmaYDer) + 12;
 
+  // ================================================================
   // FOOTER
+  // ================================================================
   doc.setDrawColor(200, 200, 200);
   doc.line(margin, pageH - 18, pageW - margin, pageH - 18);
   doc.setFont('helvetica', 'italic');
@@ -1244,6 +1257,36 @@ function generarDocPDF(entrega, incluirFotos) {
   }
 
   return doc;
+}
+
+function descargarPDFComprobante() {
+  if (!ultimoComprobante) {
+    mostrarToast('No hay comprobante');
+    return;
+  }
+  try {
+    var doc = generarDocPDF(ultimoComprobante, true);
+    doc.save('Entrega_' + ultimoComprobante.numeroEntrega + '.pdf');
+    mostrarToast('PDF descargado');
+  } catch(e){
+    console.error('Error generando PDF:', e);
+    mostrarToast('Error al generar el PDF');
+  }
+}
+
+// ================================================================
+// 18. DASHBOARD
+// ================================================================
+function actualizarDashboard() {
+  var hoy = salidas.filter(function(s){ return esHoy(s.fecha); });
+  var kitsHoy = hoy.filter(function(s){ return s.tipo==='kit'; });
+  var productosHoy = hoy.filter(function(s){ return s.tipo!=='kit' && s.tipo!=='entrega_multiple'; });
+  document.getElementById('res-entregas-hoy').textContent = hoy.length;
+  var totalUnidades=0; hoy.forEach(function(s){ if(s.total_unidades) totalUnidades+=s.total_unidades; else if(s.cantidad) totalUnidades+=s.cantidad; });
+  document.getElementById('res-unidades-hoy').textContent = totalUnidades;
+  var productosUnicos=new Set(); hoy.forEach(function(s){ if(s.detalles){ s.detalles.forEach(function(d){ productosUnicos.add(d.nombre); }); } else if(s.producto_nombre){ productosUnicos.add(s.producto_nombre); } });
+  document.getElementById('res-productos-unicos').textContent = productosUnicos.size;
+  document.getElementById('res-kits-hoy').textContent = kitsHoy.length;
 }
 
 // ================================================================
