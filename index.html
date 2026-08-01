@@ -947,7 +947,7 @@ function mostrarComprobanteUltima() {
 function cerrarModalComprobante(){ document.getElementById('modal-comprobante').classList.remove('visible'); }
 
 // ================================================================
-// 17. IMPRESION Y PDF
+// 17. IMPRESION Y PDF (CON LOGO Y FIRMAS CORREGIDAS)
 // ================================================================
 function imprimirComprobante() {
   var content=document.getElementById('ticket-content').innerHTML;
@@ -963,21 +963,47 @@ function generarDocPDF(entrega, incluirFotos) {
   var pageH = doc.internal.pageSize.getHeight();
   var margin = 15;
   var y = margin;
-  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('MUNICIPALIDAD DE LAS CONDES',pageW/2,y,{align:'center'}); y+=5;
-  doc.setFontSize(7); doc.text('Depto. Gestion de Riesgos y Desastres',pageW/2,y,{align:'center'}); y+=7;
-  doc.setFontSize(12); doc.text('COMPROBANTE DE ENTREGA N '+entrega.numeroEntrega,pageW/2,y,{align:'center'}); y+=6;
-  doc.setFontSize(7); doc.text('Fecha: '+entrega.fecha,pageW/2,y,{align:'center'}); y+=8;
-  doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.text('RECEPTOR',margin,y); y+=5;
-  doc.setFont('helvetica','normal'); doc.setFontSize(7);
+  
+  // Logo
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.setTextColor(22, 100, 192);
+  doc.text('LC', margin, y + 5);
+  doc.setFontSize(6);
+  doc.setTextColor(100);
+  doc.text('MUNICIPALIDAD', margin, y + 10);
+  doc.text('LAS CONDES', margin, y + 14);
+  doc.setTextColor(0);
+  
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.text('MUNICIPALIDAD DE LAS CONDES',pageW/2,y,{align:'center'}); y+=5;
+  doc.setFontSize(7);
+  doc.text('Depto. Gestion de Riesgos y Desastres',pageW/2,y,{align:'center'}); y+=7;
+  doc.setFontSize(12);
+  doc.text('COMPROBANTE DE ENTREGA N '+entrega.numeroEntrega,pageW/2,y,{align:'center'}); y+=6;
+  doc.setFontSize(7);
+  doc.text('Fecha: '+entrega.fecha,pageW/2,y,{align:'center'}); y+=8;
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8);
+  doc.text('RECEPTOR',margin,y); y+=5;
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7);
   doc.text('Nombre: '+entrega.receptorNombre,margin,y); y+=4;
   doc.text('RUT: '+entrega.receptorRut,margin,y); y+=4;
   doc.text('Email: '+entrega.receptorEmail,margin,y); y+=6;
-  doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.text('ENTREGADO POR',margin,y); y+=5;
-  doc.setFont('helvetica','normal'); doc.setFontSize(7);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8);
+  doc.text('ENTREGADO POR',margin,y); y+=5;
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7);
   doc.text('Nombre: '+(entrega.responsableNombre||'Personal GRRD'),margin,y); y+=4;
   doc.text('Email: '+(entrega.responsable||'personal@grrd.cl'),margin,y); y+=6;
-  doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.text('PRODUCTOS ENTREGADOS',margin,y); y+=5;
-  doc.setFont('helvetica','normal'); doc.setFontSize(7);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8);
+  doc.text('PRODUCTOS ENTREGADOS',margin,y); y+=5;
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7);
   entrega.detalles.forEach(function(d,i){
     var nombre=(i+1)+'. '+d.nombre+(d.talla?' ('+d.talla+')':'')+(d.kitInfo?' Kit':'');
     var cantidad=d.cantidad+' '+d.unidad;
@@ -988,10 +1014,60 @@ function generarDocPDF(entrega, incluirFotos) {
   y+=2; doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.line(margin,y,pageW-margin,y); y+=4;
   doc.text('TOTAL: '+entrega.totalUnidades+' unidades',margin,y); y+=6;
   if(entrega.observacion){ doc.setFont('helvetica','bold'); doc.text('OBSERVACION:',margin,y); y+=4; doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.text(entrega.observacion,margin,y); y+=6; }
-  doc.setFontSize(7); doc.text('Entregado por',margin+20,y); doc.text('Recibido por',margin+80,y); y+=4;
-  doc.line(margin+10,y,margin+45,y); doc.line(margin+70,y,margin+105,y); y+=4;
-  doc.setFontSize(6); doc.text('Firma',margin+22,y); doc.text('Firma',margin+82,y); y+=8;
-  doc.setFontSize(6); doc.text('Este comprobante es de caracter informativo y respaldo de entrega.',pageW/2,y,{align:'center'});
+  
+  // Firmas al final de la hoja
+  if(y < pageH - 45){
+    y = pageH - 45;
+  } else {
+    doc.addPage();
+    y = margin;
+  }
+  
+  // Firma izquierda
+  var firmaX = margin + 10;
+  var firmaY = y;
+  doc.line(firmaX, firmaY, firmaX + 45, firmaY);
+  firmaY += 3;
+  doc.setFontSize(7);
+  doc.text('Firma', firmaX + 20, firmaY);
+  firmaY += 5;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7);
+  doc.setTextColor(22, 100, 192);
+  doc.text('ENTREGADO POR', firmaX + 22, firmaY, { align: 'center' });
+  firmaY += 3;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(6);
+  doc.setTextColor(0);
+  doc.text((entrega.responsableNombre || 'Personal GRRD'), firmaX + 22, firmaY, { align: 'center' });
+  firmaY += 2;
+  doc.text(entrega.fecha, firmaX + 22, firmaY, { align: 'center' });
+  
+  // Firma derecha
+  var firmaXDer = pageW - margin - 55;
+  var firmaYDer = y;
+  doc.line(firmaXDer, firmaYDer, firmaXDer + 45, firmaYDer);
+  firmaYDer += 3;
+  doc.setFontSize(7);
+  doc.text('Firma', firmaXDer + 22, firmaYDer);
+  firmaYDer += 5;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7);
+  doc.setTextColor(22, 100, 192);
+  doc.text('RECIBIDO POR', firmaXDer + 22, firmaYDer, { align: 'center' });
+  firmaYDer += 3;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(6);
+  doc.setTextColor(0);
+  doc.text(entrega.receptorNombre, firmaXDer + 22, firmaYDer, { align: 'center' });
+  firmaYDer += 2;
+  doc.text('RUT: ' + entrega.receptorRut, firmaXDer + 22, firmaYDer, { align: 'center' });
+  
+  y = Math.max(firmaY, firmaYDer) + 6;
+  
+  doc.setFontSize(6);
+  doc.text('Este comprobante es de caracter informativo y respaldo de entrega.',pageW/2,y,{align:'center'});
+  
   if(incluirFotos && entrega.fotos && entrega.fotos.length>0){
     var fotoIndex=0; var fotosPorPagina=4; var anchoFoto=(pageW-margin*3)/2; var altoFoto=anchoFoto*0.7;
     while(fotoIndex<entrega.fotos.length){
@@ -1005,579 +1081,19 @@ function generarDocPDF(entrega, incluirFotos) {
   }
   return doc;
 }
-
 function descargarPDFComprobante() {
   if (!ultimoComprobante) {
     mostrarToast('No hay comprobante');
     return;
   }
-
-  const { jsPDF } = window.jspdf;
-  const entrega = ultimoComprobante;
-  const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-  const pageW = doc.internal.pageSize.getWidth(); // 210mm
-  const pageH = doc.internal.pageSize.getHeight(); // 297mm
-  const margin = 15;
-  let y = margin;
-
-  // ================================================================
-  // HEADER CON LOGO (IZQUIERDA)
-  // ================================================================
-  
-  // Logo (lado izquierdo superior)
   try {
-    // Crear un logo simple con texto (puedes reemplazar con una imagen real)
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.setTextColor(22, 100, 192);
-    doc.text('LC', margin, y + 5);
-    doc.setFontSize(6);
-    doc.setTextColor(100);
-    doc.text('MUNICIPALIDAD', margin, y + 10);
-    doc.text('LAS CONDES', margin, y + 14);
-    doc.setTextColor(0);
-  } catch(e) {
-    console.error('Error al agregar logo:', e);
+    var doc = generarDocPDF(ultimoComprobante, true);
+    doc.save('Entrega_' + ultimoComprobante.numeroEntrega + '.pdf');
+    mostrarToast('PDF descargado');
+  } catch(e){
+    console.error('Error generando PDF:', e);
+    mostrarToast('Error al generar el PDF');
   }
-
-  // Título centrado
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
-  doc.setTextColor(0);
-  doc.text('MUNICIPALIDAD DE LAS CONDES', pageW / 2, y, { align: 'center' });
-  y += 6;
-  doc.setFontSize(9);
-  doc.text('Departamento de Gestion de Riesgos y Desastres', pageW / 2, y, { align: 'center' });
-  y += 8;
-  doc.setFontSize(16);
-  doc.setTextColor(22, 100, 192);
-  doc.text('COMPROBANTE DE ENTREGA', pageW / 2, y, { align: 'center' });
-  y += 7;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(12);
-  doc.setTextColor(0);
-  doc.text('N° ' + entrega.numeroEntrega, pageW / 2, y, { align: 'center' });
-  y += 8;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.text('Fecha: ' + entrega.fecha, pageW / 2, y, { align: 'center' });
-  y += 12;
-
-  doc.setDrawColor(200, 200, 200);
-  doc.line(margin, y, pageW - margin, y);
-  y += 8;
-
-  // ================================================================
-  // ENTREGADO POR (IZQUIERDA) y RECEPTOR (DERECHA)
-  // ================================================================
-  
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(22, 100, 192);
-  doc.text('ENTREGADO POR:', margin, y);
-  y += 5;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(0);
-  doc.text('Nombre: ' + (entrega.responsableNombre || 'Personal GRRD'), margin, y);
-  y += 5;
-  doc.text('Email: ' + (entrega.responsable || 'personal@grrd.cl'), margin, y);
-  y += 5;
-  doc.text('Cargo: Funcionario GRRD', margin, y);
-  y += 5;
-
-  var colDerecha = pageW / 2 + 5;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(22, 100, 192);
-  doc.text('RECEPTOR:', colDerecha, y - 20);
-  y -= 20;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(0);
-  doc.text('Nombre: ' + entrega.receptorNombre, colDerecha, y + 5);
-  y += 5;
-  doc.text('RUT: ' + entrega.receptorRut, colDerecha, y + 5);
-  y += 5;
-  doc.text('Email: ' + entrega.receptorEmail, colDerecha, y + 5);
-  y += 5;
-  doc.text('Cargo: ' + (entrega.receptorCargo || '---'), colDerecha, y + 5);
-  y += 12;
-
-  doc.setDrawColor(200, 200, 200);
-  doc.line(margin, y, pageW - margin, y);
-  y += 8;
-
-  // ================================================================
-  // PRODUCTOS ENTREGADOS
-  // ================================================================
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(22, 100, 192);
-  doc.text('PRODUCTOS ENTREGADOS', margin, y);
-  y += 6;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(0);
-
-  entrega.detalles.forEach(function(d, i) {
-    var nombre = (i + 1) + '. ' + d.nombre + (d.talla ? ' (' + d.talla + ')' : '');
-    var cantidad = d.cantidad + ' ' + d.unidad;
-    doc.text(nombre, margin, y);
-    doc.text(cantidad, pageW - margin - 15, y, { align: 'right' });
-    y += 6;
-
-    if (d.kitInfo) {
-      doc.setFontSize(7);
-      doc.text('  Kit: ' + d.kitInfo.tipo + ' | Inv: ' + d.kitInfo.inventario + ' | Patente: ' + d.kitInfo.patente, margin, y);
-      y += 4;
-      doc.text('  Responsable: ' + d.kitInfo.responsable, margin, y);
-      y += 4;
-      doc.text('  Herramientas: ' + d.kitInfo.herramientas.join(', '), margin, y);
-      y += 5;
-      doc.setFontSize(9);
-    }
-
-    if (y > pageH - 70) {
-      doc.addPage();
-      y = margin;
-    }
-  });
-
-  y += 4;
-
-  // TOTAL UNIDADES
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(22, 100, 192);
-  doc.line(margin, y, pageW - margin, y);
-  y += 4;
-  doc.text('TOTAL UNIDADES: ' + entrega.totalUnidades, margin, y);
-  y += 10;
-
-  // OBSERVACION
-  if (entrega.observacion) {
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(22, 100, 192);
-    doc.text('OBSERVACION:', margin, y);
-    y += 5;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(0);
-    var lines = doc.splitTextToSize(entrega.observacion, pageW - margin * 2);
-    doc.text(lines, margin, y);
-    y += lines.length * 5 + 8;
-  }
-
-  // ================================================================
-  // FIRMAS (AL FINAL DE LA HOJA - SIEMPRE)
-  // ================================================================
-
-  // Verificar si hay espacio suficiente, si no, agregar página nueva
-  if (y > pageH - 70) {
-    doc.addPage();
-    y = margin;
-  } else {
-    // Forzar espacio hasta el final de la página
-    var espacioRestante = pageH - y - 30;
-    if (espacioRestante > 0) {
-      y = pageH - 30; // Dejar 30mm para las firmas al final
-    }
-  }
-
-  // Línea separadora antes de firmas
-  doc.setDrawColor(200, 200, 200);
-  doc.line(margin, y, pageW - margin, y);
-  y += 8;
-
-  // ================================================================
-  // FIRMA IZQUIERDA: Línea ARRIBA, datos DEBAJO (centrados)
-  // ================================================================
-  
-  // Firma izquierda (Entregado por)
-  var firmaX = margin + 10;
-  var firmaY = y;
-  
-  // Línea de firma (arriba)
-  doc.line(firmaX, firmaY, firmaX + 45, firmaY);
-  firmaY += 3;
-  doc.setFontSize(7);
-  doc.text('Firma', firmaX + 20, firmaY);
-  firmaY += 5;
-  
-  // Datos debajo de la firma (centrados)
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.setTextColor(22, 100, 192);
-  doc.text('ENTREGADO POR', firmaX + 22, firmaY, { align: 'center' });
-  firmaY += 4;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7);
-  doc.setTextColor(0);
-  doc.text((entrega.responsableNombre || 'Personal GRRD'), firmaX + 22, firmaY, { align: 'center' });
-  firmaY += 3;
-  doc.text(entrega.fecha, firmaX + 22, firmaY, { align: 'center' });
-
-  // ================================================================
-  // FIRMA DERECHA: Línea ARRIBA, datos DEBAJO (centrados)
-  // ================================================================
-  
-  var firmaXDer = pageW - margin - 55;
-  var firmaYDer = y;
-  
-  // Línea de firma (arriba)
-  doc.line(firmaXDer, firmaYDer, firmaXDer + 45, firmaYDer);
-  firmaYDer += 3;
-  doc.setFontSize(7);
-  doc.text('Firma', firmaXDer + 22, firmaYDer);
-  firmaYDer += 5;
-  
-  // Datos debajo de la firma (centrados)
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.setTextColor(22, 100, 192);
-  doc.text('RECIBIDO POR', firmaXDer + 22, firmaYDer, { align: 'center' });
-  firmaYDer += 4;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7);
-  doc.setTextColor(0);
-  doc.text(entrega.receptorNombre, firmaXDer + 22, firmaYDer, { align: 'center' });
-  firmaYDer += 3;
-  doc.text('RUT: ' + entrega.receptorRut, firmaXDer + 22, firmaYDer, { align: 'center' });
-
-  y = Math.max(firmaY, firmaYDer) + 12;
-
-  // ================================================================
-  // FOOTER (siempre al final de la hoja)
-  // ================================================================
-  
-  // Si hay fotos, no agregar footer aquí, se maneja en las páginas de fotos
-  if (!entrega.fotos || entrega.fotos.length === 0) {
-    doc.setDrawColor(200, 200, 200);
-    doc.line(margin, pageH - 18, pageW - margin, pageH - 18);
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(7);
-    doc.setTextColor(100);
-    doc.text('Este comprobante es de caracter informativo y respaldo de entrega.', pageW / 2, pageH - 10, { align: 'center' });
-    doc.setTextColor(0);
-  }
-
-  // ================================================================
-  // FOTOS (páginas adicionales)
-  // ================================================================
-  if (entrega.fotos && entrega.fotos.length > 0) {
-    var fotoIndex = 0;
-    var fotosPorPagina = 4;
-    var anchoFoto = (pageW - margin * 3) / 2;
-    var altoFoto = anchoFoto * 0.7;
-
-    while (fotoIndex < entrega.fotos.length) {
-      doc.addPage();
-      y = margin;
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.setTextColor(22, 100, 192);
-      doc.text('REGISTRO FOTOGRAFICO', pageW / 2, y, { align: 'center' });
-      y += 6;
-      doc.setFontSize(9);
-      doc.setTextColor(80);
-      doc.text('Entrega N° ' + entrega.numeroEntrega, pageW / 2, y, { align: 'center' });
-      y += 6;
-      doc.setFontSize(8);
-      doc.text('Pagina ' + (Math.floor(fotoIndex / fotosPorPagina) + 1), pageW / 2, y, { align: 'center' });
-      y += 10;
-
-      var filas = Math.min(2, Math.ceil((entrega.fotos.length - fotoIndex) / 2));
-      for (var f = 0; f < filas; f++) {
-        for (var c = 0; c < 2; c++) {
-          var idx = fotoIndex + f * 2 + c;
-          if (idx < entrega.fotos.length) {
-            var x = margin + c * (anchoFoto + margin);
-            var yFoto = y + f * (altoFoto + 10);
-            try {
-              doc.addImage(entrega.fotos[idx], 'JPEG', x, yFoto, anchoFoto, altoFoto);
-              doc.setFontSize(7);
-              doc.setTextColor(80);
-              doc.text('Foto ' + (idx + 1), x + anchoFoto / 2, yFoto + altoFoto + 4, { align: 'center' });
-              doc.setTextColor(0);
-            } catch (e) {
-              console.error('Error al agregar foto:', e);
-            }
-          }
-        }
-      }
-
-      // Footer en páginas de fotos
-      doc.setDrawColor(200, 200, 200);
-      doc.line(margin, pageH - 18, pageW - margin, pageH - 18);
-      doc.setFont('helvetica', 'italic');
-      doc.setFontSize(7);
-      doc.setTextColor(100);
-      doc.text('Este comprobante es de caracter informativo y respaldo de entrega.', pageW / 2, pageH - 10, { align: 'center' });
-      doc.setTextColor(0);
-
-      fotoIndex += fotosPorPagina;
-    }
-  }
-
-  doc.save('Entrega_' + entrega.numeroEntrega + '.pdf');
-  mostrarToast('PDF descargado');
-}
-  if (!ultimoComprobante) {
-    mostrarToast('No hay comprobante');
-    return;
-  }
-
-  const { jsPDF } = window.jspdf;
-  const entrega = ultimoComprobante;
-  const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-  const pageW = doc.internal.pageSize.getWidth();
-  const pageH = doc.internal.pageSize.getHeight();
-  const margin = 15;
-  let y = margin;
-
-  // HEADER
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
-  doc.text('MUNICIPALIDAD DE LAS CONDES', pageW / 2, y, { align: 'center' });
-  y += 6;
-  doc.setFontSize(9);
-  doc.text('Departamento de Gestion de Riesgos y Desastres', pageW / 2, y, { align: 'center' });
-  y += 8;
-  doc.setFontSize(16);
-  doc.setTextColor(22, 100, 192);
-  doc.text('COMPROBANTE DE ENTREGA', pageW / 2, y, { align: 'center' });
-  y += 7;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(12);
-  doc.setTextColor(0);
-  doc.text('N° ' + entrega.numeroEntrega, pageW / 2, y, { align: 'center' });
-  y += 8;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.text('Fecha: ' + entrega.fecha, pageW / 2, y, { align: 'center' });
-  y += 12;
-
-  doc.setDrawColor(200, 200, 200);
-  doc.line(margin, y, pageW - margin, y);
-  y += 8;
-
-  // ENTREGADO POR (IZQUIERDA) y RECEPTOR (DERECHA)
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(22, 100, 192);
-  doc.text('ENTREGADO POR:', margin, y);
-  y += 5;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(0);
-  doc.text('Nombre: ' + (entrega.responsableNombre || 'Personal GRRD'), margin, y);
-  y += 5;
-  doc.text('Email: ' + (entrega.responsable || 'personal@grrd.cl'), margin, y);
-  y += 5;
-  doc.text('Cargo: Funcionario GRRD', margin, y);
-  y += 5;
-
-  var colDerecha = pageW / 2 + 5;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(22, 100, 192);
-  doc.text('RECEPTOR:', colDerecha, y - 20);
-  y -= 20;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(0);
-  doc.text('Nombre: ' + entrega.receptorNombre, colDerecha, y + 5);
-  y += 5;
-  doc.text('RUT: ' + entrega.receptorRut, colDerecha, y + 5);
-  y += 5;
-  doc.text('Email: ' + entrega.receptorEmail, colDerecha, y + 5);
-  y += 5;
-  doc.text('Cargo: ' + (entrega.receptorCargo || '---'), colDerecha, y + 5);
-  y += 12;
-
-  doc.setDrawColor(200, 200, 200);
-  doc.line(margin, y, pageW - margin, y);
-  y += 8;
-
-  // PRODUCTOS ENTREGADOS
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(22, 100, 192);
-  doc.text('PRODUCTOS ENTREGADOS', margin, y);
-  y += 6;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(0);
-
-  entrega.detalles.forEach(function(d, i) {
-    var nombre = (i + 1) + '. ' + d.nombre + (d.talla ? ' (' + d.talla + ')' : '');
-    var cantidad = d.cantidad + ' ' + d.unidad;
-    doc.text(nombre, margin, y);
-    doc.text(cantidad, pageW - margin - 15, y, { align: 'right' });
-    y += 6;
-
-    if (d.kitInfo) {
-      doc.setFontSize(7);
-      doc.text('  Kit: ' + d.kitInfo.tipo + ' | Inv: ' + d.kitInfo.inventario + ' | Patente: ' + d.kitInfo.patente, margin, y);
-      y += 4;
-      doc.text('  Responsable: ' + d.kitInfo.responsable, margin, y);
-      y += 4;
-      doc.text('  Herramientas: ' + d.kitInfo.herramientas.join(', '), margin, y);
-      y += 5;
-      doc.setFontSize(9);
-    }
-
-    if (y > pageH - 50) {
-      doc.addPage();
-      y = margin;
-    }
-  });
-
-  y += 4;
-
-  // TOTAL UNIDADES
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(22, 100, 192);
-  doc.line(margin, y, pageW - margin, y);
-  y += 4;
-  doc.text('TOTAL UNIDADES: ' + entrega.totalUnidades, margin, y);
-  y += 10;
-
-  // OBSERVACION
-  if (entrega.observacion) {
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(22, 100, 192);
-    doc.text('OBSERVACION:', margin, y);
-    y += 5;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(0);
-    var lines = doc.splitTextToSize(entrega.observacion, pageW - margin * 2);
-    doc.text(lines, margin, y);
-    y += lines.length * 5 + 8;
-  }
-
-  // FIRMAS EN EXTREMOS
-  if (y > pageH - 70) {
-    doc.addPage();
-    y = margin;
-  } else {
-    y += 8;
-  }
-
-  doc.setDrawColor(200, 200, 200);
-  doc.line(margin, y, pageW - margin, y);
-  y += 8;
-
-  // FIRMA IZQUIERDA: Entregado por
-  var firmaY = y;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(22, 100, 192);
-  doc.text('ENTREGADO POR:', margin, firmaY);
-  firmaY += 5;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(0);
-  doc.text('Nombre: ' + (entrega.responsableNombre || 'Personal GRRD'), margin, firmaY);
-  firmaY += 4;
-  doc.text('Fecha: ' + entrega.fecha, margin, firmaY);
-  firmaY += 8;
-  doc.line(margin, firmaY, margin + 50, firmaY);
-  firmaY += 4;
-  doc.setFontSize(7);
-  doc.text('Firma', margin + 20, firmaY);
-
-  // FIRMA DERECHA: Recibido por
-  var firmaYDer = y;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(22, 100, 192);
-  doc.text('RECIBIDO POR:', pageW - margin - 55, firmaYDer);
-  firmaYDer += 5;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(0);
-  doc.text('Nombre: ' + entrega.receptorNombre, pageW - margin - 55, firmaYDer);
-  firmaYDer += 4;
-  doc.text('RUT: ' + entrega.receptorRut, pageW - margin - 55, firmaYDer);
-  firmaYDer += 8;
-  doc.line(pageW - margin - 55, firmaYDer, pageW - margin - 5, firmaYDer);
-  firmaYDer += 4;
-  doc.setFontSize(7);
-  doc.text('Firma', pageW - margin - 30, firmaYDer);
-
-  y = Math.max(firmaY, firmaYDer) + 12;
-
-  // FOOTER
-  if (y > pageH - 20) {
-    doc.addPage();
-    y = margin;
-  }
-  
-  doc.setDrawColor(200, 200, 200);
-  doc.line(margin, pageH - 18, pageW - margin, pageH - 18);
-  doc.setFont('helvetica', 'italic');
-  doc.setFontSize(7);
-  doc.setTextColor(100);
-  doc.text('Este comprobante es de caracter informativo y respaldo de entrega.', pageW / 2, pageH - 10, { align: 'center' });
-  doc.setTextColor(0);
-
-  // FOTOS
-  if (entrega.fotos && entrega.fotos.length > 0) {
-    var fotoIndex = 0;
-    var fotosPorPagina = 4;
-    var anchoFoto = (pageW - margin * 3) / 2;
-    var altoFoto = anchoFoto * 0.7;
-
-    while (fotoIndex < entrega.fotos.length) {
-      doc.addPage();
-      y = margin;
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.setTextColor(22, 100, 192);
-      doc.text('REGISTRO FOTOGRAFICO', pageW / 2, y, { align: 'center' });
-      y += 6;
-      doc.setFontSize(9);
-      doc.setTextColor(80);
-      doc.text('Entrega N° ' + entrega.numeroEntrega, pageW / 2, y, { align: 'center' });
-      y += 6;
-      doc.setFontSize(8);
-      doc.text('Pagina ' + (Math.floor(fotoIndex / fotosPorPagina) + 1), pageW / 2, y, { align: 'center' });
-      y += 10;
-
-      var filas = Math.min(2, Math.ceil((entrega.fotos.length - fotoIndex) / 2));
-      for (var f = 0; f < filas; f++) {
-        for (var c = 0; c < 2; c++) {
-          var idx = fotoIndex + f * 2 + c;
-          if (idx < entrega.fotos.length) {
-            var x = margin + c * (anchoFoto + margin);
-            var yFoto = y + f * (altoFoto + 10);
-            try {
-              doc.addImage(entrega.fotos[idx], 'JPEG', x, yFoto, anchoFoto, altoFoto);
-              doc.setFontSize(7);
-              doc.setTextColor(80);
-              doc.text('Foto ' + (idx + 1), x + anchoFoto / 2, yFoto + altoFoto + 4, { align: 'center' });
-              doc.setTextColor(0);
-            } catch (e) {
-              console.error('Error al agregar foto:', e);
-            }
-          }
-        }
-      }
-
-      fotoIndex += fotosPorPagina;
-    }
-  }
-
-  doc.save('Entrega_' + entrega.numeroEntrega + '.pdf');
-  mostrarToast('PDF descargado');
 }
 
 // ================================================================
