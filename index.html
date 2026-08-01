@@ -935,7 +935,7 @@ function mostrarComprobante(entrega) {
   var content=document.getElementById('ticket-content');
   if(!entrega){ mostrarToast('No hay comprobante disponible'); return; }
   var productosHTML = entrega.detalles.map(function(d,i){ return '<div class="ticket-fila"><span class="label">'+(i+1)+'. '+d.nombre+(d.talla?' ('+d.talla+')':'')+(d.kitInfo?' Kit':'')+'</span><span class="valor">'+d.cantidad+' '+d.unidad+'</span></div>'; }).join('');
-  var kitInfoHTML=''; var kitDetalle = entrega.detalles.find(function(d){ return d.kitInfo; }); if(kitDetalle && kitDetalle.kitInfo){ kitInfoHTML='<div class="ticket-fila"><span class="label">Kit</span><span class="valor">'+kitDetalle.kitInfo.tipo+'</span></div><div class="ticket-fila"><span class="label">N Inventario</span><span class="valor">'+kitDetalle.kitInfo.inventario+'</span></div><div class="ticket-fila"><span class="label">Patente</span><span class="valor">'+kitDetalle.kitInfo.patente+'</span></div><div class="ticket-fila"><span class="label">Responsable Vehiculo</span><span class="valor">'+kitDetalle.kitInfo.responsable+'</span></div><div class="ticket-fila" style="flex-direction:column;align-items:flex-start;gap:2px;"><span class="label">Herramientas incluidas:</span><span style="font-size:10px;color:var(--texto-gris);">'+kitDetalle.kitInfo.herramientas.map(function(h){ return '‚Ä?'+h; }).join('<br>')+'</span></div>'; }
+  var kitInfoHTML=''; var kitDetalle = entrega.detalles.find(function(d){ return d.kitInfo; }); if(kitDetalle && kitDetalle.kitInfo){ kitInfoHTML='<div class="ticket-fila"><span class="label">Kit</span><span class="valor">'+kitDetalle.kitInfo.tipo+'</span></div><div class="ticket-fila"><span class="label">N Inventario</span><span class="valor">'+kitDetalle.kitInfo.inventario+'</span></div><div class="ticket-fila"><span class="label">Patente</span><span class="valor">'+kitDetalle.kitInfo.patente+'</span></div><div class="ticket-fila"><span class="label">Responsable Vehiculo</span><span class="valor">'+kitDetalle.kitInfo.responsable+'</span></div><div class="ticket-fila" style="flex-direction:column;align-items:flex-start;gap:2px;"><span class="label">Herramientas incluidas:</span><span style="font-size:10px;color:var(--texto-gris);">'+kitDetalle.kitInfo.herramientas.map(function(h){ return '‚Ä¢ '+h; }).join('<br>')+'</span></div>'; }
   var fotosHTML=''; if(entrega.fotos && entrega.fotos.length>0){ fotosHTML='<div style="margin-top:8px;border-top:1px dashed #aaa;padding-top:8px;text-align:center;font-size:9px;color:var(--texto-gris);">'+entrega.fotos.length+' foto(s) adjunta(s)</div>'; }
   var html='<div class="ticket"><div class="ticket-header"><h3>MUNICIPALIDAD DE LAS CONDES</h3><div class="subtitulo">Depto. Gestion de Riesgos y Desastres</div><div style="font-weight:700;font-size:16px;margin-top:6px;">COMPROBANTE DE ENTREGA N '+entrega.numeroEntrega+'</div><div class="subtitulo">Fecha: '+entrega.fecha+'</div></div><div style="margin:8px 0;"><div style="font-weight:600;font-size:12px;border-bottom:1px solid #ddd;padding-bottom:4px;margin-bottom:4px;">RECEPTOR</div><div class="ticket-fila"><span class="label">Nombre</span><span class="valor">'+entrega.receptorNombre+'</span></div><div class="ticket-fila"><span class="label">RUT</span><span class="valor">'+entrega.receptorRut+'</span></div><div class="ticket-fila"><span class="label">Email</span><span class="valor">'+entrega.receptorEmail+'</span></div></div><div style="margin:8px 0;"><div style="font-weight:600;font-size:12px;border-bottom:1px solid #ddd;padding-bottom:4px;margin-bottom:4px;">ENTREGADO POR</div><div class="ticket-fila"><span class="label">Nombre</span><span class="valor">'+(entrega.responsableNombre||'Personal GRRD')+'</span></div><div class="ticket-fila"><span class="label">Email</span><span class="valor">'+(entrega.responsable||'personal@grrd.cl')+'</span></div></div><div style="margin:8px 0;"><div style="font-weight:600;font-size:12px;border-bottom:1px solid #ddd;padding-bottom:4px;margin-bottom:4px;">PRODUCTOS ENTREGADOS</div>'+productosHTML+kitInfoHTML+'<div class="ticket-fila" style="border-top:2px solid #333;font-weight:700;margin-top:4px;padding-top:6px;"><span class="label">TOTAL UNIDADES</span><span class="valor">'+entrega.totalUnidades+'</span></div></div>'+(entrega.observacion?'<div class="ticket-fila"><span class="label">Observacion</span><span class="valor">'+entrega.observacion+'</span></div>':'')+fotosHTML+'<div class="ticket-firma"><div class="firma-linea"><div>Entregado por</div><div class="linea"></div><div class="label-firma">Firma</div></div><div class="firma-linea"><div>Recibido por</div><div class="linea"></div><div class="label-firma">Firma</div></div></div><div class="ticket-footer">Este comprobante es de caracter informativo y respaldo de entrega.</div></div>';
   content.innerHTML=html; modal.classList.add('visible');
@@ -955,6 +955,10 @@ function imprimirComprobante() {
   ventana.document.write('<html><head><title>Comprobante</title><style>body{font-family:"Courier New",monospace;padding:20px;max-width:800px;margin:0 auto}.ticket{background:#fff;border:2px dashed #1664c0;border-radius:12px;padding:20px;margin-bottom:20px;page-break-after:always}.ticket-header{text-align:center;border-bottom:1px dashed #aaa;padding-bottom:8px;margin-bottom:8px}.ticket-header h3{font-size:16px;color:#1664c0;margin:0}.ticket-header .subtitulo{font-size:10px;color:#666}.ticket-fila{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dotted #eee}.ticket-fila .label{color:#666;font-weight:500}.ticket-fila .valor{font-weight:700}.ticket-firma{display:flex;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px dashed #aaa}.ticket-firma .firma-linea{text-align:center;flex:1}.ticket-firma .firma-linea .linea{border-top:1px solid #333;width:80%;margin:6px auto 2px}.ticket-firma .firma-linea .label-firma{font-size:8px;color:#666}.ticket-footer{text-align:center;font-size:8px;color:#666;margin-top:8px;border-top:1px dashed #aaa;padding-top:8px}@media print{body{padding:0}.ticket{border:1px solid #aaa;page-break-after:always}}</style></head><body>'+content+'<script>window.onload=function(){setTimeout(function(){window.print();},500)}<\/script></body></html>');
   ventana.document.close();
 }
+
+// ================================================================
+// 18. GENERADOR DE DOCUMENTO
+// ================================================================
 function generarDocPDF(entrega, incluirFotos) {
   incluirFotos = incluirFotos !== false;
   const { jsPDF } = window.jspdf;
@@ -999,7 +1003,7 @@ function generarDocPDF(entrega, incluirFotos) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(12);
   doc.setTextColor(0);
-  doc.text('N°„ ' + entrega.numeroEntrega, pageW / 2, y, { align: 'center' });
+  doc.text('N¬∞ ' + entrega.numeroEntrega, pageW / 2, y, { align: 'center' });
   y += 8;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
@@ -1113,10 +1117,10 @@ function generarDocPDF(entrega, incluirFotos) {
   }
 
   // ================================================================
-  // FIRMAS (COMO ESTABA ANTES - L®™NEA ARRIBA, DATOS DEBAJO)
+  // FIRMAS (COMO ESTABA ANTES - L√çNEA ARRIBA, DATOS DEBAJO)
   // ================================================================
 
-  // Forzar espacio al final de la p®¢gina
+  // Forzar espacio al final de la p√°gina
   if (y < pageH - 50) {
     y = pageH - 50;
   } else {
@@ -1201,7 +1205,7 @@ function generarDocPDF(entrega, incluirFotos) {
       y += 6;
       doc.setFontSize(9);
       doc.setTextColor(80);
-      doc.text('Entrega N°„ ' + entrega.numeroEntrega, pageW / 2, y, { align: 'center' });
+      doc.text('Entrega N¬∞ ' + entrega.numeroEntrega, pageW / 2, y, { align: 'center' });
       y += 6;
       doc.setFontSize(8);
       doc.text('Pagina ' + (Math.floor(fotoIndex / fotosPorPagina) + 1), pageW / 2, y, { align: 'center' });
@@ -1240,36 +1244,6 @@ function generarDocPDF(entrega, incluirFotos) {
   }
 
   return doc;
-}
-
-function descargarPDFComprobante() {
-  if (!ultimoComprobante) {
-    mostrarToast('No hay comprobante');
-    return;
-  }
-  try {
-    var doc = generarDocPDF(ultimoComprobante, true);
-    doc.save('Entrega_' + ultimoComprobante.numeroEntrega + '.pdf');
-    mostrarToast('PDF descargado');
-  } catch(e){
-    console.error('Error generando PDF:', e);
-    mostrarToast('Error al generar el PDF');
-  }
-}
-
-// ================================================================
-// 18. DASHBOARD
-// ================================================================
-function actualizarDashboard() {
-  var hoy = salidas.filter(function(s){ return esHoy(s.fecha); });
-  var kitsHoy = hoy.filter(function(s){ return s.tipo==='kit'; });
-  var productosHoy = hoy.filter(function(s){ return s.tipo!=='kit' && s.tipo!=='entrega_multiple'; });
-  document.getElementById('res-entregas-hoy').textContent = hoy.length;
-  var totalUnidades=0; hoy.forEach(function(s){ if(s.total_unidades) totalUnidades+=s.total_unidades; else if(s.cantidad) totalUnidades+=s.cantidad; });
-  document.getElementById('res-unidades-hoy').textContent = totalUnidades;
-  var productosUnicos=new Set(); hoy.forEach(function(s){ if(s.detalles){ s.detalles.forEach(function(d){ productosUnicos.add(d.nombre); }); } else if(s.producto_nombre){ productosUnicos.add(s.producto_nombre); } });
-  document.getElementById('res-productos-unicos').textContent = productosUnicos.size;
-  document.getElementById('res-kits-hoy').textContent = kitsHoy.length;
 }
 
 // ================================================================
