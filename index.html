@@ -826,13 +826,13 @@
 <!-- ===== JAVASCRIPT ===== -->
 <script>
 // ================================================================
-// 1. CONFIGURACIÓN SUPABASE - CON TUS NUEVAS CLAVES
+// 1. CONFIGURACIÓN SUPABASE
 // ================================================================
 
 // ✅ URL CORRECTA
 const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
 
-// ✅ TU NUEVA CLAVE PUBLISHABLE
+// ✅ TU CLAVE PUBLISHABLE
 const SUPABASE_KEY = 'sb_publishable_Vc7-e-AjorgMgj45SmAL5g_Xr0glJjx';
 
 // Crear cliente de Supabase
@@ -1454,7 +1454,7 @@ function renderReceptores() {
 }
 
 // ================================================================
-// 10. FUNCIONES DE FAMILIAS Y PRODUCTOS (UI)
+// 10. FUNCIONES DE FAMILIAS Y PRODUCTOS (UI) - CORREGIDAS
 // ================================================================
 
 function seleccionarFamilia(familia) {
@@ -1490,19 +1490,27 @@ function limpiarSeleccionProducto() {
   document.getElementById('salida-unidad').value = '';
   document.getElementById('salida-cantidad').value = '';
   document.getElementById('salida-cantidad').max = '';
+  document.getElementById('salida-cantidad').placeholder = '0';
   const container = document.getElementById('producto-seleccionado-container');
   if (container) container.style.display = 'none';
   document.getElementById('selector-tallas-container').style.display = 'none';
   document.getElementById('selector-tallas').innerHTML = '';
   document.getElementById('talla-seleccionada-info').textContent = '';
+  
+  // ✅ Eliminar mensaje de stock
+  const stockMessage = document.getElementById('stock-message');
+  if (stockMessage) stockMessage.remove();
 }
 
 function mostrarProductoSeleccionado(producto) {
   const container = document.getElementById('producto-seleccionado-container');
   const selectorContainer = document.getElementById('selector-tallas-container');
   const selector = document.getElementById('selector-tallas');
+  const tallaInfo = document.getElementById('talla-seleccionada-info');
+  const cantidadInput = document.getElementById('salida-cantidad');
+  const unidadInput = document.getElementById('salida-unidad');
   
-  if (!container || !selectorContainer || !selector) {
+  if (!container || !selectorContainer || !selector || !tallaInfo) {
     console.error('❌ Elementos del producto no encontrados');
     return;
   }
@@ -1511,7 +1519,12 @@ function mostrarProductoSeleccionado(producto) {
   const itemsProducto = items.filter(i => i.nombre === producto.nombre && i.familia === producto.familia);
   const tieneTallas = itemsProducto.some(i => i.tiene_talla);
 
+  // Eliminar mensaje de stock anterior
+  const oldMessage = document.getElementById('stock-message');
+  if (oldMessage) oldMessage.remove();
+
   if (tieneTallas && itemsProducto.length > 0) {
+    // ===== PRODUCTO CON TALLAS =====
     selectorContainer.style.display = 'block';
     selector.innerHTML = '';
     const tallasOrdenadas = itemsProducto.map(i => i.talla).sort((a, b) => {
@@ -1536,17 +1549,42 @@ function mostrarProductoSeleccionado(producto) {
       selector.appendChild(div);
     });
     tallaSeleccionada = null;
-    document.getElementById('talla-seleccionada-info').textContent = '👆 Selecciona una talla disponible';
-    document.getElementById('salida-cantidad').value = '';
-    document.getElementById('salida-cantidad').max = '';
+    tallaInfo.textContent = '👆 Selecciona una talla disponible';
+    cantidadInput.value = '';
+    cantidadInput.max = '';
+    cantidadInput.placeholder = '0';
+    unidadInput.value = itemsProducto[0]?.unidad || 'Unidad';
+    
   } else {
+    // ===== PRODUCTO SIN TALLAS (CASCOS, LENTES, ETC.) =====
     selectorContainer.style.display = 'none';
     tallaSeleccionada = null;
     const itemUnico = itemsProducto[0];
     if (itemUnico) {
-      document.getElementById('salida-cantidad').max = itemUnico.stock;
-      document.getElementById('salida-unidad').value = itemUnico.unidad || 'Unidad';
-      document.getElementById('talla-seleccionada-info').textContent = `Stock disponible: ${itemUnico.stock} unidades`;
+      // ✅ Mostrar stock disponible
+      tallaInfo.textContent = `📦 Stock disponible: ${itemUnico.stock} ${itemUnico.unidad}(s)`;
+      cantidadInput.max = itemUnico.stock;
+      cantidadInput.value = '';
+      cantidadInput.placeholder = `Máx: ${itemUnico.stock}`;
+      unidadInput.value = itemUnico.unidad || 'Unidad';
+      
+      // ✅ Mostrar mensaje visual de stock
+      const stockMessage = document.createElement('div');
+      stockMessage.id = 'stock-message';
+      stockMessage.style.cssText = `
+        margin-top: 8px;
+        padding: 8px 12px;
+        background: #e8f0fe;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #1664c0;
+        border: 1px solid #4087cf;
+        text-align: center;
+      `;
+      stockMessage.innerHTML = `📦 <strong>Stock disponible:</strong> ${itemUnico.stock} ${itemUnico.unidad}(s)`;
+      
+      // Agregar mensaje debajo del selector
+      selectorContainer.parentNode.appendChild(stockMessage);
     }
   }
 }
@@ -1559,7 +1597,12 @@ function seleccionarTallaProducto(talla, item) {
   document.getElementById('talla-seleccionada-info').textContent = `✅ Talla ${talla} seleccionada · Stock: ${item.stock} ${item.unidad}(s)`;
   document.getElementById('salida-cantidad').max = item.stock;
   document.getElementById('salida-cantidad').value = '';
+  document.getElementById('salida-cantidad').placeholder = `Máx: ${item.stock}`;
   document.getElementById('salida-unidad').value = item.unidad || 'Unidad';
+  
+  // ✅ Eliminar mensaje de stock (si existe)
+  const stockMessage = document.getElementById('stock-message');
+  if (stockMessage) stockMessage.remove();
 }
 
 function poblarDropdownProductos() {
