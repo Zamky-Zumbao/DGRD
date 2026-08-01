@@ -578,6 +578,21 @@
     flex-wrap: wrap;
   }
 
+  /* ===== RECEPTOR AGREGADO MSG ===== */
+  .receptor-agregado-msg {
+    background: #e8f0fe;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #1664c0;
+    border: 1px solid #4087cf;
+    margin-top: 6px;
+    display: none;
+  }
+  .receptor-agregado-msg strong {
+    color: #0f4a8a;
+  }
+
   @media (max-width: 600px) {
     .header-titulo { font-size: 12px; }
     .logo-texto { font-size: 8px; }
@@ -842,6 +857,9 @@
     </div>
     <button class="btn-agregar-receptor" id="btn-agregar-receptor" onclick="agregarReceptor()">+ Agregar receptor</button>
     <div id="receptor-error" style="color:var(--rojo); font-size:11px; margin-top:4px; display:none;"></div>
+    <div class="receptor-agregado-msg" id="receptor-agregado-msg">
+      ✅ Receptor <strong id="receptor-agregado-nombre"></strong> agregado para esta entrega. Ahora puedes agregar más productos.
+    </div>
   </div>
 
   <div class="field">
@@ -1570,21 +1588,49 @@ async function sincronizarBD() {
 }
 
 // ================================================================
-// 10. FUNCIONES DE RECEPTORES
+// 10. FUNCIONES DE RECEPTORES (OPTIMIZADAS)
 // ================================================================
+
+function bloquearCamposReceptor(bloquear) {
+  const nombreInput = document.getElementById('receptor-nombre');
+  const rutInput = document.getElementById('receptor-rut');
+  const emailInput = document.getElementById('receptor-email');
+  const btnAgregar = document.getElementById('btn-agregar-receptor');
+  
+  nombreInput.disabled = bloquear;
+  rutInput.disabled = bloquear;
+  emailInput.disabled = bloquear;
+  
+  if (bloquear) {
+    nombreInput.style.background = '#f1f5f9';
+    rutInput.style.background = '#f1f5f9';
+    emailInput.style.background = '#f1f5f9';
+    btnAgregar.disabled = true;
+    btnAgregar.textContent = '✅ Receptor agregado';
+  } else {
+    nombreInput.style.background = '';
+    rutInput.style.background = '';
+    emailInput.style.background = '';
+    btnAgregar.disabled = false;
+    btnAgregar.textContent = '+ Agregar receptor';
+  }
+}
 
 function agregarReceptor() {
   const nombre = document.getElementById('receptor-nombre').value.trim();
   const rut = document.getElementById('receptor-rut').value.trim();
   const email = document.getElementById('receptor-email').value.trim();
   const error = document.getElementById('receptor-error');
+  const msg = document.getElementById('receptor-agregado-msg');
 
+  // Validar nombre
   if (!nombre) {
     error.textContent = '⚠️ Ingresa el nombre completo';
     error.style.display = 'block';
     return;
   }
 
+  // Validar RUT
   if (!rut) {
     error.textContent = '⚠️ Ingresa el RUT';
     error.style.display = 'block';
@@ -1598,15 +1644,17 @@ function agregarReceptor() {
     return;
   }
 
+  // Validar email
   if (!email || !email.includes('@')) {
     error.textContent = '⚠️ Ingresa un correo electrónico válido';
     error.style.display = 'block';
     return;
   }
 
+  // Si ya hay un receptor, mostrar mensaje
   if (receptoresAgregados.length >= 1) {
-    error.textContent = '⚠️ Solo se permite un receptor por entrega';
-    error.style.display = 'block';
+    error.style.display = 'none';
+    msg.style.display = 'block';
     return;
   }
 
@@ -1620,16 +1668,22 @@ function agregarReceptor() {
   });
   
   renderReceptores();
+  bloquearCamposReceptor(true);
+  
+  // Mostrar mensaje de confirmación
+  msg.style.display = 'block';
+  document.getElementById('receptor-agregado-nombre').textContent = nombre;
 
   document.getElementById('receptor-nombre').value = '';
   document.getElementById('receptor-rut').value = '';
   document.getElementById('receptor-email').value = '';
-  document.getElementById('receptor-nombre').focus();
 }
 
 function eliminarReceptor(email) {
   receptoresAgregados = receptoresAgregados.filter(r => r.email !== email);
   renderReceptores();
+  bloquearCamposReceptor(false);
+  document.getElementById('receptor-agregado-msg').style.display = 'none';
 }
 
 function renderReceptores() {
@@ -1641,8 +1695,6 @@ function renderReceptores() {
 
   if (receptoresAgregados.length === 0) {
     container.innerHTML = '<div class="empty-state">No hay receptores agregados</div>';
-    btn.disabled = false;
-    btn.textContent = '+ Agregar receptor';
     return;
   }
 
@@ -1654,9 +1706,6 @@ function renderReceptores() {
       <div class="receptor-email">${p.email}</div>
     </div>
   `).join('');
-
-  btn.disabled = true;
-  btn.textContent = '🔒 Receptor agregado';
 }
 
 // ================================================================
@@ -2224,6 +2273,8 @@ async function finalizarEntrega() {
     receptoresAgregados = [];
     renderCarrito();
     renderReceptores();
+    bloquearCamposReceptor(false);
+    document.getElementById('receptor-agregado-msg').style.display = 'none';
     document.getElementById('foto-input').value = '';
     document.getElementById('foto-preview').innerHTML = '';
     document.getElementById('foto-placeholder').style.display = 'block';
