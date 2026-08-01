@@ -538,17 +538,19 @@
   .empty-state { text-align: center; color: var(--texto-gris); font-size: 12px; padding: 12px 0; }
   footer { text-align: center; color: var(--texto-gris); font-size: 9px; padding: 16px 16px 30px; opacity: 0.7; }
 
+  /* ===== BOTONES PRINCIPALES ===== */
   .btn-agregar-carrito {
     background: var(--naranja);
     border: none;
-    padding: 10px;
+    padding: 12px 20px;
     border-radius: 50px;
     font-weight: 700;
     color: white;
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
     transition: 0.2s;
     flex: 1;
+    min-width: 150px;
   }
   .btn-agregar-carrito:hover { opacity: 0.85; }
   .btn-agregar-carrito:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -556,17 +558,25 @@
   .btn-finalizar {
     background: var(--verde);
     border: none;
-    padding: 10px;
+    padding: 12px 20px;
     border-radius: 50px;
     font-weight: 700;
     color: white;
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
     transition: 0.2s;
     flex: 1;
+    min-width: 150px;
   }
   .btn-finalizar:hover { opacity: 0.85; }
   .btn-finalizar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-fila-principal {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
 
   @media (max-width: 600px) {
     .header-titulo { font-size: 12px; }
@@ -581,6 +591,8 @@
     .selector-tallas .talla-item { min-width: 48px; padding: 6px 2px; font-size: 12px; }
     .badge-bd { display: none; }
     .tabs-familias { flex-wrap: wrap; }
+    .btn-fila-principal { flex-direction: column; }
+    .btn-agregar-carrito, .btn-finalizar { min-width: 100%; }
   }
 
   ::-webkit-scrollbar { width: 4px; }
@@ -676,13 +688,6 @@
         <label>Unidad</label>
         <input type="text" id="salida-unidad" disabled style="background:#f1f5f9;">
       </div>
-    </div>
-
-    <!-- BOTÓN AGREGAR AL CARRITO -->
-    <div style="display: flex; gap: 8px; margin-top: 4px;">
-      <button class="btn-agregar-carrito" id="btn-agregar-carrito" onclick="agregarAlCarrito()" disabled>
-        ➕ Agregar a la entrega
-      </button>
     </div>
   </div>
 
@@ -804,13 +809,6 @@
     <div style="font-size: 10px; color: var(--texto-gris); margin-top: -6px; margin-bottom: 8px;">
       ✅ Selecciona las herramientas que componen el kit entregado
     </div>
-    
-    <!-- BOTÓN AGREGAR KIT AL CARRITO -->
-    <div style="display: flex; gap: 8px; margin-top: 4px;">
-      <button class="btn-agregar-carrito" id="btn-agregar-kit" onclick="agregarKitAlCarrito()" style="background: var(--naranja);">
-        ➕ Agregar kit a la entrega
-      </button>
-    </div>
   </div>
 
   <!-- ===== CARRITO ===== -->
@@ -871,13 +869,16 @@
     </div>
   </div>
 
-  <!-- ===== BOTONES FINALIZAR ===== -->
-  <div style="display: flex; gap: 8px; margin-top: 4px;">
+  <!-- ===== BOTONES PRINCIPALES ===== -->
+  <div class="btn-fila-principal">
+    <button class="btn-agregar-carrito" id="btn-agregar-carrito" onclick="agregarAlCarrito()" disabled>
+      ➕ Agregar otro artículo
+    </button>
     <button class="btn-finalizar" id="btn-finalizar" onclick="finalizarEntrega()" disabled>
       ✅ Finalizar entrega
     </button>
   </div>
-  
+
   <!-- ===== BOTONES SECUNDARIOS ===== -->
   <div style="display: flex; gap: 8px; margin-top: 8px;">
     <button class="btn-secundario" onclick="mostrarComprobanteUltima()" style="flex:1;">📋 Ver último comprobante</button>
@@ -1000,24 +1001,19 @@ function mostrarToast(msg) {
 // ================================================================
 
 function validarRUT(rut) {
-    // 1. Limpiar RUT (eliminar puntos y guión)
     const rutLimpio = rut.replace(/[.-]/g, '');
     
-    // 2. Verificar que tenga al menos 2 caracteres (número + dígito)
     if (rutLimpio.length < 2) {
         return { valido: false, mensaje: 'RUT demasiado corto' };
     }
     
-    // 3. Separar cuerpo y dígito verificador
     const cuerpo = rutLimpio.slice(0, -1);
     const dvIngresado = rutLimpio.slice(-1).toUpperCase();
     
-    // 4. Verificar que el cuerpo sea numérico
     if (!/^\d+$/.test(cuerpo)) {
         return { valido: false, mensaje: 'El RUT debe contener solo números' };
     }
     
-    // 5. Calcular el dígito verificador
     let suma = 0;
     let multiplicador = 2;
     
@@ -1038,7 +1034,6 @@ function validarRUT(rut) {
         dvEsperado = dvCalculado.toString();
     }
     
-    // 6. Comparar dígito ingresado con el calculado
     if (dvIngresado !== dvEsperado) {
         return { 
             valido: false, 
@@ -1046,7 +1041,6 @@ function validarRUT(rut) {
         };
     }
     
-    // 7. Formatear RUT para mostrar (con puntos y guión)
     const rutFormateado = formatearRUT(cuerpo + dvIngresado);
     
     return { 
@@ -1059,19 +1053,11 @@ function validarRUT(rut) {
     };
 }
 
-// ================================================================
-// FORMATEAR RUT (agregar puntos y guión)
-// ================================================================
-
 function formatearRUT(rut) {
-    // Limpiar RUT
     const rutLimpio = rut.replace(/[.-]/g, '');
-    
-    // Separar cuerpo y dígito
     const cuerpo = rutLimpio.slice(0, -1);
     const dv = rutLimpio.slice(-1);
     
-    // Agregar puntos al cuerpo (de derecha a izquierda)
     let cuerpoFormateado = '';
     let contador = 0;
     for (let i = cuerpo.length - 1; i >= 0; i--) {
@@ -1450,7 +1436,6 @@ function generarItemsInicialesLocal() {
 
 async function guardarEntregaBD(entregaData, detalles, fotos) {
   try {
-    // 1. Guardar la cabecera de la entrega
     const { data: entrega, error: error1 } = await supabaseClient
       .from('entregas')
       .insert([{
@@ -1471,7 +1456,6 @@ async function guardarEntregaBD(entregaData, detalles, fotos) {
     
     const entregaId = entrega[0].id;
     
-    // 2. Guardar los detalles de la entrega
     for (const detalle of detalles) {
       const { error: error2 } = await supabaseClient
         .from('detalles_entrega')
@@ -1487,7 +1471,6 @@ async function guardarEntregaBD(entregaData, detalles, fotos) {
       if (error2) throw error2;
     }
     
-    // 3. Guardar las fotos
     if (fotos && fotos.length > 0) {
       for (let i = 0; i < fotos.length; i++) {
         const { error: error3 } = await supabaseClient
@@ -1502,7 +1485,6 @@ async function guardarEntregaBD(entregaData, detalles, fotos) {
       }
     }
     
-    // 4. Actualizar stock de productos
     for (const detalle of detalles) {
       if (detalle.productoId) {
         const producto = items.find(i => i.id === detalle.productoId);
@@ -1609,7 +1591,6 @@ function agregarReceptor() {
     return;
   }
   
-  // ✅ VALIDAR RUT CON LA FUNCIÓN COMPLETA
   const resultadoRUT = validarRUT(rut);
   if (!resultadoRUT.valido) {
     error.textContent = `⚠️ ${resultadoRUT.mensaje}`;
@@ -1890,6 +1871,57 @@ function poblarDropdownProductos() {
 // ================================================================
 
 function agregarAlCarrito() {
+  // Verificar si estamos en modo kit o producto
+  if (modoKit) {
+    // ===== AGREGAR KIT =====
+    const kitTipo = document.getElementById('kit-tipo').value;
+    const kitOtroNombre = document.getElementById('kit-otro-nombre').value.trim();
+    const kitInventario = document.getElementById('kit-inventario').value.trim();
+    const kitPatente = document.getElementById('kit-patente').value.trim().toUpperCase();
+    const kitResponsable = document.getElementById('kit-responsable').value.trim();
+    
+    if (!kitTipo) { mostrarToast('❌ Selecciona el tipo de kit'); return; }
+    if (!kitInventario) { mostrarToast('❌ Ingresa el número de inventario'); return; }
+    if (!kitPatente) { mostrarToast('❌ Ingresa la patente del vehículo'); return; }
+    if (!kitResponsable) { mostrarToast('❌ Ingresa el responsable del vehículo'); return; }
+    
+    const herramientasSeleccionadas = [];
+    document.querySelectorAll('.kit-herramienta:checked').forEach(cb => {
+      herramientasSeleccionadas.push(cb.value);
+    });
+    
+    if (herramientasSeleccionadas.length === 0) {
+      mostrarToast('❌ Selecciona al menos una herramienta del kit');
+      return;
+    }
+    
+    const nombreKit = kitTipo === 'Otro' ? kitOtroNombre : kitTipo;
+    
+    carrito.push({
+      esKit: true,
+      kitTipo: nombreKit,
+      kitInventario: kitInventario,
+      kitPatente: kitPatente,
+      kitResponsable: kitResponsable,
+      kitHerramientas: herramientasSeleccionadas,
+      nombre: `🧰 Kit: ${nombreKit}`,
+      cantidad: 1,
+      unidad: 'Kit'
+    });
+
+    document.getElementById('kit-tipo').value = '';
+    document.getElementById('kit-otro-nombre').value = '';
+    document.getElementById('kit-inventario').value = '';
+    document.getElementById('kit-patente').value = '';
+    document.getElementById('kit-responsable').value = '';
+    document.querySelectorAll('.kit-herramienta:checked').forEach(cb => cb.checked = false);
+    
+    renderCarrito();
+    mostrarToast(`✅ Kit ${nombreKit} agregado al carrito`);
+    return;
+  }
+
+  // ===== AGREGAR PRODUCTO =====
   const productoBase = items.find(i => i.id === productoSeleccionadoId);
   if (!productoBase) {
     mostrarToast('❌ Selecciona un producto');
@@ -1957,53 +1989,6 @@ function agregarAlCarrito() {
   limpiarSeleccionProducto();
   renderCarrito();
   mostrarToast(`✅ ${productoBase.nombre}${tallaSeleccionada ? ' (talla '+tallaSeleccionada+')' : ''} agregado al carrito`);
-}
-
-function agregarKitAlCarrito() {
-  const kitTipo = document.getElementById('kit-tipo').value;
-  const kitOtroNombre = document.getElementById('kit-otro-nombre').value.trim();
-  const kitInventario = document.getElementById('kit-inventario').value.trim();
-  const kitPatente = document.getElementById('kit-patente').value.trim().toUpperCase();
-  const kitResponsable = document.getElementById('kit-responsable').value.trim();
-  
-  if (!kitTipo) { mostrarToast('❌ Selecciona el tipo de kit'); return; }
-  if (!kitInventario) { mostrarToast('❌ Ingresa el número de inventario'); return; }
-  if (!kitPatente) { mostrarToast('❌ Ingresa la patente del vehículo'); return; }
-  if (!kitResponsable) { mostrarToast('❌ Ingresa el responsable del vehículo'); return; }
-  
-  const herramientasSeleccionadas = [];
-  document.querySelectorAll('.kit-herramienta:checked').forEach(cb => {
-    herramientasSeleccionadas.push(cb.value);
-  });
-  
-  if (herramientasSeleccionadas.length === 0) {
-    mostrarToast('❌ Selecciona al menos una herramienta del kit');
-    return;
-  }
-  
-  const nombreKit = kitTipo === 'Otro' ? kitOtroNombre : kitTipo;
-  
-  carrito.push({
-    esKit: true,
-    kitTipo: nombreKit,
-    kitInventario: kitInventario,
-    kitPatente: kitPatente,
-    kitResponsable: kitResponsable,
-    kitHerramientas: herramientasSeleccionadas,
-    nombre: `🧰 Kit: ${nombreKit}`,
-    cantidad: 1,
-    unidad: 'Kit'
-  });
-
-  document.getElementById('kit-tipo').value = '';
-  document.getElementById('kit-otro-nombre').value = '';
-  document.getElementById('kit-inventario').value = '';
-  document.getElementById('kit-patente').value = '';
-  document.getElementById('kit-responsable').value = '';
-  document.querySelectorAll('.kit-herramienta:checked').forEach(cb => cb.checked = false);
-  
-  renderCarrito();
-  mostrarToast(`✅ Kit ${nombreKit} agregado al carrito`);
 }
 
 function eliminarDelCarrito(index) {
@@ -2147,7 +2132,6 @@ async function finalizarEntrega() {
   const receptor = receptoresAgregados[0];
   const obs = document.getElementById('salida-obs').value.trim();
 
-  // Verificar entregas duplicadas
   const duplicados = await verificarEntregaDuplicada(receptor.rutLimpio);
   if (duplicados) {
     const confirmar = confirm(
