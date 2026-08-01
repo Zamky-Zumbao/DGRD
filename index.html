@@ -754,7 +754,7 @@
     <button class="btn-agregar-receptor" id="btn-agregar-receptor" onclick="agregarReceptor()">+ Verificar receptor</button>
     <div id="receptor-error" style="color:var(--rojo); font-size:11px; margin-top:4px; display:none;"></div>
     <div class="receptor-agregado-msg" id="receptor-agregado-msg">
-      ✅ Receptor <strong id="receptor-agregado-nombre"></strong> agregado para esta entrega.
+      �?Receptor <strong id="receptor-agregado-nombre"></strong> agregado para esta entrega.
     </div>
   </div>
 
@@ -763,8 +763,8 @@
     <div class="titulo">📋 Historial de entregas de <span id="historial-nombre"></span></div>
     <div id="historial-lista"></div>
     <div class="btn-continuar" id="btn-continuar-container" style="display:none;">
-      <button class="continuar" id="btn-continuar-entrega" onclick="continuarEntrega()">✅ Continuar con la entrega</button>
-      <button class="cancelar" id="btn-cancelar-entrega" onclick="cancelarEntrega()">❌ Cancelar entrega</button>
+      <button class="continuar" id="btn-continuar-entrega" onclick="continuarEntrega()">�?Continuar con la entrega</button>
+      <button class="cancelar" id="btn-cancelar-entrega" onclick="cancelarEntrega()">�?Cancelar entrega</button>
     </div>
   </div>
 
@@ -774,8 +774,8 @@
     <div class="field">
       <label>📂 Tipo de registro</label>
       <div class="tabs-familias" id="tabs-familias">
-        <div class="tab-familia active" data-familia="epp_basico">🛡️ EPP Básico</div>
-        <div class="tab-familia" data-familia="epp_climatico">🌧️ EPP Climático</div>
+        <div class="tab-familia active" data-familia="epp_basico">🛡�?EPP Básico</div>
+        <div class="tab-familia" data-familia="epp_climatico">🌧�?EPP Climático</div>
         <div class="tab-familia" data-familia="epp_especial">🧥 EPP Especial</div>
         <div class="tab-familia" data-familia="maquinarias">🔧 Maquinarias</div>
         <div class="tab-familia" data-familia="herramientas">🔩 Herramientas</div>
@@ -930,7 +930,7 @@
         </div>
       </div>
       <div style="font-size: 10px; color: var(--texto-gris); margin-top: -6px; margin-bottom: 8px;">
-        ✅ Selecciona las herramientas que componen el kit entregado
+        �?Selecciona las herramientas que componen el kit entregado
       </div>
     </div>
 
@@ -959,7 +959,7 @@
         <input type="file" id="foto-input" accept="image/*" capture="environment" multiple onchange="previewFotos()">
         <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
           <button type="button" class="btn-camara" onclick="abrirCamara()">📸 Tomar foto con cámara</button>
-          <button type="button" class="btn-camara" style="background:var(--azul);" onclick="abrirGaleria()">🖼️ Elegir de galería</button>
+          <button type="button" class="btn-camara" style="background:var(--azul);" onclick="abrirGaleria()">🖼�?Elegir de galería</button>
         </div>
         <div id="foto-preview" class="foto-preview"></div>
         <div id="foto-placeholder" style="font-size:10px; color:var(--texto-gris); margin-top:6px;">Subir foto(s) del producto o entrega</div>
@@ -969,10 +969,10 @@
     <!-- ===== BOTONES PRINCIPALES ===== -->
     <div class="btn-fila-principal">
       <button class="btn-agregar-carrito" id="btn-agregar-carrito" onclick="agregarAlCarrito()" disabled>
-        ➕ Agregar otro artículo
+        �?Agregar otro artículo
       </button>
       <button class="btn-finalizar" id="btn-finalizar" onclick="finalizarEntrega()" disabled>
-        ✅ Finalizar entrega
+        �?Finalizar entrega
       </button>
     </div>
   </div>
@@ -991,11 +991,11 @@
   <div class="modal">
     <div class="modal-header">
       <h2>🧾 Comprobante de Entrega</h2>
-      <button class="btn-cerrar-modal" onclick="cerrarModalComprobante()">✕</button>
+      <button class="btn-cerrar-modal" onclick="cerrarModalComprobante()">�?/button>
     </div>
     <div id="ticket-content" style="max-height: 60vh; overflow-y: auto;"></div>
     <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
-      <button class="btn-primario" style="flex:1;" onclick="imprimirComprobante()">🖨️ Imprimir</button>
+      <button class="btn-primario" style="flex:1;" onclick="imprimirComprobante()">🖨�?Imprimir</button>
       <button class="btn-primario" style="flex:1; background:var(--verde);" onclick="descargarPDFComprobante()">📄 PDF</button>
       <button class="btn-secundario" style="flex:1;" onclick="cerrarModalComprobante()">Cerrar</button>
     </div>
@@ -1191,11 +1191,11 @@ async function iniciarSesionMicrosoft() {
       if (validarDominioLasCondes(email)) {
         usuarioDominioValido = true;
         await obtenerToken();
-        mostrarToast(`✅ Bienvenido, ${email}`);
+        mostrarToast(`�?Bienvenido, ${email}`);
         actualizarEstadoSesion(true);
         return usuarioAutenticado;
       } else {
-        mostrarToast(`❌ Debes usar una cuenta @lascondes.cl. Usaste: ${email}`);
+        mostrarToast(`�?Debes usar una cuenta @lascondes.cl. Usaste: ${email}`);
         usuarioDominioValido = false;
         actualizarEstadoSesion(false);
         await cerrarSesionMicrosoft();
@@ -1205,7 +1205,7 @@ async function iniciarSesionMicrosoft() {
     await msalInstance.loginRedirect({ scopes: ['user.read'] });
     return null;
   } catch (error) {
-    mostrarToast('❌ Error al iniciar sesión');
+    mostrarToast('�?Error al iniciar sesión');
     return null;
   }
 }
@@ -1227,7 +1227,7 @@ async function handleRedirectResponse() {
       if (validarDominioLasCondes(email)) {
         usuarioDominioValido = true;
         await obtenerToken();
-        mostrarToast(`✅ Bienvenido, ${email}`);
+        mostrarToast(`�?Bienvenido, ${email}`);
         actualizarEstadoSesion(true);
       } else {
         usuarioDominioValido = false;
@@ -1301,7 +1301,7 @@ function actualizarEstadoSesion(autenticado) {
 const FAMILIAS = {
   epp_basico: {
     label: 'EPP Básico',
-    icono: '🛡️',
+    icono: '🛡�?,
     productos: [
       { nombre: 'Casco de Seguridad', tallas: null },
       { nombre: 'Guante de Seguridad', tallas: null },
@@ -1314,7 +1314,7 @@ const FAMILIAS = {
   },
   epp_climatico: {
     label: 'EPP Climático',
-    icono: '🌧️',
+    icono: '🌧�?,
     productos: [
       { nombre: 'Bota de Seguridad', tallas: ['40', '41', '42', '43', '44', '45'] },
       { nombre: 'Capa de Agua', tallas: null },
@@ -1657,7 +1657,7 @@ async function verificarHistorialReceptor(rut) {
 async function sincronizarBD() {
   const btn = document.getElementById('btn-sincronizar');
   btn.disabled = true;
-  btn.textContent = '⏳ Sincronizando...';
+  btn.textContent = '�?Sincronizando...';
   
   try {
     await verificarConexionBD();
@@ -1665,7 +1665,7 @@ async function sincronizarBD() {
     await cargarEntregasBD();
     poblarDropdownProductos();
     actualizarDashboard();
-    mostrarToast('✅ Sincronización completa');
+    mostrarToast('�?Sincronización completa');
   } catch (error) {
     mostrarToast('⚠️ Error en sincronización');
   } finally {
@@ -1693,7 +1693,7 @@ function bloquearCamposReceptor(bloquear) {
     rutInput.style.background = '#f1f5f9';
     emailInput.style.background = '#f1f5f9';
     btnAgregar.disabled = true;
-    btnAgregar.textContent = '✅ Receptor verificado';
+    btnAgregar.textContent = '�?Receptor verificado';
   } else {
     nombreInput.style.background = '';
     rutInput.style.background = '';
@@ -1774,7 +1774,7 @@ function mostrarHistorial(entregas, nombre) {
   if (entregas.length === 0) {
     lista.innerHTML = `
       <div class="sin-entregas">
-        ✅ ${nombre} no tiene entregas previas. Puedes continuar.
+        �?${nombre} no tiene entregas previas. Puedes continuar.
       </div>
     `;
     btnContainer.style.display = 'flex';
@@ -1830,7 +1830,7 @@ function mostrarHistorial(entregas, nombre) {
 function continuarEntrega() {
   document.getElementById('seccion-productos-tabs').style.display = 'block';
   document.getElementById('btn-continuar-container').style.display = 'none';
-  mostrarToast('✅ Puedes agregar productos para la entrega');
+  mostrarToast('�?Puedes agregar productos para la entrega');
 }
 
 function cancelarEntrega() {
@@ -1844,7 +1844,7 @@ function cancelarEntrega() {
   receptoresAgregados = [];
   renderReceptores();
   bloquearCamposReceptor(false);
-  mostrarToast('❌ Entrega cancelada');
+  mostrarToast('�?Entrega cancelada');
 }
 
 function eliminarReceptor(email) {
@@ -1858,9 +1858,18 @@ function eliminarReceptor(email) {
 
 function renderReceptores() {
   const container = document.getElementById('receptores-container');
-  const count = document.getElementById('receptor-count');
+  const countSpan = document.getElementById('receptor-count');
+  
+  // ? Verificar que los elementos existan
+  if (!container) {
+    console.error('? Contenedor de receptores no encontrado');
+    return;
+  }
 
-  count.textContent = receptoresAgregados.length;
+  // ? Actualizar el contador si existe
+  if (countSpan) {
+    countSpan.textContent = receptoresAgregados.length;
+  }
 
   if (receptoresAgregados.length === 0) {
     container.innerHTML = '<div class="empty-state">No hay receptores agregados</div>';
@@ -1869,7 +1878,7 @@ function renderReceptores() {
 
   container.innerHTML = receptoresAgregados.map(p => `
     <div class="receptor-card">
-      <button class="btn-eliminar" onclick="eliminarReceptor('${p.email}')">✕</button>
+      <button class="btn-eliminar" onclick="eliminarReceptor('${p.email}')">?</button>
       <div class="receptor-nombre">${p.nombre}</div>
       <div class="receptor-rut">RUT: ${p.rut}</div>
       <div class="receptor-email">${p.email}</div>
@@ -1934,7 +1943,7 @@ function mostrarProductoSeleccionado(producto) {
   const unidadInput = document.getElementById('salida-unidad');
   
   if (!container || !selectorContainer || !selector || !tallaInfo) {
-    console.error('❌ Elementos del producto no encontrados');
+    console.error('�?Elementos del producto no encontrados');
     return;
   }
   
@@ -2010,7 +2019,7 @@ function seleccionarTallaProducto(talla, item) {
   document.querySelectorAll('.talla-item').forEach(el => {
     el.classList.toggle('active', el.dataset.talla === talla);
   });
-  document.getElementById('talla-seleccionada-info').textContent = `✅ Talla ${talla} seleccionada · Stock: ${item.stock} ${item.unidad}(s)`;
+  document.getElementById('talla-seleccionada-info').textContent = `�?Talla ${talla} seleccionada · Stock: ${item.stock} ${item.unidad}(s)`;
   document.getElementById('salida-cantidad').max = item.stock;
   document.getElementById('salida-cantidad').value = '';
   document.getElementById('salida-cantidad').placeholder = `Máx: ${item.stock}`;
@@ -2025,7 +2034,7 @@ function poblarDropdownProductos() {
   const input = document.getElementById('prod-trigger');
   
   if (!list || !input) {
-    console.error('❌ Elementos del dropdown no encontrados');
+    console.error('�?Elementos del dropdown no encontrados');
     return;
   }
   
@@ -2096,10 +2105,10 @@ function agregarAlCarrito() {
     const kitPatente = document.getElementById('kit-patente').value.trim().toUpperCase();
     const kitResponsable = document.getElementById('kit-responsable').value.trim();
     
-    if (!kitTipo) { mostrarToast('❌ Selecciona el tipo de kit'); return; }
-    if (!kitInventario) { mostrarToast('❌ Ingresa el número de inventario'); return; }
-    if (!kitPatente) { mostrarToast('❌ Ingresa la patente del vehículo'); return; }
-    if (!kitResponsable) { mostrarToast('❌ Ingresa el responsable del vehículo'); return; }
+    if (!kitTipo) { mostrarToast('�?Selecciona el tipo de kit'); return; }
+    if (!kitInventario) { mostrarToast('�?Ingresa el número de inventario'); return; }
+    if (!kitPatente) { mostrarToast('�?Ingresa la patente del vehículo'); return; }
+    if (!kitResponsable) { mostrarToast('�?Ingresa el responsable del vehículo'); return; }
     
     const herramientasSeleccionadas = [];
     document.querySelectorAll('.kit-herramienta:checked').forEach(cb => {
@@ -2107,7 +2116,7 @@ function agregarAlCarrito() {
     });
     
     if (herramientasSeleccionadas.length === 0) {
-      mostrarToast('❌ Selecciona al menos una herramienta del kit');
+      mostrarToast('�?Selecciona al menos una herramienta del kit');
       return;
     }
     
@@ -2133,19 +2142,19 @@ function agregarAlCarrito() {
     document.querySelectorAll('.kit-herramienta:checked').forEach(cb => cb.checked = false);
     
     renderCarrito();
-    mostrarToast(`✅ Kit ${nombreKit} agregado al carrito`);
+    mostrarToast(`�?Kit ${nombreKit} agregado al carrito`);
     return;
   }
 
   const productoBase = items.find(i => i.id === productoSeleccionadoId);
   if (!productoBase) {
-    mostrarToast('❌ Selecciona un producto');
+    mostrarToast('�?Selecciona un producto');
     return;
   }
 
   const cantidad = parseInt(document.getElementById('salida-cantidad').value);
   if (isNaN(cantidad) || cantidad <= 0) {
-    mostrarToast('❌ Ingresa una cantidad válida');
+    mostrarToast('�?Ingresa una cantidad válida');
     return;
   }
 
@@ -2155,26 +2164,26 @@ function agregarAlCarrito() {
 
   if (tieneTallas) {
     if (!tallaSeleccionada) {
-      mostrarToast('❌ Selecciona una talla');
+      mostrarToast('�?Selecciona una talla');
       return;
     }
     productoStock = items.find(i => i.nombre === productoBase.nombre && i.talla === tallaSeleccionada && i.familia === productoBase.familia);
     if (!productoStock) {
-      mostrarToast('❌ Producto no encontrado');
+      mostrarToast('�?Producto no encontrado');
       return;
     }
     if (cantidad > productoStock.stock) {
-      mostrarToast(`❌ Stock insuficiente. Disponible: ${productoStock.stock}`);
+      mostrarToast(`�?Stock insuficiente. Disponible: ${productoStock.stock}`);
       return;
     }
   } else {
     productoStock = itemsProducto[0];
     if (!productoStock) {
-      mostrarToast('❌ Producto no encontrado');
+      mostrarToast('�?Producto no encontrado');
       return;
     }
     if (cantidad > productoStock.stock) {
-      mostrarToast(`❌ Stock insuficiente. Disponible: ${productoStock.stock}`);
+      mostrarToast(`�?Stock insuficiente. Disponible: ${productoStock.stock}`);
       return;
     }
   }
@@ -2187,7 +2196,7 @@ function agregarAlCarrito() {
   if (existente) {
     const nuevaCantidad = existente.cantidad + cantidad;
     if (nuevaCantidad > productoStock.stock) {
-      mostrarToast(`❌ Stock insuficiente. Disponible: ${productoStock.stock}`);
+      mostrarToast(`�?Stock insuficiente. Disponible: ${productoStock.stock}`);
       return;
     }
     existente.cantidad = nuevaCantidad;
@@ -2203,13 +2212,13 @@ function agregarAlCarrito() {
 
   limpiarSeleccionProducto();
   renderCarrito();
-  mostrarToast(`✅ ${productoBase.nombre}${tallaSeleccionada ? ' (talla '+tallaSeleccionada+')' : ''} agregado al carrito`);
+  mostrarToast(`�?${productoBase.nombre}${tallaSeleccionada ? ' (talla '+tallaSeleccionada+')' : ''} agregado al carrito`);
 }
 
 function eliminarDelCarrito(index) {
   carrito.splice(index, 1);
   renderCarrito();
-  mostrarToast('🗑️ Producto eliminado del carrito');
+  mostrarToast('🗑�?Producto eliminado del carrito');
 }
 
 function renderCarrito() {
@@ -2241,7 +2250,7 @@ function renderCarrito() {
           <div class="detalle">${detalle}</div>
         </div>
         <div class="cantidad">${item.cantidad || 1} ${item.unidad}</div>
-        <button class="btn-eliminar" onclick="eliminarDelCarrito(${index})" title="Eliminar">✕</button>
+        <button class="btn-eliminar" onclick="eliminarDelCarrito(${index})" title="Eliminar">�?/button>
       </div>
     `;
   });
@@ -2286,7 +2295,7 @@ function previewFotos() {
         img.src = e.target.result;
         div.appendChild(img);
         const btn = document.createElement('button');
-        btn.textContent = '✕';
+        btn.textContent = '�?;
         btn.onclick = function() {
           const dt = new DataTransfer();
           const remaining = Array.from(input.files).filter((f, i) => i !== index);
@@ -2372,7 +2381,7 @@ function enviarCorreoComprobante(entrega) {
     
     emailjs.send('service_snitcew', 'template_entrega_mejorado', templateParams)
       .then(() => {
-        console.log(`✅ Correo enviado a ${receptor.nombre} (${receptor.email})`);
+        console.log(`�?Correo enviado a ${receptor.nombre} (${receptor.email})`);
       })
       .catch((error) => {
         console.error('Error al enviar correo a', receptor.email, error);
@@ -2385,17 +2394,17 @@ function enviarCorreoComprobante(entrega) {
 // ================================================================
 async function finalizarEntrega() {
   if (!usuarioAutenticado || !usuarioDominioValido) {
-    mostrarToast('❌ Debes iniciar sesión con @lascondes.cl');
+    mostrarToast('�?Debes iniciar sesión con @lascondes.cl');
     return;
   }
 
   if (carrito.length === 0) {
-    mostrarToast('❌ Agrega al menos un producto al carrito');
+    mostrarToast('�?Agrega al menos un producto al carrito');
     return;
   }
 
   if (receptoresAgregados.length === 0) {
-    mostrarToast('❌ Agrega al menos una persona que recibe');
+    mostrarToast('�?Agrega al menos una persona que recibe');
     return;
   }
 
@@ -2499,10 +2508,10 @@ async function finalizarEntrega() {
     enviarCorreoComprobante(ultimoComprobante);
     actualizarDashboard();
 
-    mostrarToast(`✅ Entrega ${numeroEntrega} registrada con ${carrito.length} productos`);
+    mostrarToast(`�?Entrega ${numeroEntrega} registrada con ${carrito.length} productos`);
 
   } catch (error) {
-    mostrarToast('❌ Error al guardar la entrega');
+    mostrarToast('�?Error al guardar la entrega');
     console.error(error);
   }
 }
@@ -2515,7 +2524,7 @@ function mostrarComprobante(entrega) {
   const content = document.getElementById('ticket-content');
   
   if (!entrega) {
-    mostrarToast('❌ No hay comprobante disponible');
+    mostrarToast('�?No hay comprobante disponible');
     return;
   }
 
@@ -2536,7 +2545,7 @@ function mostrarComprobante(entrega) {
       <div class="ticket-fila"><span class="label">Responsable Vehículo</span><span class="valor">${kitDetalle.kitInfo.responsable}</span></div>
       <div class="ticket-fila" style="flex-direction:column; align-items:flex-start; gap:2px;">
         <span class="label">Herramientas incluidas:</span>
-        <span style="font-size:10px; color:var(--texto-gris);">${kitDetalle.kitInfo.herramientas.map(h => '• '+h).join('<br>')}</span>
+        <span style="font-size:10px; color:var(--texto-gris);">${kitDetalle.kitInfo.herramientas.map(h => '�?'+h).join('<br>')}</span>
       </div>
     `;
   }
@@ -2549,7 +2558,7 @@ function mostrarComprobante(entrega) {
   const html = `
     <div class="ticket">
       <div class="ticket-header">
-        <h3>🏛️ MUNICIPALIDAD DE LAS CONDES</h3>
+        <h3>🏛�?MUNICIPALIDAD DE LAS CONDES</h3>
         <div class="subtitulo">Depto. Gestión de Riesgos y Desastres</div>
         <div style="font-weight:700; font-size:16px; margin-top:6px;">COMPROBANTE DE ENTREGA N° ${entrega.numeroEntrega}</div>
         <div class="subtitulo">Fecha: ${entrega.fecha}</div>
@@ -2608,7 +2617,7 @@ function mostrarComprobante(entrega) {
 function mostrarComprobanteUltima() {
   if (!ultimoComprobante) {
     if (salidas.length === 0) {
-      mostrarToast('❌ No hay entregas registradas');
+      mostrarToast('�?No hay entregas registradas');
       return;
     }
     const ultima = salidas.find(s => s.tipo === 'entrega_multiple');
@@ -2616,7 +2625,7 @@ function mostrarComprobanteUltima() {
       ultimoComprobante = ultima;
       mostrarComprobante(ultimoComprobante);
     } else {
-      mostrarToast('❌ No hay entregas múltiples registradas');
+      mostrarToast('�?No hay entregas múltiples registradas');
     }
     return;
   }
@@ -2672,7 +2681,7 @@ function imprimirComprobante() {
 
 function descargarPDFComprobante() {
   if (!ultimoComprobante) {
-    mostrarToast('❌ No hay comprobante');
+    mostrarToast('�?No hay comprobante');
     return;
   }
 
@@ -2838,7 +2847,7 @@ function descargarPDFComprobante() {
   }
 
   doc.save(`Entrega_${entrega.numeroEntrega}.pdf`);
-  mostrarToast('✅ PDF descargado');
+  mostrarToast('�?PDF descargado');
 }
 
 // ================================================================
@@ -2901,7 +2910,7 @@ document.addEventListener('DOMContentLoaded', function() {
         actualizarDashboard();
         verificarSesion();
         seleccionarFamilia('epp_basico');
-        console.log('✅ Aplicación lista!');
+        console.log('�?Aplicación lista!');
         console.log('📦 Productos cargados:', items.length);
         console.log('📋 Entregas cargadas:', salidas.length);
       });
@@ -2923,7 +2932,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  console.log('✅ Event listeners registrados');
+  console.log('�?Event listeners registrados');
 });
 </script>
 </body>
