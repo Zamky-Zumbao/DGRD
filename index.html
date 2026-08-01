@@ -374,6 +374,11 @@ let receptoresAgregados = [];
 // ================================================================
 // 3. EMAILJS
 // ================================================================
+// IMPORTANTE: si el correo de confirmacion falla con "template not found",
+// entra a https://dashboard.emailjs.com/admin/templates, copia el Template ID
+// real de tu cuenta y reemplazalo aqui abajo.
+const EMAILJS_SERVICE_ID = 'service_6bttmrf';
+const EMAILJS_TEMPLATE_ID = 'template_entrega_mejorado';
 let emailjsListo = false;
 try {
   if(typeof emailjs==='undefined') throw new Error('Libreria EmailJS no cargo (revisa conexion/bloqueo de red a cdn.jsdelivr.net)');
@@ -842,7 +847,7 @@ function enviarCorreoComprobante(entrega) {
   receptores.forEach(function(receptor){
     var templateParams = { to_email:receptor.email, to_name:receptor.nombre, numero_entrega:entrega.numeroEntrega, fecha:entrega.fecha, observacion:entrega.observacion||'Ninguna', responsable_nombre:responsableNombre, responsable_email:responsableEmail, receptor_nombre:receptorNombre, receptor_rut:receptorRut, receptor_email:receptorEmail, productos_lista:productosList, total_unidades:totalUnidades };
     if(!emailjsListo){ console.error('EmailJS no esta disponible, no se pudo enviar el correo a',receptor.email); return; }
-    emailjs.send('service_snitcew','template_entrega_mejorado',templateParams).then(function(){ console.log('Correo enviado a '+receptor.nombre); }).catch(function(error){ console.error('Error al enviar correo a',receptor.email,error); });
+    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,templateParams).then(function(){ console.log('Correo enviado a '+receptor.nombre); }).catch(function(error){ console.error('Error al enviar correo a',receptor.email,error); mostrarToast('Entrega guardada, pero el correo de confirmacion no se pudo enviar'); });
   });
 }
 
