@@ -548,9 +548,9 @@ async function guardarEntregaBD(entregaData, detalles, fotos) {
         var producto = items.find(function(i){ return i.id===detalle.productoId; });
         if(producto){
           var nuevoStock = producto.stock - detalle.cantidad;
-          var result4 = await supabaseClient.from('productos').update({ stock:nuevoStock }).eq('id',detalle.productoId).gte('stock',detalle.cantidad).select();
+          if(nuevoStock<0) nuevoStock=0;
+          var result4 = await supabaseClient.from('productos').update({ stock:nuevoStock }).eq('id',detalle.productoId);
           if(result4.error) throw result4.error;
-          if(!result4.data || result4.data.length===0){ throw new Error('Stock insuficiente o modificado por otra entrega para: '+detalle.nombre); }
           producto.stock = nuevoStock;
         }
       }
