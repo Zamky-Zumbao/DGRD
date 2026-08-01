@@ -415,7 +415,6 @@
     margin-top: 4px;
   }
 
-  /* ===== RECEPTOR ===== */
   .receptor-card {
     background: #f8fafc;
     border: 1px solid var(--borde);
@@ -539,7 +538,6 @@
   .empty-state { text-align: center; color: var(--texto-gris); font-size: 12px; padding: 12px 0; }
   footer { text-align: center; color: var(--texto-gris); font-size: 9px; padding: 16px 16px 30px; opacity: 0.7; }
 
-  /* ===== BOTONES PRINCIPALES ===== */
   .btn-agregar-carrito {
     background: var(--naranja);
     border: none;
@@ -579,7 +577,6 @@
     flex-wrap: wrap;
   }
 
-  /* ===== HISTORIAL ===== */
   .historial-container {
     display: none;
     margin-top: 8px;
@@ -698,15 +695,15 @@
       </div>
       <div class="logo-texto">
         MUNICIPALIDAD DE LAS CONDES
-        <small>Depto. Gestión de Riesgos y Desastres</small>
+        <small>Depto. Gestion de Riesgos y Desastres</small>
       </div>
     </div>
-    <div class="header-titulo">📦 ENTREGA DE PRODUCTOS</div>
+    <div class="header-titulo">ENTREGA DE PRODUCTOS</div>
     <div class="header-status">
-      <span class="badge-bd" id="bd-status">☁️ Conectando...</span>
+      <span class="badge-bd" id="bd-status">Conectando...</span>
       <button id="btn-sesion" class="btn-sesion">
         <span class="status-dot" id="status-dot"></span>
-        <span id="btn-sesion-texto">Iniciar sesión</span>
+        <span id="btn-sesion-texto">Iniciar sesion</span>
       </button>
     </div>
   </div>
@@ -714,7 +711,7 @@
 
 <!-- ===== RESUMEN ===== -->
 <div class="section">
-  <div class="section-label">📊 Resumen del día</div>
+  <div class="section-label">Resumen del dia</div>
   <div class="resumen-grid">
     <div class="resumen-card"><div class="num" id="res-entregas-hoy">0</div><div class="lbl">Entregas hoy</div></div>
     <div class="resumen-card rojo"><div class="num" id="res-unidades-hoy">0</div><div class="lbl">Unidades entregadas</div></div>
@@ -725,66 +722,65 @@
 
 <!-- ===== REGISTRAR ENTREGA ===== -->
 <div class="section">
-  <div class="section-label">⬆️ Nueva Entrega</div>
+  <div class="section-label">Nueva Entrega</div>
 
   <!-- USUARIO QUE ENTREGA -->
   <div id="usuario-info" class="usuario-info">
-    <div class="label">👤 Entregado por</div>
+    <div class="label">Entregado por</div>
     <div class="valor" id="usuario-nombre">--</div>
     <div style="font-size:11px; color:var(--texto-gris);" id="usuario-email">--</div>
   </div>
 
-  <!-- ===== RECEPTORES (AHORA ARRIBA) ===== -->
+  <!-- ===== RECEPTORES (ARRIBA) ===== -->
   <div class="field">
-    <label class="required">👤 Persona que recibe</label>
+    <label class="required">Persona que recibe</label>
     <div class="row-3">
       <div class="field" style="margin-bottom:0;">
         <label>Nombre completo *</label>
-        <input type="text" id="receptor-nombre" placeholder="Ej: Juan Pérez">
+        <input type="text" id="receptor-nombre" placeholder="Ej: Juan Perez">
       </div>
       <div class="field" style="margin-bottom:0;">
         <label>RUT *</label>
         <input type="text" id="receptor-rut" placeholder="Ej: 12.345.678-5" maxlength="12">
       </div>
       <div class="field" style="margin-bottom:0;">
-        <label>Correo electrónico *</label>
+        <label>Correo electronico *</label>
         <input type="email" id="receptor-email" placeholder="Ej: juan@lascondes.cl">
       </div>
     </div>
     <button class="btn-agregar-receptor" id="btn-agregar-receptor" onclick="agregarReceptor()">+ Verificar receptor</button>
     <div id="receptor-error" style="color:var(--rojo); font-size:11px; margin-top:4px; display:none;"></div>
     <div class="receptor-agregado-msg" id="receptor-agregado-msg">
-      �?Receptor <strong id="receptor-agregado-nombre"></strong> agregado para esta entrega.
+      Receptor <strong id="receptor-agregado-nombre"></strong> agregado para esta entrega.
     </div>
   </div>
 
   <!-- ===== HISTORIAL DEL RECEPTOR ===== -->
   <div class="historial-container" id="historial-container">
-    <div class="titulo">📋 Historial de entregas de <span id="historial-nombre"></span></div>
+    <div class="titulo">Historial de entregas de <span id="historial-nombre"></span></div>
     <div id="historial-lista"></div>
     <div class="btn-continuar" id="btn-continuar-container" style="display:none;">
-      <button class="continuar" id="btn-continuar-entrega" onclick="continuarEntrega()">�?Continuar con la entrega</button>
-      <button class="cancelar" id="btn-cancelar-entrega" onclick="cancelarEntrega()">�?Cancelar entrega</button>
+      <button class="continuar" id="btn-continuar-entrega" onclick="continuarEntrega()">Continuar con la entrega</button>
+      <button class="cancelar" id="btn-cancelar-entrega" onclick="cancelarEntrega()">Cancelar entrega</button>
     </div>
   </div>
 
-  <!-- ===== SECCIÓN DE PRODUCTOS (OCULTA HASTA VERIFICAR RECEPTOR) ===== -->
+  <!-- ===== SECCION DE PRODUCTOS ===== -->
   <div id="seccion-productos-tabs" style="display: none;">
-    <!-- TABS: Productos + Kit -->
     <div class="field">
-      <label>📂 Tipo de registro</label>
+      <label>Tipo de registro</label>
       <div class="tabs-familias" id="tabs-familias">
-        <div class="tab-familia active" data-familia="epp_basico">🛡�?EPP Básico</div>
-        <div class="tab-familia" data-familia="epp_climatico">🌧�?EPP Climático</div>
-        <div class="tab-familia" data-familia="epp_especial">🧥 EPP Especial</div>
-        <div class="tab-familia" data-familia="maquinarias">🔧 Maquinarias</div>
-        <div class="tab-familia" data-familia="herramientas">🔩 Herramientas</div>
-        <div class="tab-familia" data-familia="kit">🧰 Kit Vehicular</div>
-        <div class="tab-familia" data-familia="todas">📦 Todas</div>
+        <div class="tab-familia active" data-familia="epp_basico">EPP Basico</div>
+        <div class="tab-familia" data-familia="epp_climatico">EPP Climatico</div>
+        <div class="tab-familia" data-familia="epp_especial">EPP Especial</div>
+        <div class="tab-familia" data-familia="maquinarias">Maquinarias</div>
+        <div class="tab-familia" data-familia="herramientas">Herramientas</div>
+        <div class="tab-familia" data-familia="kit">Kit Vehicular</div>
+        <div class="tab-familia" data-familia="todas">Todas</div>
       </div>
     </div>
 
-    <!-- ===== SECCIÓN PRODUCTOS ===== -->
+    <!-- PRODUCTOS -->
     <div id="seccion-productos">
       <div class="field">
         <label class="required">Producto</label>
@@ -796,7 +792,7 @@
 
       <div id="producto-seleccionado-container" class="producto-seleccionado">
         <div id="selector-tallas-container" style="display:none;">
-          <div class="prod-subtitulo">📏 Selecciona una talla:</div>
+          <div class="prod-subtitulo">Selecciona una talla:</div>
           <div class="selector-tallas" id="selector-tallas"></div>
           <div id="talla-seleccionada-info" style="font-size:10px; color:var(--texto-gris); margin-top:6px;"></div>
         </div>
@@ -814,18 +810,18 @@
       </div>
     </div>
 
-    <!-- ===== SECCIÓN KIT ===== -->
+    <!-- KIT -->
     <div id="seccion-kit" style="display: none;">
-      <div class="section-label" style="border-left-color: var(--naranja);">🧰 Kit de Fiscalización Vehicular</div>
+      <div class="section-label" style="border-left-color: var(--naranja);">Kit de Fiscalizacion Vehicular</div>
 
       <div class="field">
         <label class="required">Tipo de Kit</label>
         <select id="kit-tipo">
           <option value="">Selecciona un kit...</option>
-          <option value="Kit Básico Inspector">Kit Básico Inspector</option>
-          <option value="Kit Control de Tránsito">Kit Control de Tránsito</option>
-          <option value="Kit Fiscalización Obras">Kit Fiscalización Obras</option>
-          <option value="Kit Fiscalización Ambiental">Kit Fiscalización Ambiental</option>
+          <option value="Kit Basico Inspector">Kit Basico Inspector</option>
+          <option value="Kit Control de Transito">Kit Control de Transito</option>
+          <option value="Kit Fiscalizacion Obras">Kit Fiscalizacion Obras</option>
+          <option value="Kit Fiscalizacion Ambiental">Kit Fiscalizacion Ambiental</option>
           <option value="Otro">Otro</option>
         </select>
       </div>
@@ -837,82 +833,81 @@
 
       <div class="row-2">
         <div class="field">
-          <label class="required">N° Inventario del Kit</label>
+          <label class="required">N Inventario del Kit</label>
           <input type="text" id="kit-inventario" placeholder="Ej: KIT-2024-001">
         </div>
         <div class="field">
-          <label class="required">Patente del Vehículo</label>
+          <label class="required">Patente del Vehiculo</label>
           <input type="text" id="kit-patente" placeholder="Ej: AB-CD-12">
         </div>
       </div>
 
       <div class="field">
-        <label class="required">Responsable del Vehículo</label>
+        <label class="required">Responsable del Vehiculo</label>
         <input type="text" id="kit-responsable" placeholder="Nombre del funcionario">
       </div>
 
       <div class="field">
         <label>Componentes del Kit</label>
         <div id="kit-componentes" style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px; max-height: 350px; overflow-y: auto; padding: 8px; border: 1px solid var(--borde); border-radius: 12px; background: #fafcff;">
-          
-          <div class="kit-categoria">📋 Herramientas de Fiscalización</div>
+          <div class="kit-categoria">Herramientas de Fiscalizacion</div>
           <div class="kit-componentes-grid">
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Tablero de fiscalización" class="kit-herramienta"> Tablero de fiscalización
+              <input type="checkbox" value="Tablero de fiscalizacion" class="kit-herramienta"> Tablero de fiscalizacion
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Kit de escritorio (lápices, marcadores, formularios)" class="kit-herramienta"> Kit de escritorio
+              <input type="checkbox" value="Kit de escritorio (lapices, marcadores, formularios)" class="kit-herramienta"> Kit de escritorio
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Cargador de vehículo (USB)" class="kit-herramienta"> Cargador vehículo USB
+              <input type="checkbox" value="Cargador de vehiculo (USB)" class="kit-herramienta"> Cargador vehiculo USB
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
               <input type="checkbox" value="Linterna de mano recargable" class="kit-herramienta"> Linterna recargable
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Cinta métrica de 5m" class="kit-herramienta"> Cinta métrica 5m
+              <input type="checkbox" value="Cinta metrica de 5m" class="kit-herramienta"> Cinta metrica 5m
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Cámara fotográfica digital" class="kit-herramienta"> Cámara fotográfica
+              <input type="checkbox" value="Camara fotografica digital" class="kit-herramienta"> Camara fotografica
             </label>
           </div>
 
-          <div class="kit-categoria">🦺 Elementos de Seguridad Personal</div>
+          <div class="kit-categoria">Elementos de Seguridad Personal</div>
           <div class="kit-componentes-grid">
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
               <input type="checkbox" value="Chaleco reflectivo" class="kit-herramienta"> Chaleco reflectivo
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Funda para carnet con cordón" class="kit-herramienta"> Funda carnet
+              <input type="checkbox" value="Funda para carnet con cordon" class="kit-herramienta"> Funda carnet
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Guantes de seguridad (talla única)" class="kit-herramienta"> Guantes seguridad
+              <input type="checkbox" value="Guantes de seguridad (talla unica)" class="kit-herramienta"> Guantes seguridad
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Botiquín básico" class="kit-herramienta"> Botiquín básico
+              <input type="checkbox" value="Botiquin basico" class="kit-herramienta"> Botiquin basico
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
               <input type="checkbox" value="Protector solar y repelente" class="kit-herramienta"> Protector solar/repelente
             </label>
           </div>
 
-          <div class="kit-categoria">🚦 Control y Señalización Vial</div>
+          <div class="kit-categoria">Control y Senalizacion Vial</div>
           <div class="kit-componentes-grid">
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Conos de tránsito (2 unidades)" class="kit-herramienta"> Conos de tránsito (2)
+              <input type="checkbox" value="Conos de transito (2 unidades)" class="kit-herramienta"> Conos de transito (2)
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Baliza portátil (luz intermitente)" class="kit-herramienta"> Baliza portátil
+              <input type="checkbox" value="Baliza portatil (luz intermitente)" class="kit-herramienta"> Baliza portatil
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Placa señalización fiscalización" class="kit-herramienta"> Placa fiscalización
+              <input type="checkbox" value="Placa senalizacion fiscalizacion" class="kit-herramienta"> Placa fiscalizacion
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
               <input type="checkbox" value="Cinta de peligro" class="kit-herramienta"> Cinta de peligro
             </label>
           </div>
 
-          <div class="kit-categoria">🔧 Herramientas Manuales</div>
+          <div class="kit-categoria">Herramientas Manuales</div>
           <div class="kit-componentes-grid">
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
               <input type="checkbox" value="Multiherramienta (navaja, alicate, destornillador)" class="kit-herramienta"> Multiherramienta
@@ -921,7 +916,7 @@
               <input type="checkbox" value="Cuchillo multiusos con seguro" class="kit-herramienta"> Cuchillo multiusos
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-              <input type="checkbox" value="Martillo de inspección" class="kit-herramienta"> Martillo inspección
+              <input type="checkbox" value="Martillo de inspeccion" class="kit-herramienta"> Martillo inspeccion
             </label>
             <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
               <input type="checkbox" value="Cinta aisladora y de amarre" class="kit-herramienta"> Cinta aisladora/amarre
@@ -930,13 +925,13 @@
         </div>
       </div>
       <div style="font-size: 10px; color: var(--texto-gris); margin-top: -6px; margin-bottom: 8px;">
-        �?Selecciona las herramientas que componen el kit entregado
+        Selecciona las herramientas que componen el kit entregado
       </div>
     </div>
 
-    <!-- ===== CARRITO ===== -->
+    <!-- CARRITO -->
     <div class="field">
-      <label>📦 Productos en esta entrega (<span id="carrito-count">0</span>)</label>
+      <label>Productos en esta entrega (<span id="carrito-count">0</span>)</label>
       <div id="carrito-container" style="border: 1px solid var(--borde); border-radius: 12px; padding: 8px; min-height: 60px; background: #fafcff;">
         <div class="empty-state" id="carrito-vacio">No hay productos agregados</div>
       </div>
@@ -946,41 +941,41 @@
       </div>
     </div>
 
-    <!-- ===== OBSERVACIÓN ===== -->
+    <!-- OBSERVACION -->
     <div class="field">
-      <label>Observación (opcional)</label>
+      <label>Observacion (opcional)</label>
       <textarea id="salida-obs" rows="2" placeholder="Motivo de la entrega, proyecto, etc."></textarea>
     </div>
 
-    <!-- ===== FOTOS ===== -->
+    <!-- FOTOS -->
     <div class="field">
-      <label>📷 Fotografía (opcional)</label>
+      <label>Fotografia (opcional)</label>
       <div class="foto-upload">
         <input type="file" id="foto-input" accept="image/*" capture="environment" multiple onchange="previewFotos()">
         <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-          <button type="button" class="btn-camara" onclick="abrirCamara()">📸 Tomar foto con cámara</button>
-          <button type="button" class="btn-camara" style="background:var(--azul);" onclick="abrirGaleria()">🖼�?Elegir de galería</button>
+          <button type="button" class="btn-camara" onclick="abrirCamara()">Tomar foto con camara</button>
+          <button type="button" class="btn-camara" style="background:var(--azul);" onclick="abrirGaleria()">Elegir de galeria</button>
         </div>
         <div id="foto-preview" class="foto-preview"></div>
         <div id="foto-placeholder" style="font-size:10px; color:var(--texto-gris); margin-top:6px;">Subir foto(s) del producto o entrega</div>
       </div>
     </div>
 
-    <!-- ===== BOTONES PRINCIPALES ===== -->
+    <!-- BOTONES PRINCIPALES -->
     <div class="btn-fila-principal">
       <button class="btn-agregar-carrito" id="btn-agregar-carrito" onclick="agregarAlCarrito()" disabled>
-        �?Agregar otro artículo
+        Agregar otro articulo
       </button>
       <button class="btn-finalizar" id="btn-finalizar" onclick="finalizarEntrega()" disabled>
-        �?Finalizar entrega
+        Finalizar entrega
       </button>
     </div>
   </div>
 
-  <!-- ===== BOTONES SECUNDARIOS ===== -->
+  <!-- BOTONES SECUNDARIOS -->
   <div style="display: flex; gap: 8px; margin-top: 8px;">
-    <button class="btn-secundario" onclick="mostrarComprobanteUltima()" style="flex:1;">📋 Ver último comprobante</button>
-    <button class="btn-secundario" onclick="sincronizarBD()" style="flex:1; background: var(--verde); color: white;" id="btn-sincronizar">🔄 Sincronizar</button>
+    <button class="btn-secundario" onclick="mostrarComprobanteUltima()" style="flex:1;">Ver ultimo comprobante</button>
+    <button class="btn-secundario" onclick="sincronizarBD()" style="flex:1; background: var(--verde); color: white;" id="btn-sincronizar">Sincronizar</button>
   </div>
 </div>
 
@@ -990,13 +985,13 @@
 <div class="modal-overlay" id="modal-comprobante">
   <div class="modal">
     <div class="modal-header">
-      <h2>🧾 Comprobante de Entrega</h2>
-      <button class="btn-cerrar-modal" onclick="cerrarModalComprobante()">�?/button>
+      <h2>Comprobante de Entrega</h2>
+      <button class="btn-cerrar-modal" onclick="cerrarModalComprobante()">X</button>
     </div>
     <div id="ticket-content" style="max-height: 60vh; overflow-y: auto;"></div>
     <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
-      <button class="btn-primario" style="flex:1;" onclick="imprimirComprobante()">🖨�?Imprimir</button>
-      <button class="btn-primario" style="flex:1; background:var(--verde);" onclick="descargarPDFComprobante()">📄 PDF</button>
+      <button class="btn-primario" style="flex:1;" onclick="imprimirComprobante()">Imprimir</button>
+      <button class="btn-primario" style="flex:1; background:var(--verde);" onclick="descargarPDFComprobante()">PDF</button>
       <button class="btn-secundario" style="flex:1;" onclick="cerrarModalComprobante()">Cerrar</button>
     </div>
   </div>
@@ -1009,7 +1004,7 @@
 <!-- ===== JAVASCRIPT ===== -->
 <script>
 // ================================================================
-// 1. CONFIGURACIÓN SUPABASE
+// 1. CONFIGURACION SUPABASE
 // ================================================================
 
 const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
@@ -1019,7 +1014,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let bdConectada = false;
 
 // ================================================================
-// 2. CONFIGURACIÓN MSAL (Azure AD)
+// 2. CONFIGURACION MSAL (Azure AD)
 // ================================================================
 
 const msalConfig = {
@@ -1037,7 +1032,7 @@ let usuarioDominioValido = false;
 let receptoresAgregados = [];
 
 // ================================================================
-// 3. CONFIGURACIÓN EMAILJS
+// 3. CONFIGURACION EMAILJS
 // ================================================================
 emailjs.init('tJ1jLx0YD2ifJfsW-');
 
@@ -1053,7 +1048,6 @@ let familiaSeleccionada = 'epp_basico';
 let modoKit = false;
 let carrito = [];
 let fotosData = [];
-let receptorVerificado = false;
 
 const STORAGE_KEY = 'inv_items_salidas_v8';
 
@@ -1069,7 +1063,7 @@ function fechaHoraActual() {
   const yyyy = now.getFullYear();
   const hh = now.getHours().toString().padStart(2, '0');
   const min = now.getMinutes().toString().padStart(2, '0');
-  return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+  return dd + '/' + mm + '/' + yyyy + ' ' + hh + ':' + min;
 }
 
 function esHoy(fechaStr) {
@@ -1078,7 +1072,7 @@ function esHoy(fechaStr) {
   const ddHoy = hoy.getDate().toString().padStart(2, '0');
   const mmHoy = (hoy.getMonth() + 1).toString().padStart(2, '0');
   const yyyyHoy = hoy.getFullYear();
-  return fechaStr.startsWith(`${ddHoy}/${mmHoy}/${yyyyHoy}`);
+  return fechaStr.startsWith(ddHoy + '/' + mmHoy + '/' + yyyyHoy);
 }
 
 function validarDominioLasCondes(email) {
@@ -1091,38 +1085,38 @@ function mostrarToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(t._timeout);
-  t._timeout = setTimeout(() => t.classList.remove('show'), 4000);
+  t._timeout = setTimeout(function() { t.classList.remove('show'); }, 4000);
 }
 
 // ================================================================
-// 6. VALIDADOR DE RUT COMPLETO
+// 6. VALIDADOR DE RUT
 // ================================================================
 
 function validarRUT(rut) {
-    const rutLimpio = rut.replace(/[.-]/g, '');
+    var rutLimpio = rut.replace(/[.-]/g, '');
     
     if (rutLimpio.length < 2) {
         return { valido: false, mensaje: 'RUT demasiado corto' };
     }
     
-    const cuerpo = rutLimpio.slice(0, -1);
-    const dvIngresado = rutLimpio.slice(-1).toUpperCase();
+    var cuerpo = rutLimpio.slice(0, -1);
+    var dvIngresado = rutLimpio.slice(-1).toUpperCase();
     
     if (!/^\d+$/.test(cuerpo)) {
-        return { valido: false, mensaje: 'El RUT debe contener solo números' };
+        return { valido: false, mensaje: 'El RUT debe contener solo numeros' };
     }
     
-    let suma = 0;
-    let multiplicador = 2;
+    var suma = 0;
+    var multiplicador = 2;
     
-    for (let i = cuerpo.length - 1; i >= 0; i--) {
+    for (var i = cuerpo.length - 1; i >= 0; i--) {
         suma += parseInt(cuerpo[i]) * multiplicador;
-        multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+        multiplicador = (multiplicador === 7) ? 2 : multiplicador + 1;
     }
     
-    const resto = suma % 11;
-    const dvCalculado = 11 - resto;
-    let dvEsperado = '';
+    var resto = suma % 11;
+    var dvCalculado = 11 - resto;
+    var dvEsperado = '';
     
     if (dvCalculado === 11) {
         dvEsperado = '0';
@@ -1135,15 +1129,15 @@ function validarRUT(rut) {
     if (dvIngresado !== dvEsperado) {
         return { 
             valido: false, 
-            mensaje: `El dígito verificador correcto es: ${dvEsperado}`
+            mensaje: 'El digito verificador correcto es: ' + dvEsperado
         };
     }
     
-    const rutFormateado = formatearRUT(cuerpo + dvIngresado);
+    var rutFormateado = formatearRUT(cuerpo + dvIngresado);
     
     return { 
         valido: true, 
-        mensaje: 'RUT válido',
+        mensaje: 'RUT valido',
         rut: rutLimpio,
         rutFormateado: rutFormateado,
         cuerpo: cuerpo,
@@ -1152,13 +1146,13 @@ function validarRUT(rut) {
 }
 
 function formatearRUT(rut) {
-    const rutLimpio = rut.replace(/[.-]/g, '');
-    const cuerpo = rutLimpio.slice(0, -1);
-    const dv = rutLimpio.slice(-1);
+    var rutLimpio = rut.replace(/[.-]/g, '');
+    var cuerpo = rutLimpio.slice(0, -1);
+    var dv = rutLimpio.slice(-1);
     
-    let cuerpoFormateado = '';
-    let contador = 0;
-    for (let i = cuerpo.length - 1; i >= 0; i--) {
+    var cuerpoFormateado = '';
+    var contador = 0;
+    for (var i = cuerpo.length - 1; i >= 0; i--) {
         cuerpoFormateado = cuerpo[i] + cuerpoFormateado;
         contador++;
         if (contador === 3 && i > 0) {
@@ -1167,35 +1161,35 @@ function formatearRUT(rut) {
         }
     }
     
-    return `${cuerpoFormateado}-${dv}`;
+    return cuerpoFormateado + '-' + dv;
 }
 
 // ================================================================
-// 7. FUNCIONES DE AUTENTICACIÓN (Azure AD)
+// 7. FUNCIONES DE AUTENTICACION
 // ================================================================
 async function obtenerToken() {
   try {
-    const account = msalInstance.getAllAccounts()[0];
+    var account = msalInstance.getAllAccounts()[0];
     if (!account) return null;
-    const response = await msalInstance.acquireTokenSilent({ account: account, scopes: ['user.read'] });
+    var response = await msalInstance.acquireTokenSilent({ account: account, scopes: ['user.read'] });
     return response.accessToken;
   } catch (error) { return null; }
 }
 
 async function iniciarSesionMicrosoft() {
   try {
-    const accounts = msalInstance.getAllAccounts();
+    var accounts = msalInstance.getAllAccounts();
     if (accounts.length > 0) {
       usuarioAutenticado = accounts[0];
-      const email = usuarioAutenticado.username;
+      var email = usuarioAutenticado.username;
       if (validarDominioLasCondes(email)) {
         usuarioDominioValido = true;
         await obtenerToken();
-        mostrarToast(`�?Bienvenido, ${email}`);
+        mostrarToast('Bienvenido, ' + email);
         actualizarEstadoSesion(true);
         return usuarioAutenticado;
       } else {
-        mostrarToast(`�?Debes usar una cuenta @lascondes.cl. Usaste: ${email}`);
+        mostrarToast('Debes usar una cuenta @lascondes.cl. Usaste: ' + email);
         usuarioDominioValido = false;
         actualizarEstadoSesion(false);
         await cerrarSesionMicrosoft();
@@ -1205,7 +1199,7 @@ async function iniciarSesionMicrosoft() {
     await msalInstance.loginRedirect({ scopes: ['user.read'] });
     return null;
   } catch (error) {
-    mostrarToast('�?Error al iniciar sesión');
+    mostrarToast('Error al iniciar sesion');
     return null;
   }
 }
@@ -1215,19 +1209,19 @@ async function cerrarSesionMicrosoft() {
   usuarioAutenticado = null;
   usuarioDominioValido = false;
   actualizarEstadoSesion(false);
-  mostrarToast('🔓 Sesión cerrada');
+  mostrarToast('Sesion cerrada');
 }
 
 async function handleRedirectResponse() {
   try {
-    const response = await msalInstance.handleRedirectPromise();
+    var response = await msalInstance.handleRedirectPromise();
     if (response && response.account) {
       usuarioAutenticado = response.account;
-      const email = usuarioAutenticado.username;
+      var email = usuarioAutenticado.username;
       if (validarDominioLasCondes(email)) {
         usuarioDominioValido = true;
         await obtenerToken();
-        mostrarToast(`�?Bienvenido, ${email}`);
+        mostrarToast('Bienvenido, ' + email);
         actualizarEstadoSesion(true);
       } else {
         usuarioDominioValido = false;
@@ -1240,10 +1234,10 @@ async function handleRedirectResponse() {
 
 async function verificarSesion() {
   await handleRedirectResponse();
-  const accounts = msalInstance.getAllAccounts();
+  var accounts = msalInstance.getAllAccounts();
   if (accounts.length > 0) {
     usuarioAutenticado = accounts[0];
-    const email = usuarioAutenticado.username;
+    var email = usuarioAutenticado.username;
     if (validarDominioLasCondes(email)) {
       usuarioDominioValido = true;
       await obtenerToken();
@@ -1259,38 +1253,35 @@ async function verificarSesion() {
 }
 
 function actualizarEstadoSesion(autenticado) {
-  const btn = document.getElementById('btn-sesion');
-  const texto = document.getElementById('btn-sesion-texto');
-  const dot = document.getElementById('status-dot');
-  const btnFinalizar = document.getElementById('btn-finalizar');
-  const btnAgregar = document.getElementById('btn-agregar-carrito');
-  const btnVerificar = document.getElementById('btn-agregar-receptor');
-  const usuarioInfo = document.getElementById('usuario-info');
-  const usuarioNombre = document.getElementById('usuario-nombre');
-  const usuarioEmail = document.getElementById('usuario-email');
+  var btn = document.getElementById('btn-sesion');
+  var texto = document.getElementById('btn-sesion-texto');
+  var dot = document.getElementById('status-dot');
+  var btnFinalizar = document.getElementById('btn-finalizar');
+  var btnAgregar = document.getElementById('btn-agregar-carrito');
+  var usuarioInfo = document.getElementById('usuario-info');
+  var usuarioNombre = document.getElementById('usuario-nombre');
+  var usuarioEmail = document.getElementById('usuario-email');
 
   if (autenticado && usuarioDominioValido && usuarioAutenticado) {
-    const email = usuarioAutenticado.username;
-    const nombre = email.split('@')[0];
-    texto.textContent = `👤 ${nombre}`;
+    var email = usuarioAutenticado.username;
+    var nombre = email.split('@')[0];
+    texto.textContent = nombre;
     dot.className = 'status-dot online';
-    btn.title = 'Cerrar sesión';
+    btn.title = 'Cerrar sesion';
     btn.onclick = cerrarSesionMicrosoft;
     btnFinalizar.disabled = false;
     btnAgregar.disabled = false;
-    btnVerificar.disabled = false;
     
     usuarioInfo.style.display = 'block';
     usuarioNombre.textContent = nombre;
     usuarioEmail.textContent = email;
   } else {
-    texto.textContent = 'Iniciar sesión';
+    texto.textContent = 'Iniciar sesion';
     dot.className = 'status-dot';
-    btn.title = 'Iniciar sesión con cuenta @lascondes.cl';
+    btn.title = 'Iniciar sesion con cuenta @lascondes.cl';
     btn.onclick = iniciarSesionMicrosoft;
     btnFinalizar.disabled = true;
     btnAgregar.disabled = true;
-    btnVerificar.disabled = true;
     usuarioInfo.style.display = 'none';
   }
 }
@@ -1298,14 +1289,14 @@ function actualizarEstadoSesion(autenticado) {
 // ================================================================
 // 8. FAMILIAS Y PRODUCTOS
 // ================================================================
-const FAMILIAS = {
+var FAMILIAS = {
   epp_basico: {
-    label: 'EPP Básico',
-    icono: '🛡�?,
+    label: 'EPP Basico',
+    icono: 'S',
     productos: [
       { nombre: 'Casco de Seguridad', tallas: null },
       { nombre: 'Guante de Seguridad', tallas: null },
-      { nombre: 'Botín de Seguridad', tallas: ['40', '41', '42', '43', '44', '45'] },
+      { nombre: 'Botin de Seguridad', tallas: ['40', '41', '42', '43', '44', '45'] },
       { nombre: 'Zapato de Seguridad', tallas: ['40', '41', '42', '43', '44', '45'] },
       { nombre: 'Lentes de Seguridad', tallas: null },
       { nombre: 'Antiparras', tallas: null },
@@ -1313,13 +1304,13 @@ const FAMILIAS = {
     ]
   },
   epp_climatico: {
-    label: 'EPP Climático',
-    icono: '🌧�?,
+    label: 'EPP Climatico',
+    icono: 'C',
     productos: [
       { nombre: 'Bota de Seguridad', tallas: ['40', '41', '42', '43', '44', '45'] },
       { nombre: 'Capa de Agua', tallas: null },
       { nombre: 'Traje de Agua', tallas: null },
-      { nombre: 'Pantalón de Agua', tallas: null },
+      { nombre: 'Pantalon de Agua', tallas: null },
       { nombre: 'Cubrebotas', tallas: null },
       { nombre: 'Jardinera', tallas: null },
       { nombre: 'Chaqueta Impermeable', tallas: null },
@@ -1328,28 +1319,28 @@ const FAMILIAS = {
   },
   epp_especial: {
     label: 'EPP Especial',
-    icono: '🧥',
+    icono: 'E',
     productos: [
-      { nombre: 'Parka Térmica', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Parka Termica', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
       { nombre: 'Overol de Trabajo', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
       { nombre: 'Chaqueta Softshell', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
       { nombre: 'Chaqueta Polar', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
-      { nombre: 'Pantalón de Trabajo', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Pantalon de Trabajo', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
       { nombre: 'Camisa de Trabajo', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
-      { nombre: 'Polera Térmica', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
-      { nombre: 'Ropa Ignífuga', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Polera Termica', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
+      { nombre: 'Ropa Ignifuga', tallas: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] },
       { nombre: 'Malla de Seguridad', tallas: null }
     ]
   },
   maquinarias: {
     label: 'Maquinarias',
-    icono: '🔧',
+    icono: 'M',
     productos: [
       { nombre: 'Motobomba de Agua', tallas: null },
-      { nombre: 'Bomba Periférica', tallas: null },
+      { nombre: 'Bomba Periferica', tallas: null },
       { nombre: 'Bomba Sumergible', tallas: null },
       { nombre: 'Bomba Pozo Profundo', tallas: null },
-      { nombre: 'Generador Eléctrico', tallas: null },
+      { nombre: 'Generador Electrico', tallas: null },
       { nombre: 'Esmeril Angular', tallas: null },
       { nombre: 'Taladro Percutor', tallas: null },
       { nombre: 'Martillo Demoledor', tallas: null },
@@ -1361,7 +1352,7 @@ const FAMILIAS = {
   },
   herramientas: {
     label: 'Herramientas',
-    icono: '🔩',
+    icono: 'H',
     productos: [
       { nombre: 'Herramienta 01', tallas: null },
       { nombre: 'Herramienta 02', tallas: null },
@@ -1376,20 +1367,20 @@ const FAMILIAS = {
 };
 
 // ================================================================
-// 9. FUNCIONES DE BASE DE DATOS (Supabase)
+// 9. FUNCIONES DE BASE DE DATOS
 // ================================================================
 
 async function verificarConexionBD() {
   try {
-    const { data, error } = await supabaseClient.from('productos').select('count', { count: 'exact', head: true });
-    if (error) throw error;
+    var result = await supabaseClient.from('productos').select('count', { count: 'exact', head: true });
+    if (result.error) throw result.error;
     bdConectada = true;
-    document.getElementById('bd-status').textContent = '☁️ Conectado';
+    document.getElementById('bd-status').textContent = 'Conectado';
     document.getElementById('bd-status').className = 'badge-bd online';
     return true;
   } catch (error) {
     bdConectada = false;
-    document.getElementById('bd-status').textContent = '⚠️ Offline';
+    document.getElementById('bd-status').textContent = 'Offline';
     document.getElementById('bd-status').className = 'badge-bd';
     console.error('Error conectando a Supabase:', error);
     return false;
@@ -1398,15 +1389,15 @@ async function verificarConexionBD() {
 
 async function cargarProductosBD() {
   try {
-    const { data, error } = await supabaseClient
+    var result = await supabaseClient
       .from('productos')
       .select('*')
       .order('nombre');
     
-    if (error) throw error;
+    if (result.error) throw result.error;
     
-    if (data && data.length > 0) {
-      items = data;
+    if (result.data && result.data.length > 0) {
+      items = result.data;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
       return items;
     } else {
@@ -1415,7 +1406,7 @@ async function cargarProductosBD() {
     }
   } catch (error) {
     console.error('Error cargando productos:', error);
-    const localItems = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    var localItems = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
     if (localItems && localItems.length > 0) {
       items = localItems;
       return items;
@@ -1426,15 +1417,16 @@ async function cargarProductosBD() {
 
 async function inicializarProductosBD() {
   try {
-    const nuevosItems = [];
-    let idCounter = 0;
-    const STOCK_INICIAL = 10;
+    var nuevosItems = [];
+    var STOCK_INICIAL = 10;
     
-    Object.entries(FAMILIAS).forEach(([familiaKey, familia]) => {
-      familia.productos.forEach(prod => {
-        const tieneTalla = prod.tallas && prod.tallas.length > 0;
+    Object.entries(FAMILIAS).forEach(function(entry) {
+      var familiaKey = entry[0];
+      var familia = entry[1];
+      familia.productos.forEach(function(prod) {
+        var tieneTalla = prod.tallas && prod.tallas.length > 0;
         if (tieneTalla) {
-          prod.tallas.forEach(talla => {
+          prod.tallas.forEach(function(talla) {
             nuevosItems.push({
               nombre: prod.nombre,
               familia: familiaKey,
@@ -1469,14 +1461,14 @@ async function inicializarProductosBD() {
       });
     });
     
-    const { data, error } = await supabaseClient
+    var result = await supabaseClient
       .from('productos')
       .insert(nuevosItems)
       .select();
     
-    if (error) throw error;
+    if (result.error) throw result.error;
     
-    items = data;
+    items = result.data;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     return items;
   } catch (error) {
@@ -1486,15 +1478,17 @@ async function inicializarProductosBD() {
 }
 
 function generarItemsInicialesLocal() {
-  const nuevos = [];
-  let idCounter = 0;
-  const STOCK_INICIAL = 10;
+  var nuevos = [];
+  var idCounter = 0;
+  var STOCK_INICIAL = 10;
   
-  Object.entries(FAMILIAS).forEach(([familiaKey, familia]) => {
-    familia.productos.forEach(prod => {
-      const tieneTalla = prod.tallas && prod.tallas.length > 0;
+  Object.entries(FAMILIAS).forEach(function(entry) {
+    var familiaKey = entry[0];
+    var familia = entry[1];
+    familia.productos.forEach(function(prod) {
+      var tieneTalla = prod.tallas && prod.tallas.length > 0;
       if (tieneTalla) {
-        prod.tallas.forEach(talla => {
+        prod.tallas.forEach(function(talla) {
           nuevos.push({
             id: 'i' + (++idCounter).toString().padStart(4, '0'),
             nombre: prod.nombre,
@@ -1537,7 +1531,7 @@ function generarItemsInicialesLocal() {
 
 async function guardarEntregaBD(entregaData, detalles, fotos) {
   try {
-    const { data: entrega, error: error1 } = await supabaseClient
+    var result1 = await supabaseClient
       .from('entregas')
       .insert([{
         numero_entrega: entregaData.numeroEntrega,
@@ -1553,12 +1547,12 @@ async function guardarEntregaBD(entregaData, detalles, fotos) {
       }])
       .select();
     
-    if (error1) throw error1;
+    if (result1.error) throw result1.error;
     
-    const entregaId = entrega[0].id;
+    var entregaId = result1.data[0].id;
     
-    for (const detalle of detalles) {
-      const { error: error2 } = await supabaseClient
+    for (var detalle of detalles) {
+      var result2 = await supabaseClient
         .from('detalles_entrega')
         .insert([{
           entrega_id: entregaId,
@@ -1569,34 +1563,34 @@ async function guardarEntregaBD(entregaData, detalles, fotos) {
           unidad: detalle.unidad || 'Unidad'
         }]);
       
-      if (error2) throw error2;
+      if (result2.error) throw result2.error;
     }
     
     if (fotos && fotos.length > 0) {
-      for (let i = 0; i < fotos.length; i++) {
-        const { error: error3 } = await supabaseClient
+      for (var j = 0; j < fotos.length; j++) {
+        var result3 = await supabaseClient
           .from('fotos_entrega')
           .insert([{
             entrega_id: entregaId,
-            foto_data: fotos[i],
-            orden: i + 1
+            foto_data: fotos[j],
+            orden: j + 1
           }]);
         
-        if (error3) throw error3;
+        if (result3.error) throw result3.error;
       }
     }
     
-    for (const detalle of detalles) {
+    for (var detalle of detalles) {
       if (detalle.productoId) {
-        const producto = items.find(i => i.id === detalle.productoId);
+        var producto = items.find(function(i) { return i.id === detalle.productoId; });
         if (producto) {
-          const nuevoStock = producto.stock - detalle.cantidad;
-          const { error: error4 } = await supabaseClient
+          var nuevoStock = producto.stock - detalle.cantidad;
+          var result4 = await supabaseClient
             .from('productos')
             .update({ stock: nuevoStock })
             .eq('id', detalle.productoId);
           
-          if (error4) throw error4;
+          if (result4.error) throw result4.error;
           producto.stock = nuevoStock;
         }
       }
@@ -1611,19 +1605,19 @@ async function guardarEntregaBD(entregaData, detalles, fotos) {
 
 async function cargarEntregasBD() {
   try {
-    const { data, error } = await supabaseClient
+    var result = await supabaseClient
       .from('entregas')
       .select('*')
       .order('fecha', { ascending: false });
     
-    if (error) throw error;
+    if (result.error) throw result.error;
     
-    salidas = data || [];
+    salidas = result.data || [];
     localStorage.setItem('salidas_registradas_v8', JSON.stringify(salidas));
     return salidas;
   } catch (error) {
     console.error('Error cargando entregas:', error);
-    const localSalidas = JSON.parse(localStorage.getItem('salidas_registradas_v8') || '[]');
+    var localSalidas = JSON.parse(localStorage.getItem('salidas_registradas_v8') || '[]');
     salidas = localSalidas;
     return salidas;
   }
@@ -1631,9 +1625,9 @@ async function cargarEntregasBD() {
 
 async function verificarHistorialReceptor(rut) {
   try {
-    const rutLimpio = rut.replace(/[.-]/g, '');
+    var rutLimpio = rut.replace(/[.-]/g, '');
     
-    const { data, error } = await supabaseClient
+    var result = await supabaseClient
       .from('entregas')
       .select(`
         id,
@@ -1645,9 +1639,9 @@ async function verificarHistorialReceptor(rut) {
       .eq('receptor_rut', rutLimpio)
       .order('fecha', { ascending: false });
     
-    if (error) throw error;
+    if (result.error) throw result.error;
     
-    return data || [];
+    return result.data || [];
   } catch (error) {
     console.error('Error verificando historial:', error);
     return [];
@@ -1655,9 +1649,9 @@ async function verificarHistorialReceptor(rut) {
 }
 
 async function sincronizarBD() {
-  const btn = document.getElementById('btn-sincronizar');
+  var btn = document.getElementById('btn-sincronizar');
   btn.disabled = true;
-  btn.textContent = '�?Sincronizando...';
+  btn.textContent = 'Sincronizando...';
   
   try {
     await verificarConexionBD();
@@ -1665,24 +1659,24 @@ async function sincronizarBD() {
     await cargarEntregasBD();
     poblarDropdownProductos();
     actualizarDashboard();
-    mostrarToast('�?Sincronización completa');
+    mostrarToast('Sincronizacion completa');
   } catch (error) {
-    mostrarToast('⚠️ Error en sincronización');
+    mostrarToast('Error en sincronizacion');
   } finally {
     btn.disabled = false;
-    btn.textContent = '🔄 Sincronizar';
+    btn.textContent = 'Sincronizar';
   }
 }
 
 // ================================================================
-// 10. FUNCIONES DE RECEPTOR (CON HISTORIAL)
+// 10. FUNCIONES DE RECEPTOR
 // ================================================================
 
 function bloquearCamposReceptor(bloquear) {
-  const nombreInput = document.getElementById('receptor-nombre');
-  const rutInput = document.getElementById('receptor-rut');
-  const emailInput = document.getElementById('receptor-email');
-  const btnAgregar = document.getElementById('btn-agregar-receptor');
+  var nombreInput = document.getElementById('receptor-nombre');
+  var rutInput = document.getElementById('receptor-rut');
+  var emailInput = document.getElementById('receptor-email');
+  var btnAgregar = document.getElementById('btn-agregar-receptor');
   
   nombreInput.disabled = bloquear;
   rutInput.disabled = bloquear;
@@ -1693,7 +1687,7 @@ function bloquearCamposReceptor(bloquear) {
     rutInput.style.background = '#f1f5f9';
     emailInput.style.background = '#f1f5f9';
     btnAgregar.disabled = true;
-    btnAgregar.textContent = '�?Receptor verificado';
+    btnAgregar.textContent = 'Receptor verificado';
   } else {
     nombreInput.style.background = '';
     rutInput.style.background = '';
@@ -1704,54 +1698,52 @@ function bloquearCamposReceptor(bloquear) {
 }
 
 async function agregarReceptor() {
-  const nombre = document.getElementById('receptor-nombre').value.trim();
-  const rut = document.getElementById('receptor-rut').value.trim();
-  const email = document.getElementById('receptor-email').value.trim();
-  const error = document.getElementById('receptor-error');
-  const msg = document.getElementById('receptor-agregado-msg');
+  var nombre = document.getElementById('receptor-nombre').value.trim();
+  var rut = document.getElementById('receptor-rut').value.trim();
+  var email = document.getElementById('receptor-email').value.trim();
+  var error = document.getElementById('receptor-error');
+  var msg = document.getElementById('receptor-agregado-msg');
 
   if (!nombre) {
-    error.textContent = '⚠️ Ingresa el nombre completo';
+    error.textContent = 'Ingresa el nombre completo';
     error.style.display = 'block';
     return;
   }
 
   if (!rut) {
-    error.textContent = '⚠️ Ingresa el RUT';
+    error.textContent = 'Ingresa el RUT';
     error.style.display = 'block';
     return;
   }
   
-  const resultadoRUT = validarRUT(rut);
+  var resultadoRUT = validarRUT(rut);
   if (!resultadoRUT.valido) {
-    error.textContent = `⚠️ ${resultadoRUT.mensaje}`;
+    error.textContent = resultadoRUT.mensaje;
     error.style.display = 'block';
     return;
   }
 
   if (!email || !email.includes('@')) {
-    error.textContent = '⚠️ Ingresa un correo electrónico válido';
+    error.textContent = 'Ingresa un correo electronico valido';
     error.style.display = 'block';
     return;
   }
 
   error.style.display = 'none';
   
-  // Verificar historial del receptor
-  const entregas = await verificarHistorialReceptor(resultadoRUT.rut);
+  // Verificar historial
+  var entregas = await verificarHistorialReceptor(resultadoRUT.rut);
   
-  // Guardar receptor
   receptoresAgregados = [{
-    nombre, 
+    nombre: nombre, 
     rut: resultadoRUT.rutFormateado,
     rutLimpio: resultadoRUT.rut,
-    email 
+    email: email 
   }];
   
   renderReceptores();
   bloquearCamposReceptor(true);
   
-  // Mostrar historial
   mostrarHistorial(entregas, nombre);
   
   msg.style.display = 'block';
@@ -1763,65 +1755,38 @@ async function agregarReceptor() {
 }
 
 function mostrarHistorial(entregas, nombre) {
-  const container = document.getElementById('historial-container');
-  const lista = document.getElementById('historial-lista');
-  const nombreSpan = document.getElementById('historial-nombre');
-  const btnContainer = document.getElementById('btn-continuar-container');
+  var container = document.getElementById('historial-container');
+  var lista = document.getElementById('historial-lista');
+  var nombreSpan = document.getElementById('historial-nombre');
+  var btnContainer = document.getElementById('btn-continuar-container');
   
   nombreSpan.textContent = nombre;
   container.style.display = 'block';
   
   if (entregas.length === 0) {
-    lista.innerHTML = `
-      <div class="sin-entregas">
-        �?${nombre} no tiene entregas previas. Puedes continuar.
-      </div>
-    `;
+    lista.innerHTML = '<div class="sin-entregas">' + nombre + ' no tiene entregas previas. Puedes continuar.</div>';
     btnContainer.style.display = 'flex';
     return;
   }
   
-  // Mostrar historial
-  let html = `
-    <div class="tabla-historial">
-      <table>
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>N° Entrega</th>
-            <th>Productos</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-  `;
+  var html = '<div class="tabla-historial"><table><thead><tr><th>Fecha</th><th>N Entrega</th><th>Productos</th><th>Total</th></tr></thead><tbody>';
   
-  entregas.forEach(e => {
-    const productos = e.detalles_entrega ? e.detalles_entrega.map(d => 
-      `${d.producto_nombre}${d.talla ? ' ('+d.talla+')' : ''} × ${d.cantidad}`
-    ).join(', ') : 'Sin productos';
+  entregas.forEach(function(e) {
+    var productos = '';
+    if (e.detalles_entrega) {
+      productos = e.detalles_entrega.map(function(d) {
+        return d.producto_nombre + (d.talla ? ' (' + d.talla + ')' : '') + ' x ' + d.cantidad;
+      }).join(', ');
+    } else {
+      productos = 'Sin productos';
+    }
     
-    const fecha = new Date(e.fecha).toLocaleDateString('es-CL');
+    var fecha = new Date(e.fecha).toLocaleDateString('es-CL');
     
-    html += `
-      <tr>
-        <td>${fecha}</td>
-        <td><strong>${e.numero_entrega}</strong></td>
-        <td style="font-size: 11px;">${productos}</td>
-        <td style="text-align: center;">${e.total_unidades || 0}</td>
-      </tr>
-    `;
+    html += '<tr><td>' + fecha + '</td><td><strong>' + e.numero_entrega + '</strong></td><td style="font-size: 11px;">' + productos + '</td><td style="text-align: center;">' + (e.total_unidades || 0) + '</td></tr>';
   });
   
-  html += `
-        </tbody>
-      </table>
-    </div>
-    <div class="aviso">
-      ⚠️ <strong>${nombre}</strong> tiene <strong>${entregas.length}</strong> entrega(s) previa(s).
-      Si decides continuar, se registrará una nueva entrega.
-    </div>
-  `;
+  html += '</tbody></table></div><div class="aviso">' + nombre + ' tiene ' + entregas.length + ' entrega(s) previa(s). Si decides continuar, se registrara una nueva entrega.</div>';
   
   lista.innerHTML = html;
   btnContainer.style.display = 'flex';
@@ -1830,7 +1795,7 @@ function mostrarHistorial(entregas, nombre) {
 function continuarEntrega() {
   document.getElementById('seccion-productos-tabs').style.display = 'block';
   document.getElementById('btn-continuar-container').style.display = 'none';
-  mostrarToast('�?Puedes agregar productos para la entrega');
+  mostrarToast('Puedes agregar productos para la entrega');
 }
 
 function cancelarEntrega() {
@@ -1844,11 +1809,11 @@ function cancelarEntrega() {
   receptoresAgregados = [];
   renderReceptores();
   bloquearCamposReceptor(false);
-  mostrarToast('�?Entrega cancelada');
+  mostrarToast('Entrega cancelada');
 }
 
 function eliminarReceptor(email) {
-  receptoresAgregados = receptoresAgregados.filter(r => r.email !== email);
+  receptoresAgregados = receptoresAgregados.filter(function(r) { return r.email !== email; });
   renderReceptores();
   bloquearCamposReceptor(false);
   document.getElementById('receptor-agregado-msg').style.display = 'none';
@@ -1857,16 +1822,9 @@ function eliminarReceptor(email) {
 }
 
 function renderReceptores() {
-  const container = document.getElementById('receptores-container');
-  const countSpan = document.getElementById('receptor-count');
-  
-  // ? Verificar que los elementos existan
-  if (!container) {
-    console.error('? Contenedor de receptores no encontrado');
-    return;
-  }
+  var container = document.getElementById('receptores-container');
+  var countSpan = document.getElementById('receptor-count');
 
-  // ? Actualizar el contador si existe
   if (countSpan) {
     countSpan.textContent = receptoresAgregados.length;
   }
@@ -1876,24 +1834,19 @@ function renderReceptores() {
     return;
   }
 
-  container.innerHTML = receptoresAgregados.map(p => `
-    <div class="receptor-card">
-      <button class="btn-eliminar" onclick="eliminarReceptor('${p.email}')">?</button>
-      <div class="receptor-nombre">${p.nombre}</div>
-      <div class="receptor-rut">RUT: ${p.rut}</div>
-      <div class="receptor-email">${p.email}</div>
-    </div>
-  `).join('');
+  container.innerHTML = receptoresAgregados.map(function(p) {
+    return '<div class="receptor-card"><button class="btn-eliminar" onclick="eliminarReceptor(\'' + p.email + '\')">X</button><div class="receptor-nombre">' + p.nombre + '</div><div class="receptor-rut">RUT: ' + p.rut + '</div><div class="receptor-email">' + p.email + '</div></div>';
+  }).join('');
 }
 
 // ================================================================
-// 11. FUNCIONES DE FAMILIAS Y PRODUCTOS (UI)
+// 11. FUNCIONES DE FAMILIAS Y PRODUCTOS
 // ================================================================
 
 function seleccionarFamilia(familia) {
-  console.log('🔄 Cambiando a:', familia);
+  console.log('Cambiando a:', familia);
   
-  document.querySelectorAll('.tab-familia').forEach(tab => {
+  document.querySelectorAll('.tab-familia').forEach(function(tab) {
     tab.classList.remove('active');
     if (tab.dataset.familia === familia) {
       tab.classList.add('active');
@@ -1924,91 +1877,82 @@ function limpiarSeleccionProducto() {
   document.getElementById('salida-cantidad').value = '';
   document.getElementById('salida-cantidad').max = '';
   document.getElementById('salida-cantidad').placeholder = '0';
-  const container = document.getElementById('producto-seleccionado-container');
+  var container = document.getElementById('producto-seleccionado-container');
   if (container) container.style.display = 'none';
   document.getElementById('selector-tallas-container').style.display = 'none';
   document.getElementById('selector-tallas').innerHTML = '';
   document.getElementById('talla-seleccionada-info').textContent = '';
   
-  const stockMessage = document.getElementById('stock-message');
+  var stockMessage = document.getElementById('stock-message');
   if (stockMessage) stockMessage.remove();
 }
 
 function mostrarProductoSeleccionado(producto) {
-  const container = document.getElementById('producto-seleccionado-container');
-  const selectorContainer = document.getElementById('selector-tallas-container');
-  const selector = document.getElementById('selector-tallas');
-  const tallaInfo = document.getElementById('talla-seleccionada-info');
-  const cantidadInput = document.getElementById('salida-cantidad');
-  const unidadInput = document.getElementById('salida-unidad');
+  var container = document.getElementById('producto-seleccionado-container');
+  var selectorContainer = document.getElementById('selector-tallas-container');
+  var selector = document.getElementById('selector-tallas');
+  var tallaInfo = document.getElementById('talla-seleccionada-info');
+  var cantidadInput = document.getElementById('salida-cantidad');
+  var unidadInput = document.getElementById('salida-unidad');
   
   if (!container || !selectorContainer || !selector || !tallaInfo) {
-    console.error('�?Elementos del producto no encontrados');
+    console.error('Elementos del producto no encontrados');
     return;
   }
   
   container.style.display = 'block';
-  const itemsProducto = items.filter(i => i.nombre === producto.nombre && i.familia === producto.familia);
-  const tieneTallas = itemsProducto.some(i => i.tiene_talla);
+  var itemsProducto = items.filter(function(i) { return i.nombre === producto.nombre && i.familia === producto.familia; });
+  var tieneTallas = itemsProducto.some(function(i) { return i.tiene_talla; });
 
-  const oldMessage = document.getElementById('stock-message');
+  var oldMessage = document.getElementById('stock-message');
   if (oldMessage) oldMessage.remove();
 
   if (tieneTallas && itemsProducto.length > 0) {
     selectorContainer.style.display = 'block';
     selector.innerHTML = '';
-    const tallasOrdenadas = itemsProducto.map(i => i.talla).sort((a, b) => {
-      const aNum = parseFloat(a), bNum = parseFloat(b);
+    var tallasOrdenadas = itemsProducto.map(function(i) { return i.talla; }).sort(function(a, b) {
+      var aNum = parseFloat(a), bNum = parseFloat(b);
       if (!isNaN(aNum) && !isNaN(bNum)) return aNum - bNum;
       return a.localeCompare(b);
     });
-    tallasOrdenadas.forEach(talla => {
-      const item = itemsProducto.find(i => i.talla === talla);
-      const div = document.createElement('div');
+    tallasOrdenadas.forEach(function(talla) {
+      var item = itemsProducto.find(function(i) { return i.talla === talla; });
+      var div = document.createElement('div');
       div.className = 'talla-item';
       div.dataset.talla = talla;
       if (item && item.stock > 0) {
         div.classList.add('con-stock');
         if (item.stock <= item.stock_min) div.classList.add('stock-bajo');
-        div.innerHTML = `<span class="talla-nombre">${talla}</span><span class="talla-stock">${item.stock} disp.</span>`;
-        div.onclick = () => seleccionarTallaProducto(talla, item);
+        div.innerHTML = '<span class="talla-nombre">' + talla + '</span><span class="talla-stock">' + item.stock + ' disp.</span>';
+        div.onclick = function() { seleccionarTallaProducto(talla, item); };
       } else {
         div.classList.add('sin-stock');
-        div.innerHTML = `<span class="talla-nombre">${talla}</span><span class="talla-stock">agotado</span>`;
+        div.innerHTML = '<span class="talla-nombre">' + talla + '</span><span class="talla-stock">agotado</span>';
       }
       selector.appendChild(div);
     });
     tallaSeleccionada = null;
-    tallaInfo.textContent = '👆 Selecciona una talla disponible';
+    tallaInfo.textContent = 'Selecciona una talla disponible';
     cantidadInput.value = '';
     cantidadInput.max = '';
     cantidadInput.placeholder = '0';
-    unidadInput.value = itemsProducto[0]?.unidad || 'Unidad';
+    unidadInput.value = (itemsProducto[0] && itemsProducto[0].unidad) ? itemsProducto[0].unidad : 'Unidad';
     
   } else {
     selectorContainer.style.display = 'none';
     tallaSeleccionada = null;
-    const itemUnico = itemsProducto[0];
+    var itemUnico = itemsProducto[0];
     if (itemUnico) {
-      tallaInfo.textContent = `📦 Stock disponible: ${itemUnico.stock} ${itemUnico.unidad}(s)`;
+      tallaInfo.textContent = 'Stock disponible: ' + itemUnico.stock + ' ' + itemUnico.unidad + '(s)';
       cantidadInput.max = itemUnico.stock;
       cantidadInput.value = '';
-      cantidadInput.placeholder = `Máx: ${itemUnico.stock}`;
+      cantidadInput.placeholder = 'Max: ' + itemUnico.stock;
       unidadInput.value = itemUnico.unidad || 'Unidad';
       
-      const stockMessage = document.createElement('div');
+      var stockMessage = document.createElement('div');
       stockMessage.id = 'stock-message';
-      stockMessage.style.cssText = `
-        margin-top: 8px;
-        padding: 8px 12px;
-        background: #e8f0fe;
-        border-radius: 8px;
-        font-size: 13px;
-        color: #1664c0;
-        border: 1px solid #4087cf;
-        text-align: center;
-      `;
-      stockMessage.innerHTML = `📦 <strong>Stock disponible:</strong> ${itemUnico.stock} ${itemUnico.unidad}(s)`;
+      stockMessage.style.cssText = 'margin-top: 8px; padding: 8px 12px; background: #e8f0fe; border-radius: 8px; font-size: 13px; color: #1664c0; border: 1px solid #4087cf; text-align: center;';
+      stockMessage.innerHTML = 'Stock disponible: <strong>' + itemUnico.stock + '</strong> ' + itemUnico.unidad + '(s)';
       selectorContainer.parentNode.appendChild(stockMessage);
     }
   }
@@ -2016,25 +1960,25 @@ function mostrarProductoSeleccionado(producto) {
 
 function seleccionarTallaProducto(talla, item) {
   tallaSeleccionada = talla;
-  document.querySelectorAll('.talla-item').forEach(el => {
+  document.querySelectorAll('.talla-item').forEach(function(el) {
     el.classList.toggle('active', el.dataset.talla === talla);
   });
-  document.getElementById('talla-seleccionada-info').textContent = `�?Talla ${talla} seleccionada · Stock: ${item.stock} ${item.unidad}(s)`;
+  document.getElementById('talla-seleccionada-info').textContent = 'Talla ' + talla + ' seleccionada · Stock: ' + item.stock + ' ' + item.unidad + '(s)';
   document.getElementById('salida-cantidad').max = item.stock;
   document.getElementById('salida-cantidad').value = '';
-  document.getElementById('salida-cantidad').placeholder = `Máx: ${item.stock}`;
+  document.getElementById('salida-cantidad').placeholder = 'Max: ' + item.stock;
   document.getElementById('salida-unidad').value = item.unidad || 'Unidad';
   
-  const stockMessage = document.getElementById('stock-message');
+  var stockMessage = document.getElementById('stock-message');
   if (stockMessage) stockMessage.remove();
 }
 
 function poblarDropdownProductos() {
-  const list = document.getElementById('prod-list');
-  const input = document.getElementById('prod-trigger');
+  var list = document.getElementById('prod-list');
+  var input = document.getElementById('prod-trigger');
   
   if (!list || !input) {
-    console.error('�?Elementos del dropdown no encontrados');
+    console.error('Elementos del dropdown no encontrados');
     return;
   }
   
@@ -2042,42 +1986,42 @@ function poblarDropdownProductos() {
   
   if (!items || items.length === 0) {
     input.value = '';
-    const div = document.createElement('div');
+    var div = document.createElement('div');
     div.className = 'dropdown-item';
     div.textContent = 'No hay productos disponibles';
     list.appendChild(div);
     return;
   }
   
-  let productosFiltrados = items.slice();
+  var productosFiltrados = items.slice();
   if (familiaSeleccionada !== 'todas') {
-    productosFiltrados = productosFiltrados.filter(i => i.familia === familiaSeleccionada);
+    productosFiltrados = productosFiltrados.filter(function(i) { return i.familia === familiaSeleccionada; });
   }
   
   if (productosFiltrados.length === 0) {
     input.value = '';
-    const div = document.createElement('div');
+    var div = document.createElement('div');
     div.className = 'dropdown-item';
     div.textContent = 'No hay productos en esta familia';
     list.appendChild(div);
     return;
   }
   
-  const agrupados = {};
-  productosFiltrados.forEach(item => {
-    const key = item.nombre + '|' + item.familia;
+  var agrupados = {};
+  productosFiltrados.forEach(function(item) {
+    var key = item.nombre + '|' + item.familia;
     if (!agrupados[key]) agrupados[key] = [];
     agrupados[key].push(item);
   });
   
-  Object.keys(agrupados).sort().forEach(key => {
-    const grupo = agrupados[key];
-    const primerItem = grupo[0];
-    const div = document.createElement('div');
+  Object.keys(agrupados).sort().forEach(function(key) {
+    var grupo = agrupados[key];
+    var primerItem = grupo[0];
+    var div = document.createElement('div');
     div.className = 'dropdown-item';
-    const icono = FAMILIAS[primerItem.familia]?.icono || '📦';
-    let stockTotal = grupo.reduce((a, i) => a + (i.stock || 0), 0);
-    div.innerHTML = `${icono} ${primerItem.nombre} <span class="stock-info">(stock: ${stockTotal})</span>`;
+    var icono = (FAMILIAS[primerItem.familia] && FAMILIAS[primerItem.familia].icono) ? FAMILIAS[primerItem.familia].icono : '';
+    var stockTotal = grupo.reduce(function(a, i) { return a + (i.stock || 0); }, 0);
+    div.innerHTML = icono + ' ' + primerItem.nombre + ' <span class="stock-info">(stock: ' + stockTotal + ')</span>';
     div.onclick = function() {
       input.value = primerItem.nombre;
       productoSeleccionadoId = primerItem.id;
@@ -2099,28 +2043,28 @@ function poblarDropdownProductos() {
 
 function agregarAlCarrito() {
   if (modoKit) {
-    const kitTipo = document.getElementById('kit-tipo').value;
-    const kitOtroNombre = document.getElementById('kit-otro-nombre').value.trim();
-    const kitInventario = document.getElementById('kit-inventario').value.trim();
-    const kitPatente = document.getElementById('kit-patente').value.trim().toUpperCase();
-    const kitResponsable = document.getElementById('kit-responsable').value.trim();
+    var kitTipo = document.getElementById('kit-tipo').value;
+    var kitOtroNombre = document.getElementById('kit-otro-nombre').value.trim();
+    var kitInventario = document.getElementById('kit-inventario').value.trim();
+    var kitPatente = document.getElementById('kit-patente').value.trim().toUpperCase();
+    var kitResponsable = document.getElementById('kit-responsable').value.trim();
     
-    if (!kitTipo) { mostrarToast('�?Selecciona el tipo de kit'); return; }
-    if (!kitInventario) { mostrarToast('�?Ingresa el número de inventario'); return; }
-    if (!kitPatente) { mostrarToast('�?Ingresa la patente del vehículo'); return; }
-    if (!kitResponsable) { mostrarToast('�?Ingresa el responsable del vehículo'); return; }
+    if (!kitTipo) { mostrarToast('Selecciona el tipo de kit'); return; }
+    if (!kitInventario) { mostrarToast('Ingresa el numero de inventario'); return; }
+    if (!kitPatente) { mostrarToast('Ingresa la patente del vehiculo'); return; }
+    if (!kitResponsable) { mostrarToast('Ingresa el responsable del vehiculo'); return; }
     
-    const herramientasSeleccionadas = [];
-    document.querySelectorAll('.kit-herramienta:checked').forEach(cb => {
+    var herramientasSeleccionadas = [];
+    document.querySelectorAll('.kit-herramienta:checked').forEach(function(cb) {
       herramientasSeleccionadas.push(cb.value);
     });
     
     if (herramientasSeleccionadas.length === 0) {
-      mostrarToast('�?Selecciona al menos una herramienta del kit');
+      mostrarToast('Selecciona al menos una herramienta del kit');
       return;
     }
     
-    const nombreKit = kitTipo === 'Otro' ? kitOtroNombre : kitTipo;
+    var nombreKit = kitTipo === 'Otro' ? kitOtroNombre : kitTipo;
     
     carrito.push({
       esKit: true,
@@ -2129,7 +2073,7 @@ function agregarAlCarrito() {
       kitPatente: kitPatente,
       kitResponsable: kitResponsable,
       kitHerramientas: herramientasSeleccionadas,
-      nombre: `🧰 Kit: ${nombreKit}`,
+      nombre: 'Kit: ' + nombreKit,
       cantidad: 1,
       unidad: 'Kit'
     });
@@ -2139,64 +2083,63 @@ function agregarAlCarrito() {
     document.getElementById('kit-inventario').value = '';
     document.getElementById('kit-patente').value = '';
     document.getElementById('kit-responsable').value = '';
-    document.querySelectorAll('.kit-herramienta:checked').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.kit-herramienta:checked').forEach(function(cb) { cb.checked = false; });
     
     renderCarrito();
-    mostrarToast(`�?Kit ${nombreKit} agregado al carrito`);
+    mostrarToast('Kit ' + nombreKit + ' agregado al carrito');
     return;
   }
 
-  const productoBase = items.find(i => i.id === productoSeleccionadoId);
+  var productoBase = items.find(function(i) { return i.id === productoSeleccionadoId; });
   if (!productoBase) {
-    mostrarToast('�?Selecciona un producto');
+    mostrarToast('Selecciona un producto');
     return;
   }
 
-  const cantidad = parseInt(document.getElementById('salida-cantidad').value);
+  var cantidad = parseInt(document.getElementById('salida-cantidad').value);
   if (isNaN(cantidad) || cantidad <= 0) {
-    mostrarToast('�?Ingresa una cantidad válida');
+    mostrarToast('Ingresa una cantidad valida');
     return;
   }
 
-  let productoStock = null;
-  const itemsProducto = items.filter(i => i.nombre === productoBase.nombre && i.familia === productoBase.familia);
-  const tieneTallas = itemsProducto.some(i => i.tiene_talla);
+  var productoStock = null;
+  var itemsProducto = items.filter(function(i) { return i.nombre === productoBase.nombre && i.familia === productoBase.familia; });
+  var tieneTallas = itemsProducto.some(function(i) { return i.tiene_talla; });
 
   if (tieneTallas) {
     if (!tallaSeleccionada) {
-      mostrarToast('�?Selecciona una talla');
+      mostrarToast('Selecciona una talla');
       return;
     }
-    productoStock = items.find(i => i.nombre === productoBase.nombre && i.talla === tallaSeleccionada && i.familia === productoBase.familia);
+    productoStock = items.find(function(i) { return i.nombre === productoBase.nombre && i.talla === tallaSeleccionada && i.familia === productoBase.familia; });
     if (!productoStock) {
-      mostrarToast('�?Producto no encontrado');
+      mostrarToast('Producto no encontrado');
       return;
     }
     if (cantidad > productoStock.stock) {
-      mostrarToast(`�?Stock insuficiente. Disponible: ${productoStock.stock}`);
+      mostrarToast('Stock insuficiente. Disponible: ' + productoStock.stock);
       return;
     }
   } else {
     productoStock = itemsProducto[0];
     if (!productoStock) {
-      mostrarToast('�?Producto no encontrado');
+      mostrarToast('Producto no encontrado');
       return;
     }
     if (cantidad > productoStock.stock) {
-      mostrarToast(`�?Stock insuficiente. Disponible: ${productoStock.stock}`);
+      mostrarToast('Stock insuficiente. Disponible: ' + productoStock.stock);
       return;
     }
   }
 
-  const existente = carrito.find(item => 
-    item.productoId === productoStock.id && 
-    item.talla === tallaSeleccionada
-  );
+  var existente = carrito.find(function(item) {
+    return item.productoId === productoStock.id && item.talla === tallaSeleccionada;
+  });
 
   if (existente) {
-    const nuevaCantidad = existente.cantidad + cantidad;
+    var nuevaCantidad = existente.cantidad + cantidad;
     if (nuevaCantidad > productoStock.stock) {
-      mostrarToast(`�?Stock insuficiente. Disponible: ${productoStock.stock}`);
+      mostrarToast('Stock insuficiente. Disponible: ' + productoStock.stock);
       return;
     }
     existente.cantidad = nuevaCantidad;
@@ -2212,21 +2155,21 @@ function agregarAlCarrito() {
 
   limpiarSeleccionProducto();
   renderCarrito();
-  mostrarToast(`�?${productoBase.nombre}${tallaSeleccionada ? ' (talla '+tallaSeleccionada+')' : ''} agregado al carrito`);
+  mostrarToast(productoBase.nombre + (tallaSeleccionada ? ' (talla ' + tallaSeleccionada + ')' : '') + ' agregado al carrito');
 }
 
 function eliminarDelCarrito(index) {
   carrito.splice(index, 1);
   renderCarrito();
-  mostrarToast('🗑�?Producto eliminado del carrito');
+  mostrarToast('Producto eliminado del carrito');
 }
 
 function renderCarrito() {
-  const container = document.getElementById('carrito-container');
-  const count = document.getElementById('carrito-count');
-  const totalContainer = document.getElementById('carrito-total');
-  const totalUnidades = document.getElementById('carrito-total-unidades');
-  const btnFinalizar = document.getElementById('btn-finalizar');
+  var container = document.getElementById('carrito-container');
+  var count = document.getElementById('carrito-count');
+  var totalContainer = document.getElementById('carrito-total');
+  var totalUnidades = document.getElementById('carrito-total-unidades');
+  var btnFinalizar = document.getElementById('btn-finalizar');
 
   count.textContent = carrito.length;
 
@@ -2237,22 +2180,13 @@ function renderCarrito() {
     return;
   }
 
-  let html = '';
-  let total = 0;
+  var html = '';
+  var total = 0;
 
-  carrito.forEach((item, index) => {
+  carrito.forEach(function(item, index) {
     total += item.cantidad || 1;
-    const detalle = item.talla ? `Talla: ${item.talla}` : (item.esKit ? `Kit - ${item.kitHerramientas.length} herramientas` : '');
-    html += `
-      <div class="carrito-item">
-        <div class="info">
-          <div class="nombre">${item.nombre}</div>
-          <div class="detalle">${detalle}</div>
-        </div>
-        <div class="cantidad">${item.cantidad || 1} ${item.unidad}</div>
-        <button class="btn-eliminar" onclick="eliminarDelCarrito(${index})" title="Eliminar">�?/button>
-      </div>
-    `;
+    var detalle = item.talla ? 'Talla: ' + item.talla : (item.esKit ? 'Kit - ' + item.kitHerramientas.length + ' herramientas' : '');
+    html += '<div class="carrito-item"><div class="info"><div class="nombre">' + item.nombre + '</div><div class="detalle">' + detalle + '</div></div><div class="cantidad">' + (item.cantidad || 1) + ' ' + item.unidad + '</div><button class="btn-eliminar" onclick="eliminarDelCarrito(' + index + ')" title="Eliminar">X</button></div>';
   });
 
   container.innerHTML = html;
@@ -2265,41 +2199,41 @@ function renderCarrito() {
 // 13. FUNCIONES DE FOTOS
 // ================================================================
 function abrirCamara() {
-  const input = document.getElementById('foto-input');
+  var input = document.getElementById('foto-input');
   input.setAttribute('capture', 'environment');
   input.click();
 }
 
 function abrirGaleria() {
-  const input = document.getElementById('foto-input');
+  var input = document.getElementById('foto-input');
   input.removeAttribute('capture');
   input.click();
-  setTimeout(() => input.setAttribute('capture', 'environment'), 100);
+  setTimeout(function() { input.setAttribute('capture', 'environment'); }, 100);
 }
 
 function previewFotos() {
-  const input = document.getElementById('foto-input');
-  const preview = document.getElementById('foto-preview');
-  const placeholder = document.getElementById('foto-placeholder');
+  var input = document.getElementById('foto-input');
+  var preview = document.getElementById('foto-preview');
+  var placeholder = document.getElementById('foto-placeholder');
   preview.innerHTML = '';
   fotosData = [];
   
   if (input.files && input.files.length > 0) {
     placeholder.style.display = 'none';
-    Array.from(input.files).forEach((file, index) => {
-      const reader = new FileReader();
-      const div = document.createElement('div');
+    Array.from(input.files).forEach(function(file, index) {
+      var reader = new FileReader();
+      var div = document.createElement('div');
       div.className = 'preview-item';
       reader.onload = function(e) {
-        const img = document.createElement('img');
+        var img = document.createElement('img');
         img.src = e.target.result;
         div.appendChild(img);
-        const btn = document.createElement('button');
-        btn.textContent = '�?;
+        var btn = document.createElement('button');
+        btn.textContent = 'X';
         btn.onclick = function() {
-          const dt = new DataTransfer();
-          const remaining = Array.from(input.files).filter((f, i) => i !== index);
-          remaining.forEach(f => dt.items.add(f));
+          var dt = new DataTransfer();
+          var remaining = Array.from(input.files).filter(function(f, i) { return i !== index; });
+          remaining.forEach(function(f) { dt.items.add(f); });
           input.files = dt.files;
           previewFotos();
         };
@@ -2314,15 +2248,17 @@ function previewFotos() {
   }
 }
 
-function comprimirImagen(file, calidad = 0.7, maxWidth = 800) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
+function comprimirImagen(file, calidad, maxWidth) {
+  calidad = calidad || 0.7;
+  maxWidth = maxWidth || 800;
+  return new Promise(function(resolve) {
+    var reader = new FileReader();
     reader.onload = function(e) {
-      const img = new Image();
+      var img = new Image();
       img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        let width = img.width, height = img.height;
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var width = img.width, height = img.height;
         if (width > maxWidth) { height = (height * maxWidth) / width; width = maxWidth; }
         canvas.width = width; canvas.height = height;
         ctx.drawImage(img, 0, 0, width, height);
@@ -2335,36 +2271,33 @@ function comprimirImagen(file, calidad = 0.7, maxWidth = 800) {
 }
 
 // ================================================================
-// 14. FUNCIÓN ENVIAR CORREO MEJORADA
+// 14. ENVIAR CORREO
 // ================================================================
 
 function enviarCorreoComprobante(entrega) {
-  const receptores = [{ nombre: entrega.receptorNombre, email: entrega.receptorEmail }];
+  var receptores = [{ nombre: entrega.receptorNombre, email: entrega.receptorEmail }];
   
   if (receptores.length === 0) return;
   
-  // Construir lista de productos
-  let productosList = '';
-  let totalUnidades = 0;
+  var productosList = '';
+  var totalUnidades = 0;
   
-  entrega.detalles.forEach((d, i) => {
-    const nombreProducto = `${i+1}. ${d.nombre}${d.talla ? ' ('+d.talla+')' : ''}`;
-    const cantidad = `${d.cantidad} ${d.unidad}`;
-    productosList += `${nombreProducto} × ${cantidad}\n`;
+  entrega.detalles.forEach(function(d, i) {
+    var nombreProducto = (i+1) + '. ' + d.nombre + (d.talla ? ' (' + d.talla + ')' : '');
+    var cantidad = d.cantidad + ' ' + d.unidad;
+    productosList += nombreProducto + ' x ' + cantidad + '\n';
     totalUnidades += d.cantidad;
   });
   
-  // Datos del que entrega
-  const responsableNombre = entrega.responsableNombre || 'Personal GRRD';
-  const responsableEmail = entrega.responsable || 'personal@grrd.cl';
+  var responsableNombre = entrega.responsableNombre || 'Personal GRRD';
+  var responsableEmail = entrega.responsable || 'personal@grrd.cl';
   
-  // Datos del receptor
-  const receptorNombre = entrega.receptorNombre || 'No especificado';
-  const receptorRut = entrega.receptorRut || 'No especificado';
-  const receptorEmail = entrega.receptorEmail || 'No especificado';
+  var receptorNombre = entrega.receptorNombre || 'No especificado';
+  var receptorRut = entrega.receptorRut || 'No especificado';
+  var receptorEmail = entrega.receptorEmail || 'No especificado';
   
-  receptores.forEach((receptor) => {
-    const templateParams = {
+  receptores.forEach(function(receptor) {
+    var templateParams = {
       to_email: receptor.email,
       to_name: receptor.nombre,
       numero_entrega: entrega.numeroEntrega,
@@ -2380,10 +2313,10 @@ function enviarCorreoComprobante(entrega) {
     };
     
     emailjs.send('service_snitcew', 'template_entrega_mejorado', templateParams)
-      .then(() => {
-        console.log(`�?Correo enviado a ${receptor.nombre} (${receptor.email})`);
+      .then(function() {
+        console.log('Correo enviado a ' + receptor.nombre + ' (' + receptor.email + ')');
       })
-      .catch((error) => {
+      .catch(function(error) {
         console.error('Error al enviar correo a', receptor.email, error);
       });
   });
@@ -2394,30 +2327,30 @@ function enviarCorreoComprobante(entrega) {
 // ================================================================
 async function finalizarEntrega() {
   if (!usuarioAutenticado || !usuarioDominioValido) {
-    mostrarToast('�?Debes iniciar sesión con @lascondes.cl');
+    mostrarToast('Debes iniciar sesion con @lascondes.cl');
     return;
   }
 
   if (carrito.length === 0) {
-    mostrarToast('�?Agrega al menos un producto al carrito');
+    mostrarToast('Agrega al menos un producto al carrito');
     return;
   }
 
   if (receptoresAgregados.length === 0) {
-    mostrarToast('�?Agrega al menos una persona que recibe');
+    mostrarToast('Agrega al menos una persona que recibe');
     return;
   }
 
-  const receptor = receptoresAgregados[0];
-  const obs = document.getElementById('salida-obs').value.trim();
+  var receptor = receptoresAgregados[0];
+  var obs = document.getElementById('salida-obs').value.trim();
 
-  const numEntrega = String(salidas.length + 1).padStart(4, '0');
-  const numeroEntrega = `ENT-${numEntrega}`;
+  var numEntrega = String(salidas.length + 1).padStart(4, '0');
+  var numeroEntrega = 'ENT-' + numEntrega;
 
-  let totalUnidades = 0;
-  const detalles = [];
+  var totalUnidades = 0;
+  var detalles = [];
 
-  for (const item of carrito) {
+  for (var item of carrito) {
     if (item.esKit) {
       totalUnidades += 1;
       detalles.push({
@@ -2446,7 +2379,7 @@ async function finalizarEntrega() {
     }
   }
 
-  const entregaData = {
+  var entregaData = {
     numeroEntrega: numeroEntrega,
     responsable: usuarioAutenticado.username,
     responsableEmail: usuarioAutenticado.username,
@@ -2458,7 +2391,7 @@ async function finalizarEntrega() {
   };
 
   try {
-    const entregaId = await guardarEntregaBD(entregaData, detalles, fotosData);
+    var entregaId = await guardarEntregaBD(entregaData, detalles, fotosData);
 
     salidas.unshift({
       id: entregaId,
@@ -2508,10 +2441,10 @@ async function finalizarEntrega() {
     enviarCorreoComprobante(ultimoComprobante);
     actualizarDashboard();
 
-    mostrarToast(`�?Entrega ${numeroEntrega} registrada con ${carrito.length} productos`);
+    mostrarToast('Entrega ' + numeroEntrega + ' registrada con ' + carrito.length + ' productos');
 
   } catch (error) {
-    mostrarToast('�?Error al guardar la entrega');
+    mostrarToast('Error al guardar la entrega');
     console.error(error);
   }
 }
@@ -2520,95 +2453,30 @@ async function finalizarEntrega() {
 // 16. COMPROBANTE
 // ================================================================
 function mostrarComprobante(entrega) {
-  const modal = document.getElementById('modal-comprobante');
-  const content = document.getElementById('ticket-content');
+  var modal = document.getElementById('modal-comprobante');
+  var content = document.getElementById('ticket-content');
   
   if (!entrega) {
-    mostrarToast('�?No hay comprobante disponible');
+    mostrarToast('No hay comprobante disponible');
     return;
   }
 
-  let productosHTML = entrega.detalles.map((d, i) => `
-    <div class="ticket-fila">
-      <span class="label">${i+1}. ${d.nombre}${d.talla ? ' ('+d.talla+')' : ''}${d.kitInfo ? ' 🧰' : ''}</span>
-      <span class="valor">${d.cantidad} ${d.unidad}</span>
-    </div>
-  `).join('');
+  var productosHTML = entrega.detalles.map(function(d, i) {
+    return '<div class="ticket-fila"><span class="label">' + (i+1) + '. ' + d.nombre + (d.talla ? ' (' + d.talla + ')' : '') + (d.kitInfo ? ' Kit' : '') + '</span><span class="valor">' + d.cantidad + ' ' + d.unidad + '</span></div>';
+  }).join('');
 
-  let kitInfoHTML = '';
-  const kitDetalle = entrega.detalles.find(d => d.kitInfo);
+  var kitInfoHTML = '';
+  var kitDetalle = entrega.detalles.find(function(d) { return d.kitInfo; });
   if (kitDetalle && kitDetalle.kitInfo) {
-    kitInfoHTML = `
-      <div class="ticket-fila"><span class="label">Kit</span><span class="valor">${kitDetalle.kitInfo.tipo}</span></div>
-      <div class="ticket-fila"><span class="label">N° Inventario</span><span class="valor">${kitDetalle.kitInfo.inventario}</span></div>
-      <div class="ticket-fila"><span class="label">Patente</span><span class="valor">${kitDetalle.kitInfo.patente}</span></div>
-      <div class="ticket-fila"><span class="label">Responsable Vehículo</span><span class="valor">${kitDetalle.kitInfo.responsable}</span></div>
-      <div class="ticket-fila" style="flex-direction:column; align-items:flex-start; gap:2px;">
-        <span class="label">Herramientas incluidas:</span>
-        <span style="font-size:10px; color:var(--texto-gris);">${kitDetalle.kitInfo.herramientas.map(h => '�?'+h).join('<br>')}</span>
-      </div>
-    `;
+    kitInfoHTML = '<div class="ticket-fila"><span class="label">Kit</span><span class="valor">' + kitDetalle.kitInfo.tipo + '</span></div><div class="ticket-fila"><span class="label">N Inventario</span><span class="valor">' + kitDetalle.kitInfo.inventario + '</span></div><div class="ticket-fila"><span class="label">Patente</span><span class="valor">' + kitDetalle.kitInfo.patente + '</span></div><div class="ticket-fila"><span class="label">Responsable Vehiculo</span><span class="valor">' + kitDetalle.kitInfo.responsable + '</span></div><div class="ticket-fila" style="flex-direction:column; align-items:flex-start; gap:2px;"><span class="label">Herramientas incluidas:</span><span style="font-size:10px; color:var(--texto-gris);">' + kitDetalle.kitInfo.herramientas.map(function(h) { return '• ' + h; }).join('<br>') + '</span></div>';
   }
 
-  let fotosHTML = '';
+  var fotosHTML = '';
   if (entrega.fotos && entrega.fotos.length > 0) {
-    fotosHTML = `<div style="margin-top:8px; border-top:1px dashed #aaa; padding-top:8px; text-align:center; font-size:9px; color:var(--texto-gris);">📷 ${entrega.fotos.length} foto(s) adjunta(s)</div>`;
+    fotosHTML = '<div style="margin-top:8px; border-top:1px dashed #aaa; padding-top:8px; text-align:center; font-size:9px; color:var(--texto-gris);">' + entrega.fotos.length + ' foto(s) adjunta(s)</div>';
   }
 
-  const html = `
-    <div class="ticket">
-      <div class="ticket-header">
-        <h3>🏛�?MUNICIPALIDAD DE LAS CONDES</h3>
-        <div class="subtitulo">Depto. Gestión de Riesgos y Desastres</div>
-        <div style="font-weight:700; font-size:16px; margin-top:6px;">COMPROBANTE DE ENTREGA N° ${entrega.numeroEntrega}</div>
-        <div class="subtitulo">Fecha: ${entrega.fecha}</div>
-      </div>
-
-      <div style="margin: 8px 0;">
-        <div style="font-weight:600; font-size:12px; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:4px;">👤 DATOS DEL RECEPTOR</div>
-        <div class="ticket-fila"><span class="label">Nombre</span><span class="valor">${entrega.receptorNombre}</span></div>
-        <div class="ticket-fila"><span class="label">RUT</span><span class="valor">${entrega.receptorRut}</span></div>
-        <div class="ticket-fila"><span class="label">Email</span><span class="valor">${entrega.receptorEmail}</span></div>
-      </div>
-
-      <div style="margin: 8px 0;">
-        <div style="font-weight:600; font-size:12px; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:4px;">👤 ENTREGADO POR</div>
-        <div class="ticket-fila"><span class="label">Nombre</span><span class="valor">${entrega.responsableNombre || 'Personal GRRD'}</span></div>
-        <div class="ticket-fila"><span class="label">Email</span><span class="valor">${entrega.responsable || 'personal@grrd.cl'}</span></div>
-      </div>
-
-      <div style="margin: 8px 0;">
-        <div style="font-weight:600; font-size:12px; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:4px;">📦 PRODUCTOS ENTREGADOS</div>
-        ${productosHTML}
-        ${kitInfoHTML}
-        <div class="ticket-fila" style="border-top: 2px solid #333; font-weight:700; margin-top:4px; padding-top:6px;">
-          <span class="label">TOTAL UNIDADES</span>
-          <span class="valor">${entrega.totalUnidades}</span>
-        </div>
-      </div>
-
-      ${entrega.observacion ? `<div class="ticket-fila"><span class="label">Observación</span><span class="valor">${entrega.observacion}</span></div>` : ''}
-
-      ${fotosHTML}
-
-      <div class="ticket-firma">
-        <div class="firma-linea">
-          <div>Entregado por</div>
-          <div class="linea"></div>
-          <div class="label-firma">Firma</div>
-        </div>
-        <div class="firma-linea">
-          <div>Recibido por</div>
-          <div class="linea"></div>
-          <div class="label-firma">Firma</div>
-        </div>
-      </div>
-
-      <div class="ticket-footer">
-        Este comprobante es de carácter informativo y respaldo de entrega.
-      </div>
-    </div>
-  `;
+  var html = '<div class="ticket"><div class="ticket-header"><h3>MUNICIPALIDAD DE LAS CONDES</h3><div class="subtitulo">Depto. Gestion de Riesgos y Desastres</div><div style="font-weight:700; font-size:16px; margin-top:6px;">COMPROBANTE DE ENTREGA N ' + entrega.numeroEntrega + '</div><div class="subtitulo">Fecha: ' + entrega.fecha + '</div></div><div style="margin: 8px 0;"><div style="font-weight:600; font-size:12px; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:4px;">RECEPTOR</div><div class="ticket-fila"><span class="label">Nombre</span><span class="valor">' + entrega.receptorNombre + '</span></div><div class="ticket-fila"><span class="label">RUT</span><span class="valor">' + entrega.receptorRut + '</span></div><div class="ticket-fila"><span class="label">Email</span><span class="valor">' + entrega.receptorEmail + '</span></div></div><div style="margin: 8px 0;"><div style="font-weight:600; font-size:12px; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:4px;">ENTREGADO POR</div><div class="ticket-fila"><span class="label">Nombre</span><span class="valor">' + (entrega.responsableNombre || 'Personal GRRD') + '</span></div><div class="ticket-fila"><span class="label">Email</span><span class="valor">' + (entrega.responsable || 'personal@grrd.cl') + '</span></div></div><div style="margin: 8px 0;"><div style="font-weight:600; font-size:12px; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:4px;">PRODUCTOS ENTREGADOS</div>' + productosHTML + kitInfoHTML + '<div class="ticket-fila" style="border-top: 2px solid #333; font-weight:700; margin-top:4px; padding-top:6px;"><span class="label">TOTAL UNIDADES</span><span class="valor">' + entrega.totalUnidades + '</span></div></div>' + (entrega.observacion ? '<div class="ticket-fila"><span class="label">Observacion</span><span class="valor">' + entrega.observacion + '</span></div>' : '') + fotosHTML + '<div class="ticket-firma"><div class="firma-linea"><div>Entregado por</div><div class="linea"></div><div class="label-firma">Firma</div></div><div class="firma-linea"><div>Recibido por</div><div class="linea"></div><div class="label-firma">Firma</div></div></div><div class="ticket-footer">Este comprobante es de caracter informativo y respaldo de entrega.</div></div>';
 
   content.innerHTML = html;
   modal.classList.add('visible');
@@ -2617,15 +2485,15 @@ function mostrarComprobante(entrega) {
 function mostrarComprobanteUltima() {
   if (!ultimoComprobante) {
     if (salidas.length === 0) {
-      mostrarToast('�?No hay entregas registradas');
+      mostrarToast('No hay entregas registradas');
       return;
     }
-    const ultima = salidas.find(s => s.tipo === 'entrega_multiple');
+    var ultima = salidas.find(function(s) { return s.tipo === 'entrega_multiple'; });
     if (ultima) {
       ultimoComprobante = ultima;
       mostrarComprobante(ultimoComprobante);
     } else {
-      mostrarToast('�?No hay entregas múltiples registradas');
+      mostrarToast('No hay entregas multiples registradas');
     }
     return;
   }
@@ -2637,126 +2505,90 @@ function cerrarModalComprobante() {
 }
 
 // ================================================================
-// 17. IMPRESIÓN Y PDF
+// 17. IMPRESION Y PDF
 // ================================================================
 
 function imprimirComprobante() {
-  const content = document.getElementById('ticket-content').innerHTML;
-  const ventana = window.open('', '_blank');
-  ventana.document.write(`
-    <html><head><title>Comprobante de Entrega</title>
-    <style>
-      body { font-family: 'Courier New', monospace; padding: 20px; max-width: 800px; margin: 0 auto; }
-      .ticket { background: white; border: 2px dashed #1664c0; border-radius: 12px; padding: 20px; margin-bottom: 20px; page-break-after: always; }
-      .ticket-header { text-align: center; border-bottom: 1px dashed #aaa; padding-bottom: 8px; margin-bottom: 8px; }
-      .ticket-header h3 { font-size: 16px; color: #1664c0; margin:0; }
-      .ticket-header .subtitulo { font-size: 10px; color: #666; }
-      .ticket-fila { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dotted #eee; }
-      .ticket-fila .label { color: #666; font-weight: 500; }
-      .ticket-fila .valor { font-weight: 700; }
-      .ticket-firma { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #aaa; }
-      .ticket-firma .firma-linea { text-align: center; flex: 1; }
-      .ticket-firma .firma-linea .linea { border-top: 1px solid #333; width: 80%; margin: 6px auto 2px; }
-      .ticket-firma .firma-linea .label-firma { font-size: 8px; color: #666; }
-      .ticket-footer { text-align: center; font-size: 8px; color: #666; margin-top: 8px; border-top: 1px dashed #aaa; padding-top: 8px; }
-      .foto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
-      .foto-grid img { max-width: 100%; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; }
-      .foto-label { text-align: center; font-size: 8px; color: #999; margin-top: 2px; }
-      @media print {
-        body { padding: 0; }
-        .ticket { border: 1px solid #aaa; page-break-after: always; }
-      }
-    </style>
-    </head><body>
-    ${content}
-    <script>
-      window.onload = function() { 
-        setTimeout(function() { window.print(); }, 500);
-      }
-    <\/script>
-    </body></html>
-  `);
+  var content = document.getElementById('ticket-content').innerHTML;
+  var ventana = window.open('', '_blank');
+  ventana.document.write('<html><head><title>Comprobante de Entrega</title><style>body { font-family: "Courier New", monospace; padding: 20px; max-width: 800px; margin: 0 auto; } .ticket { background: white; border: 2px dashed #1664c0; border-radius: 12px; padding: 20px; margin-bottom: 20px; page-break-after: always; } .ticket-header { text-align: center; border-bottom: 1px dashed #aaa; padding-bottom: 8px; margin-bottom: 8px; } .ticket-header h3 { font-size: 16px; color: #1664c0; margin:0; } .ticket-header .subtitulo { font-size: 10px; color: #666; } .ticket-fila { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dotted #eee; } .ticket-fila .label { color: #666; font-weight: 500; } .ticket-fila .valor { font-weight: 700; } .ticket-firma { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #aaa; } .ticket-firma .firma-linea { text-align: center; flex: 1; } .ticket-firma .firma-linea .linea { border-top: 1px solid #333; width: 80%; margin: 6px auto 2px; } .ticket-firma .firma-linea .label-firma { font-size: 8px; color: #666; } .ticket-footer { text-align: center; font-size: 8px; color: #666; margin-top: 8px; border-top: 1px dashed #aaa; padding-top: 8px; } .foto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; } .foto-grid img { max-width: 100%; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; } .foto-label { text-align: center; font-size: 8px; color: #999; margin-top: 2px; } @media print { body { padding: 0; } .ticket { border: 1px solid #aaa; page-break-after: always; } }</style></head><body>' + content + '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); }</script></body></html>');
   ventana.document.close();
 }
 
 function descargarPDFComprobante() {
   if (!ultimoComprobante) {
-    mostrarToast('�?No hay comprobante');
+    mostrarToast('No hay comprobante');
     return;
   }
 
-  const { jsPDF } = window.jspdf;
-  const entrega = ultimoComprobante;
-  const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-  const pageW = doc.internal.pageSize.getWidth();
-  const pageH = doc.internal.pageSize.getHeight();
-  const margin = 15;
-  let y = margin;
+  var { jsPDF } = window.jspdf;
+  var entrega = ultimoComprobante;
+  var doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+  var pageW = doc.internal.pageSize.getWidth();
+  var pageH = doc.internal.pageSize.getHeight();
+  var margin = 15;
+  var y = margin;
 
-  // ===== HOJA 1: RESUMEN =====
-  
+  // Hoja 1: Resumen
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
   doc.text('MUNICIPALIDAD DE LAS CONDES', pageW/2, y, { align: 'center' });
   y += 5;
   doc.setFontSize(7);
-  doc.text('Depto. Gestión de Riesgos y Desastres', pageW/2, y, { align: 'center' });
+  doc.text('Depto. Gestion de Riesgos y Desastres', pageW/2, y, { align: 'center' });
   y += 7;
   doc.setFontSize(12);
-  doc.text(`COMPROBANTE DE ENTREGA N° ${entrega.numeroEntrega}`, pageW/2, y, { align: 'center' });
+  doc.text('COMPROBANTE DE ENTREGA N ' + entrega.numeroEntrega, pageW/2, y, { align: 'center' });
   y += 6;
   doc.setFontSize(7);
-  doc.text(`Fecha: ${entrega.fecha}`, pageW/2, y, { align: 'center' });
+  doc.text('Fecha: ' + entrega.fecha, pageW/2, y, { align: 'center' });
   y += 8;
 
-  // RECEPTOR
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
-  doc.text('👤 RECEPTOR', margin, y);
+  doc.text('RECEPTOR', margin, y);
   y += 5;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
-  doc.text(`Nombre: ${entrega.receptorNombre}`, margin, y);
+  doc.text('Nombre: ' + entrega.receptorNombre, margin, y);
   y += 4;
-  doc.text(`RUT: ${entrega.receptorRut}`, margin, y);
+  doc.text('RUT: ' + entrega.receptorRut, margin, y);
   y += 4;
-  doc.text(`Email: ${entrega.receptorEmail}`, margin, y);
+  doc.text('Email: ' + entrega.receptorEmail, margin, y);
   y += 6;
 
-  // ENTREGADO POR
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
-  doc.text('👤 ENTREGADO POR', margin, y);
+  doc.text('ENTREGADO POR', margin, y);
   y += 5;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
-  doc.text(`Nombre: ${entrega.responsableNombre || 'Personal GRRD'}`, margin, y);
+  doc.text('Nombre: ' + (entrega.responsableNombre || 'Personal GRRD'), margin, y);
   y += 4;
-  doc.text(`Email: ${entrega.responsable || 'personal@grrd.cl'}`, margin, y);
+  doc.text('Email: ' + (entrega.responsable || 'personal@grrd.cl'), margin, y);
   y += 6;
 
-  // PRODUCTOS
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
-  doc.text('📦 PRODUCTOS ENTREGADOS', margin, y);
+  doc.text('PRODUCTOS ENTREGADOS', margin, y);
   y += 5;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
 
-  entrega.detalles.forEach((d, i) => {
-    const nombre = `${i+1}. ${d.nombre}${d.talla ? ' ('+d.talla+')' : ''}${d.kitInfo ? ' 🧰' : ''}`;
-    const cantidad = `${d.cantidad} ${d.unidad}`;
+  entrega.detalles.forEach(function(d, i) {
+    var nombre = (i+1) + '. ' + d.nombre + (d.talla ? ' (' + d.talla + ')' : '') + (d.kitInfo ? ' Kit' : '');
+    var cantidad = d.cantidad + ' ' + d.unidad;
     doc.text(nombre, margin, y);
     doc.text(cantidad, pageW - margin - 20, y, { align: 'right' });
     y += 4;
     
     if (d.kitInfo) {
       doc.setFontSize(6);
-      doc.text(`  Kit: ${d.kitInfo.tipo} | Inv: ${d.kitInfo.inventario} | Patente: ${d.kitInfo.patente}`, margin, y);
+      doc.text('  Kit: ' + d.kitInfo.tipo + ' | Inv: ' + d.kitInfo.inventario + ' | Patente: ' + d.kitInfo.patente, margin, y);
       y += 3;
-      doc.text(`  Responsable: ${d.kitInfo.responsable}`, margin, y);
+      doc.text('  Responsable: ' + d.kitInfo.responsable, margin, y);
       y += 3;
-      doc.text(`  Herramientas: ${d.kitInfo.herramientas.join(', ')}`, margin, y);
+      doc.text('  Herramientas: ' + d.kitInfo.herramientas.join(', '), margin, y);
       y += 4;
       doc.setFontSize(7);
     }
@@ -2772,13 +2604,12 @@ function descargarPDFComprobante() {
   doc.setFontSize(8);
   doc.line(margin, y, pageW - margin, y);
   y += 4;
-  doc.text(`TOTAL: ${entrega.totalUnidades} unidades`, margin, y);
+  doc.text('TOTAL: ' + entrega.totalUnidades + ' unidades', margin, y);
   y += 6;
 
-  // OBSERVACIÓN
   if (entrega.observacion) {
     doc.setFont('helvetica', 'bold');
-    doc.text('📝 OBSERVACIÓN:', margin, y);
+    doc.text('OBSERVACION:', margin, y);
     y += 4;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7);
@@ -2786,7 +2617,6 @@ function descargarPDFComprobante() {
     y += 6;
   }
 
-  // FIRMAS
   doc.setFontSize(7);
   doc.text('Entregado por', margin + 20, y);
   doc.text('Recibido por', margin + 80, y);
@@ -2800,14 +2630,14 @@ function descargarPDFComprobante() {
   y += 8;
 
   doc.setFontSize(6);
-  doc.text('Este comprobante es de carácter informativo y respaldo de entrega.', pageW/2, y, { align: 'center' });
+  doc.text('Este comprobante es de caracter informativo y respaldo de entrega.', pageW/2, y, { align: 'center' });
 
-  // ===== HOJAS DE FOTOS =====
+  // Fotos
   if (entrega.fotos && entrega.fotos.length > 0) {
-    let fotoIndex = 0;
-    const fotosPorPagina = 4;
-    const anchoFoto = (pageW - margin * 3) / 2;
-    const altoFoto = anchoFoto * 0.7;
+    var fotoIndex = 0;
+    var fotosPorPagina = 4;
+    var anchoFoto = (pageW - margin * 3) / 2;
+    var altoFoto = anchoFoto * 0.7;
 
     while (fotoIndex < entrega.fotos.length) {
       doc.addPage();
@@ -2816,25 +2646,25 @@ function descargarPDFComprobante() {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
       doc.setTextColor(22, 100, 192);
-      doc.text(`📷 REGISTRO FOTOGRÁFICO - ${entrega.numeroEntrega}`, pageW/2, y, { align: 'center' });
+      doc.text('REGISTRO FOTOGRAFICO - ' + entrega.numeroEntrega, pageW/2, y, { align: 'center' });
       y += 6;
       doc.setFontSize(7);
       doc.setTextColor(80);
-      doc.text(`Página ${Math.floor(fotoIndex / fotosPorPagina) + 1}`, pageW/2, y, { align: 'center' });
+      doc.text('Pagina ' + (Math.floor(fotoIndex / fotosPorPagina) + 1), pageW/2, y, { align: 'center' });
       y += 8;
 
-      const filas = Math.min(2, Math.ceil((entrega.fotos.length - fotoIndex) / 2));
-      for (let f = 0; f < filas; f++) {
-        for (let c = 0; c < 2; c++) {
-          const idx = fotoIndex + f * 2 + c;
+      var filas = Math.min(2, Math.ceil((entrega.fotos.length - fotoIndex) / 2));
+      for (var f = 0; f < filas; f++) {
+        for (var c = 0; c < 2; c++) {
+          var idx = fotoIndex + f * 2 + c;
           if (idx < entrega.fotos.length) {
-            const x = margin + c * (anchoFoto + margin);
-            const yFoto = y + f * (altoFoto + 8);
+            var x = margin + c * (anchoFoto + margin);
+            var yFoto = y + f * (altoFoto + 8);
             try {
               doc.addImage(entrega.fotos[idx], 'JPEG', x, yFoto, anchoFoto, altoFoto);
               doc.setFontSize(6);
               doc.setTextColor(80);
-              doc.text(`Foto ${idx+1}`, x + anchoFoto/2, yFoto + altoFoto + 4, { align: 'center' });
+              doc.text('Foto ' + (idx+1), x + anchoFoto/2, yFoto + altoFoto + 4, { align: 'center' });
             } catch(e) {
               console.error('Error al agregar foto:', e);
             }
@@ -2846,22 +2676,22 @@ function descargarPDFComprobante() {
     }
   }
 
-  doc.save(`Entrega_${entrega.numeroEntrega}.pdf`);
-  mostrarToast('�?PDF descargado');
+  doc.save('Entrega_' + entrega.numeroEntrega + '.pdf');
+  mostrarToast('PDF descargado');
 }
 
 // ================================================================
 // 18. DASHBOARD
 // ================================================================
 function actualizarDashboard() {
-  const hoy = salidas.filter(s => esHoy(s.fecha));
-  const kitsHoy = hoy.filter(s => s.tipo === 'kit');
-  const productosHoy = hoy.filter(s => s.tipo !== 'kit' && s.tipo !== 'entrega_multiple');
+  var hoy = salidas.filter(function(s) { return esHoy(s.fecha); });
+  var kitsHoy = hoy.filter(function(s) { return s.tipo === 'kit'; });
+  var productosHoy = hoy.filter(function(s) { return s.tipo !== 'kit' && s.tipo !== 'entrega_multiple'; });
   
   document.getElementById('res-entregas-hoy').textContent = hoy.length;
   
-  let totalUnidades = 0;
-  hoy.forEach(s => {
+  var totalUnidades = 0;
+  hoy.forEach(function(s) {
     if (s.total_unidades) {
       totalUnidades += s.total_unidades;
     } else if (s.cantidad) {
@@ -2870,10 +2700,10 @@ function actualizarDashboard() {
   });
   document.getElementById('res-unidades-hoy').textContent = totalUnidades;
   
-  const productosUnicos = new Set();
-  hoy.forEach(s => {
+  var productosUnicos = new Set();
+  hoy.forEach(function(s) {
     if (s.detalles) {
-      s.detalles.forEach(d => productosUnicos.add(d.nombre));
+      s.detalles.forEach(function(d) { productosUnicos.add(d.nombre); });
     } else if (s.producto_nombre) {
       productosUnicos.add(s.producto_nombre);
     }
@@ -2883,18 +2713,18 @@ function actualizarDashboard() {
 }
 
 // ================================================================
-// 19. INICIALIZACIÓN
+// 19. INICIALIZACION
 // ================================================================
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀 Iniciando aplicación GRRD...');
+  console.log('Iniciando aplicacion GRRD...');
   
   renderReceptores();
   renderCarrito();
   
-  const kitTipo = document.getElementById('kit-tipo');
+  var kitTipo = document.getElementById('kit-tipo');
   if (kitTipo) {
     kitTipo.addEventListener('change', function() {
-      const otroContainer = document.getElementById('kit-otro-container');
+      var otroContainer = document.getElementById('kit-otro-container');
       if (this.value === 'Otro') {
         otroContainer.style.display = 'block';
       } else {
@@ -2903,36 +2733,36 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  verificarConexionBD().then(() => {
-    cargarProductosBD().then(() => {
-      cargarEntregasBD().then(() => {
+  verificarConexionBD().then(function() {
+    cargarProductosBD().then(function() {
+      cargarEntregasBD().then(function() {
         poblarDropdownProductos();
         actualizarDashboard();
         verificarSesion();
         seleccionarFamilia('epp_basico');
-        console.log('�?Aplicación lista!');
-        console.log('📦 Productos cargados:', items.length);
-        console.log('📋 Entregas cargadas:', salidas.length);
+        console.log('Aplicacion lista!');
+        console.log('Productos cargados:', items.length);
+        console.log('Entregas cargadas:', salidas.length);
       });
     });
   });
 
-  document.querySelectorAll('.tab-familia').forEach(tab => {
+  document.querySelectorAll('.tab-familia').forEach(function(tab) {
     tab.addEventListener('click', function(e) {
       e.preventDefault();
-      const familia = this.dataset.familia;
-      console.log('🔘 Click en pestaña:', familia);
+      var familia = this.dataset.familia;
+      console.log('Click en pestaña:', familia);
       seleccionarFamilia(familia);
     });
   });
 
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.custom-dropdown')) {
-      document.querySelectorAll('.dropdown-list').forEach(l => l.style.display = 'none');
+      document.querySelectorAll('.dropdown-list').forEach(function(l) { l.style.display = 'none'; });
     }
   });
   
-  console.log('�?Event listeners registrados');
+  console.log('Event listeners registrados');
 });
 </script>
 </body>
