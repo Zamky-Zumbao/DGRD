@@ -933,10 +933,11 @@
 // ================================================================
 
 const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_Vc7-e-AjorgMgj45SmAL5g_Xr0glJjx';
+
+// ✅ CLAVE ANON PUBLIC - CORRECTA
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtY21jYnl4cXluemhrYWNoeWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzNTMwNjEsImV4cCI6MjEwMDkyOTA2MX0.NRLgNctjDGHY71FcZK3gWU576xzRxV10qx_FuQm_jrw';
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let bdConectada = false;
 
 // ================================================================
 // 2. CONFIGURACIÓN MSAL (Azure AD)
