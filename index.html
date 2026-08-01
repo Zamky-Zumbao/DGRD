@@ -415,6 +415,7 @@
     margin-top: 4px;
   }
 
+  /* ===== RECEPTOR ===== */
   .receptor-card {
     background: #f8fafc;
     border: 1px solid var(--borde);
@@ -578,7 +579,77 @@
     flex-wrap: wrap;
   }
 
-  /* ===== RECEPTOR AGREGADO MSG ===== */
+  /* ===== HISTORIAL ===== */
+  .historial-container {
+    display: none;
+    margin-top: 8px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid var(--borde);
+  }
+  .historial-container .titulo {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .historial-container .sin-entregas {
+    color: var(--verde);
+    font-size: 13px;
+    padding: 8px 0;
+  }
+  .historial-container .tabla-historial {
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 12px;
+  }
+  .historial-container .tabla-historial table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .historial-container .tabla-historial th {
+    background: #eef2f8;
+    text-align: left;
+    padding: 4px 8px;
+  }
+  .historial-container .tabla-historial td {
+    padding: 4px 8px;
+    border-bottom: 1px solid #eee;
+  }
+  .historial-container .aviso {
+    margin-top: 8px;
+    padding: 8px;
+    background: #fff3cd;
+    border-radius: 8px;
+    border: 1px solid #ffc107;
+    font-size: 12px;
+  }
+  .historial-container .btn-continuar {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+  }
+  .historial-container .btn-continuar button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+  }
+  .historial-container .btn-continuar .continuar {
+    background: var(--verde);
+    color: white;
+  }
+  .historial-container .btn-continuar .continuar:hover { opacity: 0.85; }
+  .historial-container .btn-continuar .cancelar {
+    background: var(--rojo);
+    color: white;
+  }
+  .historial-container .btn-continuar .cancelar:hover { opacity: 0.85; }
+
   .receptor-agregado-msg {
     background: #e8f0fe;
     border-radius: 8px;
@@ -608,6 +679,7 @@
     .tabs-familias { flex-wrap: wrap; }
     .btn-fila-principal { flex-direction: column; }
     .btn-agregar-carrito, .btn-finalizar { min-width: 100%; }
+    .historial-container .btn-continuar { flex-direction: column; }
   }
 
   ::-webkit-scrollbar { width: 4px; }
@@ -662,185 +734,9 @@
     <div style="font-size:11px; color:var(--texto-gris);" id="usuario-email">--</div>
   </div>
 
-  <!-- TABS: Productos + Kit -->
+  <!-- ===== RECEPTORES (AHORA ARRIBA) ===== -->
   <div class="field">
-    <label>📂 Tipo de registro</label>
-    <div class="tabs-familias" id="tabs-familias">
-      <div class="tab-familia active" data-familia="epp_basico">🛡️ EPP Básico</div>
-      <div class="tab-familia" data-familia="epp_climatico">🌧️ EPP Climático</div>
-      <div class="tab-familia" data-familia="epp_especial">🧥 EPP Especial</div>
-      <div class="tab-familia" data-familia="maquinarias">🔧 Maquinarias</div>
-      <div class="tab-familia" data-familia="herramientas">🔩 Herramientas</div>
-      <div class="tab-familia" data-familia="kit">🧰 Kit Vehicular</div>
-      <div class="tab-familia" data-familia="todas">📦 Todas</div>
-    </div>
-  </div>
-
-  <!-- ===== SECCIÓN PRODUCTOS ===== -->
-  <div id="seccion-productos">
-    <div class="field">
-      <label class="required">Producto</label>
-      <div class="custom-dropdown">
-        <input type="text" id="prod-trigger" class="dropdown-input" placeholder="Buscar producto..." readonly>
-        <div class="dropdown-list" id="prod-list"></div>
-      </div>
-    </div>
-
-    <div id="producto-seleccionado-container" class="producto-seleccionado">
-      <div id="selector-tallas-container" style="display:none;">
-        <div class="prod-subtitulo">📏 Selecciona una talla:</div>
-        <div class="selector-tallas" id="selector-tallas"></div>
-        <div id="talla-seleccionada-info" style="font-size:10px; color:var(--texto-gris); margin-top:6px;"></div>
-      </div>
-    </div>
-
-    <div class="row-2">
-      <div class="field">
-        <label class="required">Cantidad</label>
-        <input type="number" id="salida-cantidad" min="1" placeholder="0">
-      </div>
-      <div class="field">
-        <label>Unidad</label>
-        <input type="text" id="salida-unidad" disabled style="background:#f1f5f9;">
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== SECCIÓN KIT ===== -->
-  <div id="seccion-kit" style="display: none;">
-    <div class="section-label" style="border-left-color: var(--naranja);">🧰 Kit de Fiscalización Vehicular</div>
-
-    <div class="field">
-      <label class="required">Tipo de Kit</label>
-      <select id="kit-tipo">
-        <option value="">Selecciona un kit...</option>
-        <option value="Kit Básico Inspector">Kit Básico Inspector</option>
-        <option value="Kit Control de Tránsito">Kit Control de Tránsito</option>
-        <option value="Kit Fiscalización Obras">Kit Fiscalización Obras</option>
-        <option value="Kit Fiscalización Ambiental">Kit Fiscalización Ambiental</option>
-        <option value="Otro">Otro</option>
-      </select>
-    </div>
-
-    <div class="field" id="kit-otro-container" style="display: none;">
-      <label>Nombre del Kit (Otro)</label>
-      <input type="text" id="kit-otro-nombre" placeholder="Ej: Kit de Emergencia Invernal">
-    </div>
-
-    <div class="row-2">
-      <div class="field">
-        <label class="required">N° Inventario del Kit</label>
-        <input type="text" id="kit-inventario" placeholder="Ej: KIT-2024-001">
-      </div>
-      <div class="field">
-        <label class="required">Patente del Vehículo</label>
-        <input type="text" id="kit-patente" placeholder="Ej: AB-CD-12">
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="required">Responsable del Vehículo</label>
-      <input type="text" id="kit-responsable" placeholder="Nombre del funcionario">
-    </div>
-
-    <div class="field">
-      <label>Componentes del Kit</label>
-      <div id="kit-componentes" style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px; max-height: 350px; overflow-y: auto; padding: 8px; border: 1px solid var(--borde); border-radius: 12px; background: #fafcff;">
-        
-        <div class="kit-categoria">📋 Herramientas de Fiscalización</div>
-        <div class="kit-componentes-grid">
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Tablero de fiscalización" class="kit-herramienta"> Tablero de fiscalización
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Kit de escritorio (lápices, marcadores, formularios)" class="kit-herramienta"> Kit de escritorio
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Cargador de vehículo (USB)" class="kit-herramienta"> Cargador vehículo USB
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Linterna de mano recargable" class="kit-herramienta"> Linterna recargable
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Cinta métrica de 5m" class="kit-herramienta"> Cinta métrica 5m
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Cámara fotográfica digital" class="kit-herramienta"> Cámara fotográfica
-          </label>
-        </div>
-
-        <div class="kit-categoria">🦺 Elementos de Seguridad Personal</div>
-        <div class="kit-componentes-grid">
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Chaleco reflectivo" class="kit-herramienta"> Chaleco reflectivo
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Funda para carnet con cordón" class="kit-herramienta"> Funda carnet
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Guantes de seguridad (talla única)" class="kit-herramienta"> Guantes seguridad
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Botiquín básico" class="kit-herramienta"> Botiquín básico
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Protector solar y repelente" class="kit-herramienta"> Protector solar/repelente
-          </label>
-        </div>
-
-        <div class="kit-categoria">🚦 Control y Señalización Vial</div>
-        <div class="kit-componentes-grid">
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Conos de tránsito (2 unidades)" class="kit-herramienta"> Conos de tránsito (2)
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Baliza portátil (luz intermitente)" class="kit-herramienta"> Baliza portátil
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Placa señalización fiscalización" class="kit-herramienta"> Placa fiscalización
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Cinta de peligro" class="kit-herramienta"> Cinta de peligro
-          </label>
-        </div>
-
-        <div class="kit-categoria">🔧 Herramientas Manuales</div>
-        <div class="kit-componentes-grid">
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Multiherramienta (navaja, alicate, destornillador)" class="kit-herramienta"> Multiherramienta
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Cuchillo multiusos con seguro" class="kit-herramienta"> Cuchillo multiusos
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Martillo de inspección" class="kit-herramienta"> Martillo inspección
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
-            <input type="checkbox" value="Cinta aisladora y de amarre" class="kit-herramienta"> Cinta aisladora/amarre
-          </label>
-        </div>
-      </div>
-    </div>
-    <div style="font-size: 10px; color: var(--texto-gris); margin-top: -6px; margin-bottom: 8px;">
-      ✅ Selecciona las herramientas que componen el kit entregado
-    </div>
-  </div>
-
-  <!-- ===== CARRITO ===== -->
-  <div class="field">
-    <label>📦 Productos en esta entrega (<span id="carrito-count">0</span>)</label>
-    <div id="carrito-container" style="border: 1px solid var(--borde); border-radius: 12px; padding: 8px; min-height: 60px; background: #fafcff;">
-      <div class="empty-state" id="carrito-vacio">No hay productos agregados</div>
-    </div>
-    <div id="carrito-total" class="carrito-total" style="display: none;">
-      <span>Total unidades:</span>
-      <span id="carrito-total-unidades">0</span>
-    </div>
-  </div>
-
-  <!-- ===== RECEPTORES ===== -->
-  <div class="field">
-    <label class="required">Persona que recibe</label>
+    <label class="required">👤 Persona que recibe</label>
     <div class="row-3">
       <div class="field" style="margin-bottom:0;">
         <label>Nombre completo *</label>
@@ -855,46 +751,230 @@
         <input type="email" id="receptor-email" placeholder="Ej: juan@lascondes.cl">
       </div>
     </div>
-    <button class="btn-agregar-receptor" id="btn-agregar-receptor" onclick="agregarReceptor()">+ Agregar receptor</button>
+    <button class="btn-agregar-receptor" id="btn-agregar-receptor" onclick="agregarReceptor()">+ Verificar receptor</button>
     <div id="receptor-error" style="color:var(--rojo); font-size:11px; margin-top:4px; display:none;"></div>
     <div class="receptor-agregado-msg" id="receptor-agregado-msg">
-      ✅ Receptor <strong id="receptor-agregado-nombre"></strong> agregado para esta entrega. Ahora puedes agregar más productos.
+      ✅ Receptor <strong id="receptor-agregado-nombre"></strong> agregado para esta entrega.
     </div>
   </div>
 
-  <div class="field">
-    <label>Receptores agregados (<span id="receptor-count">0</span>/1)</label>
-    <div id="receptores-container"></div>
+  <!-- ===== HISTORIAL DEL RECEPTOR ===== -->
+  <div class="historial-container" id="historial-container">
+    <div class="titulo">📋 Historial de entregas de <span id="historial-nombre"></span></div>
+    <div id="historial-lista"></div>
+    <div class="btn-continuar" id="btn-continuar-container" style="display:none;">
+      <button class="continuar" id="btn-continuar-entrega" onclick="continuarEntrega()">✅ Continuar con la entrega</button>
+      <button class="cancelar" id="btn-cancelar-entrega" onclick="cancelarEntrega()">❌ Cancelar entrega</button>
+    </div>
   </div>
 
-  <!-- ===== OBSERVACIÓN ===== -->
-  <div class="field">
-    <label>Observación (opcional)</label>
-    <textarea id="salida-obs" rows="2" placeholder="Motivo de la entrega, proyecto, etc."></textarea>
-  </div>
-
-  <!-- ===== FOTOS ===== -->
-  <div class="field">
-    <label>📷 Fotografía (opcional)</label>
-    <div class="foto-upload">
-      <input type="file" id="foto-input" accept="image/*" capture="environment" multiple onchange="previewFotos()">
-      <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-        <button type="button" class="btn-camara" onclick="abrirCamara()">📸 Tomar foto con cámara</button>
-        <button type="button" class="btn-camara" style="background:var(--azul);" onclick="abrirGaleria()">🖼️ Elegir de galería</button>
+  <!-- ===== SECCIÓN DE PRODUCTOS (OCULTA HASTA VERIFICAR RECEPTOR) ===== -->
+  <div id="seccion-productos-tabs" style="display: none;">
+    <!-- TABS: Productos + Kit -->
+    <div class="field">
+      <label>📂 Tipo de registro</label>
+      <div class="tabs-familias" id="tabs-familias">
+        <div class="tab-familia active" data-familia="epp_basico">🛡️ EPP Básico</div>
+        <div class="tab-familia" data-familia="epp_climatico">🌧️ EPP Climático</div>
+        <div class="tab-familia" data-familia="epp_especial">🧥 EPP Especial</div>
+        <div class="tab-familia" data-familia="maquinarias">🔧 Maquinarias</div>
+        <div class="tab-familia" data-familia="herramientas">🔩 Herramientas</div>
+        <div class="tab-familia" data-familia="kit">🧰 Kit Vehicular</div>
+        <div class="tab-familia" data-familia="todas">📦 Todas</div>
       </div>
-      <div id="foto-preview" class="foto-preview"></div>
-      <div id="foto-placeholder" style="font-size:10px; color:var(--texto-gris); margin-top:6px;">Subir foto(s) del producto o entrega</div>
     </div>
-  </div>
 
-  <!-- ===== BOTONES PRINCIPALES ===== -->
-  <div class="btn-fila-principal">
-    <button class="btn-agregar-carrito" id="btn-agregar-carrito" onclick="agregarAlCarrito()" disabled>
-      ➕ Agregar otro artículo
-    </button>
-    <button class="btn-finalizar" id="btn-finalizar" onclick="finalizarEntrega()" disabled>
-      ✅ Finalizar entrega
-    </button>
+    <!-- ===== SECCIÓN PRODUCTOS ===== -->
+    <div id="seccion-productos">
+      <div class="field">
+        <label class="required">Producto</label>
+        <div class="custom-dropdown">
+          <input type="text" id="prod-trigger" class="dropdown-input" placeholder="Buscar producto..." readonly>
+          <div class="dropdown-list" id="prod-list"></div>
+        </div>
+      </div>
+
+      <div id="producto-seleccionado-container" class="producto-seleccionado">
+        <div id="selector-tallas-container" style="display:none;">
+          <div class="prod-subtitulo">📏 Selecciona una talla:</div>
+          <div class="selector-tallas" id="selector-tallas"></div>
+          <div id="talla-seleccionada-info" style="font-size:10px; color:var(--texto-gris); margin-top:6px;"></div>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label class="required">Cantidad</label>
+          <input type="number" id="salida-cantidad" min="1" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Unidad</label>
+          <input type="text" id="salida-unidad" disabled style="background:#f1f5f9;">
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECCIÓN KIT ===== -->
+    <div id="seccion-kit" style="display: none;">
+      <div class="section-label" style="border-left-color: var(--naranja);">🧰 Kit de Fiscalización Vehicular</div>
+
+      <div class="field">
+        <label class="required">Tipo de Kit</label>
+        <select id="kit-tipo">
+          <option value="">Selecciona un kit...</option>
+          <option value="Kit Básico Inspector">Kit Básico Inspector</option>
+          <option value="Kit Control de Tránsito">Kit Control de Tránsito</option>
+          <option value="Kit Fiscalización Obras">Kit Fiscalización Obras</option>
+          <option value="Kit Fiscalización Ambiental">Kit Fiscalización Ambiental</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="field" id="kit-otro-container" style="display: none;">
+        <label>Nombre del Kit (Otro)</label>
+        <input type="text" id="kit-otro-nombre" placeholder="Ej: Kit de Emergencia Invernal">
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label class="required">N° Inventario del Kit</label>
+          <input type="text" id="kit-inventario" placeholder="Ej: KIT-2024-001">
+        </div>
+        <div class="field">
+          <label class="required">Patente del Vehículo</label>
+          <input type="text" id="kit-patente" placeholder="Ej: AB-CD-12">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="required">Responsable del Vehículo</label>
+        <input type="text" id="kit-responsable" placeholder="Nombre del funcionario">
+      </div>
+
+      <div class="field">
+        <label>Componentes del Kit</label>
+        <div id="kit-componentes" style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px; max-height: 350px; overflow-y: auto; padding: 8px; border: 1px solid var(--borde); border-radius: 12px; background: #fafcff;">
+          
+          <div class="kit-categoria">📋 Herramientas de Fiscalización</div>
+          <div class="kit-componentes-grid">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Tablero de fiscalización" class="kit-herramienta"> Tablero de fiscalización
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Kit de escritorio (lápices, marcadores, formularios)" class="kit-herramienta"> Kit de escritorio
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Cargador de vehículo (USB)" class="kit-herramienta"> Cargador vehículo USB
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Linterna de mano recargable" class="kit-herramienta"> Linterna recargable
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Cinta métrica de 5m" class="kit-herramienta"> Cinta métrica 5m
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Cámara fotográfica digital" class="kit-herramienta"> Cámara fotográfica
+            </label>
+          </div>
+
+          <div class="kit-categoria">🦺 Elementos de Seguridad Personal</div>
+          <div class="kit-componentes-grid">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Chaleco reflectivo" class="kit-herramienta"> Chaleco reflectivo
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Funda para carnet con cordón" class="kit-herramienta"> Funda carnet
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Guantes de seguridad (talla única)" class="kit-herramienta"> Guantes seguridad
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Botiquín básico" class="kit-herramienta"> Botiquín básico
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Protector solar y repelente" class="kit-herramienta"> Protector solar/repelente
+            </label>
+          </div>
+
+          <div class="kit-categoria">🚦 Control y Señalización Vial</div>
+          <div class="kit-componentes-grid">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Conos de tránsito (2 unidades)" class="kit-herramienta"> Conos de tránsito (2)
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Baliza portátil (luz intermitente)" class="kit-herramienta"> Baliza portátil
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Placa señalización fiscalización" class="kit-herramienta"> Placa fiscalización
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Cinta de peligro" class="kit-herramienta"> Cinta de peligro
+            </label>
+          </div>
+
+          <div class="kit-categoria">🔧 Herramientas Manuales</div>
+          <div class="kit-componentes-grid">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Multiherramienta (navaja, alicate, destornillador)" class="kit-herramienta"> Multiherramienta
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Cuchillo multiusos con seguro" class="kit-herramienta"> Cuchillo multiusos
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Martillo de inspección" class="kit-herramienta"> Martillo inspección
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 2px 8px;">
+              <input type="checkbox" value="Cinta aisladora y de amarre" class="kit-herramienta"> Cinta aisladora/amarre
+            </label>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 10px; color: var(--texto-gris); margin-top: -6px; margin-bottom: 8px;">
+        ✅ Selecciona las herramientas que componen el kit entregado
+      </div>
+    </div>
+
+    <!-- ===== CARRITO ===== -->
+    <div class="field">
+      <label>📦 Productos en esta entrega (<span id="carrito-count">0</span>)</label>
+      <div id="carrito-container" style="border: 1px solid var(--borde); border-radius: 12px; padding: 8px; min-height: 60px; background: #fafcff;">
+        <div class="empty-state" id="carrito-vacio">No hay productos agregados</div>
+      </div>
+      <div id="carrito-total" class="carrito-total" style="display: none;">
+        <span>Total unidades:</span>
+        <span id="carrito-total-unidades">0</span>
+      </div>
+    </div>
+
+    <!-- ===== OBSERVACIÓN ===== -->
+    <div class="field">
+      <label>Observación (opcional)</label>
+      <textarea id="salida-obs" rows="2" placeholder="Motivo de la entrega, proyecto, etc."></textarea>
+    </div>
+
+    <!-- ===== FOTOS ===== -->
+    <div class="field">
+      <label>📷 Fotografía (opcional)</label>
+      <div class="foto-upload">
+        <input type="file" id="foto-input" accept="image/*" capture="environment" multiple onchange="previewFotos()">
+        <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+          <button type="button" class="btn-camara" onclick="abrirCamara()">📸 Tomar foto con cámara</button>
+          <button type="button" class="btn-camara" style="background:var(--azul);" onclick="abrirGaleria()">🖼️ Elegir de galería</button>
+        </div>
+        <div id="foto-preview" class="foto-preview"></div>
+        <div id="foto-placeholder" style="font-size:10px; color:var(--texto-gris); margin-top:6px;">Subir foto(s) del producto o entrega</div>
+      </div>
+    </div>
+
+    <!-- ===== BOTONES PRINCIPALES ===== -->
+    <div class="btn-fila-principal">
+      <button class="btn-agregar-carrito" id="btn-agregar-carrito" onclick="agregarAlCarrito()" disabled>
+        ➕ Agregar otro artículo
+      </button>
+      <button class="btn-finalizar" id="btn-finalizar" onclick="finalizarEntrega()" disabled>
+        ✅ Finalizar entrega
+      </button>
+    </div>
   </div>
 
   <!-- ===== BOTONES SECUNDARIOS ===== -->
@@ -933,11 +1013,10 @@
 // ================================================================
 
 const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
-
-// ✅ CLAVE ANON PUBLIC - CORRECTA
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtY21jYnl4cXluemhrYWNoeWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzNTMwNjEsImV4cCI6MjEwMDkyOTA2MX0.NRLgNctjDGHY71FcZK3gWU576xzRxV10qx_FuQm_jrw';
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let bdConectada = false;
 
 // ================================================================
 // 2. CONFIGURACIÓN MSAL (Azure AD)
@@ -974,9 +1053,9 @@ let familiaSeleccionada = 'epp_basico';
 let modoKit = false;
 let carrito = [];
 let fotosData = [];
+let receptorVerificado = false;
 
 const STORAGE_KEY = 'inv_items_salidas_v8';
-const CARRITO_KEY = 'carrito_entrega_temp';
 
 // ================================================================
 // 5. FUNCIONES DE UTILIDAD
@@ -1185,6 +1264,7 @@ function actualizarEstadoSesion(autenticado) {
   const dot = document.getElementById('status-dot');
   const btnFinalizar = document.getElementById('btn-finalizar');
   const btnAgregar = document.getElementById('btn-agregar-carrito');
+  const btnVerificar = document.getElementById('btn-agregar-receptor');
   const usuarioInfo = document.getElementById('usuario-info');
   const usuarioNombre = document.getElementById('usuario-nombre');
   const usuarioEmail = document.getElementById('usuario-email');
@@ -1198,6 +1278,7 @@ function actualizarEstadoSesion(autenticado) {
     btn.onclick = cerrarSesionMicrosoft;
     btnFinalizar.disabled = false;
     btnAgregar.disabled = false;
+    btnVerificar.disabled = false;
     
     usuarioInfo.style.display = 'block';
     usuarioNombre.textContent = nombre;
@@ -1209,6 +1290,7 @@ function actualizarEstadoSesion(autenticado) {
     btn.onclick = iniciarSesionMicrosoft;
     btnFinalizar.disabled = true;
     btnAgregar.disabled = true;
+    btnVerificar.disabled = true;
     usuarioInfo.style.display = 'none';
   }
 }
@@ -1547,24 +1629,28 @@ async function cargarEntregasBD() {
   }
 }
 
-async function verificarEntregaDuplicada(rut) {
+async function verificarHistorialReceptor(rut) {
   try {
     const rutLimpio = rut.replace(/[.-]/g, '');
-    const hoy = new Date().toISOString().split('T')[0];
     
     const { data, error } = await supabaseClient
       .from('entregas')
-      .select('id, numero_entrega, fecha')
+      .select(`
+        id,
+        numero_entrega,
+        fecha,
+        total_unidades,
+        detalles_entrega (producto_nombre, talla, cantidad)
+      `)
       .eq('receptor_rut', rutLimpio)
-      .gte('fecha', `${hoy}T00:00:00`)
-      .lte('fecha', `${hoy}T23:59:59`);
+      .order('fecha', { ascending: false });
     
     if (error) throw error;
     
-    return data && data.length > 0 ? data : null;
+    return data || [];
   } catch (error) {
-    console.error('Error verificando duplicados:', error);
-    return null;
+    console.error('Error verificando historial:', error);
+    return [];
   }
 }
 
@@ -1589,7 +1675,7 @@ async function sincronizarBD() {
 }
 
 // ================================================================
-// 10. FUNCIONES DE RECEPTORES (OPTIMIZADAS)
+// 10. FUNCIONES DE RECEPTOR (CON HISTORIAL)
 // ================================================================
 
 function bloquearCamposReceptor(bloquear) {
@@ -1607,31 +1693,29 @@ function bloquearCamposReceptor(bloquear) {
     rutInput.style.background = '#f1f5f9';
     emailInput.style.background = '#f1f5f9';
     btnAgregar.disabled = true;
-    btnAgregar.textContent = '✅ Receptor agregado';
+    btnAgregar.textContent = '✅ Receptor verificado';
   } else {
     nombreInput.style.background = '';
     rutInput.style.background = '';
     emailInput.style.background = '';
     btnAgregar.disabled = false;
-    btnAgregar.textContent = '+ Agregar receptor';
+    btnAgregar.textContent = '+ Verificar receptor';
   }
 }
 
-function agregarReceptor() {
+async function agregarReceptor() {
   const nombre = document.getElementById('receptor-nombre').value.trim();
   const rut = document.getElementById('receptor-rut').value.trim();
   const email = document.getElementById('receptor-email').value.trim();
   const error = document.getElementById('receptor-error');
   const msg = document.getElementById('receptor-agregado-msg');
 
-  // Validar nombre
   if (!nombre) {
     error.textContent = '⚠️ Ingresa el nombre completo';
     error.style.display = 'block';
     return;
   }
 
-  // Validar RUT
   if (!rut) {
     error.textContent = '⚠️ Ingresa el RUT';
     error.style.display = 'block';
@@ -1645,33 +1729,31 @@ function agregarReceptor() {
     return;
   }
 
-  // Validar email
   if (!email || !email.includes('@')) {
     error.textContent = '⚠️ Ingresa un correo electrónico válido';
     error.style.display = 'block';
     return;
   }
 
-  // Si ya hay un receptor, mostrar mensaje
-  if (receptoresAgregados.length >= 1) {
-    error.style.display = 'none';
-    msg.style.display = 'block';
-    return;
-  }
-
   error.style.display = 'none';
   
-  receptoresAgregados.push({ 
+  // Verificar historial del receptor
+  const entregas = await verificarHistorialReceptor(resultadoRUT.rut);
+  
+  // Guardar receptor
+  receptoresAgregados = [{
     nombre, 
     rut: resultadoRUT.rutFormateado,
     rutLimpio: resultadoRUT.rut,
     email 
-  });
+  }];
   
   renderReceptores();
   bloquearCamposReceptor(true);
   
-  // Mostrar mensaje de confirmación
+  // Mostrar historial
+  mostrarHistorial(entregas, nombre);
+  
   msg.style.display = 'block';
   document.getElementById('receptor-agregado-nombre').textContent = nombre;
 
@@ -1680,17 +1762,103 @@ function agregarReceptor() {
   document.getElementById('receptor-email').value = '';
 }
 
+function mostrarHistorial(entregas, nombre) {
+  const container = document.getElementById('historial-container');
+  const lista = document.getElementById('historial-lista');
+  const nombreSpan = document.getElementById('historial-nombre');
+  const btnContainer = document.getElementById('btn-continuar-container');
+  
+  nombreSpan.textContent = nombre;
+  container.style.display = 'block';
+  
+  if (entregas.length === 0) {
+    lista.innerHTML = `
+      <div class="sin-entregas">
+        ✅ ${nombre} no tiene entregas previas. Puedes continuar.
+      </div>
+    `;
+    btnContainer.style.display = 'flex';
+    return;
+  }
+  
+  // Mostrar historial
+  let html = `
+    <div class="tabla-historial">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>N° Entrega</th>
+            <th>Productos</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+  
+  entregas.forEach(e => {
+    const productos = e.detalles_entrega ? e.detalles_entrega.map(d => 
+      `${d.producto_nombre}${d.talla ? ' ('+d.talla+')' : ''} × ${d.cantidad}`
+    ).join(', ') : 'Sin productos';
+    
+    const fecha = new Date(e.fecha).toLocaleDateString('es-CL');
+    
+    html += `
+      <tr>
+        <td>${fecha}</td>
+        <td><strong>${e.numero_entrega}</strong></td>
+        <td style="font-size: 11px;">${productos}</td>
+        <td style="text-align: center;">${e.total_unidades || 0}</td>
+      </tr>
+    `;
+  });
+  
+  html += `
+        </tbody>
+      </table>
+    </div>
+    <div class="aviso">
+      ⚠️ <strong>${nombre}</strong> tiene <strong>${entregas.length}</strong> entrega(s) previa(s).
+      Si decides continuar, se registrará una nueva entrega.
+    </div>
+  `;
+  
+  lista.innerHTML = html;
+  btnContainer.style.display = 'flex';
+}
+
+function continuarEntrega() {
+  document.getElementById('seccion-productos-tabs').style.display = 'block';
+  document.getElementById('btn-continuar-container').style.display = 'none';
+  mostrarToast('✅ Puedes agregar productos para la entrega');
+}
+
+function cancelarEntrega() {
+  document.getElementById('receptor-nombre').value = '';
+  document.getElementById('receptor-rut').value = '';
+  document.getElementById('receptor-email').value = '';
+  document.getElementById('historial-container').style.display = 'none';
+  document.getElementById('seccion-productos-tabs').style.display = 'none';
+  document.getElementById('btn-continuar-container').style.display = 'none';
+  document.getElementById('receptor-agregado-msg').style.display = 'none';
+  receptoresAgregados = [];
+  renderReceptores();
+  bloquearCamposReceptor(false);
+  mostrarToast('❌ Entrega cancelada');
+}
+
 function eliminarReceptor(email) {
   receptoresAgregados = receptoresAgregados.filter(r => r.email !== email);
   renderReceptores();
   bloquearCamposReceptor(false);
   document.getElementById('receptor-agregado-msg').style.display = 'none';
+  document.getElementById('historial-container').style.display = 'none';
+  document.getElementById('seccion-productos-tabs').style.display = 'none';
 }
 
 function renderReceptores() {
   const container = document.getElementById('receptores-container');
   const count = document.getElementById('receptor-count');
-  const btn = document.getElementById('btn-agregar-receptor');
 
   count.textContent = receptoresAgregados.length;
 
@@ -1921,9 +2089,7 @@ function poblarDropdownProductos() {
 // ================================================================
 
 function agregarAlCarrito() {
-  // Verificar si estamos en modo kit o producto
   if (modoKit) {
-    // ===== AGREGAR KIT =====
     const kitTipo = document.getElementById('kit-tipo').value;
     const kitOtroNombre = document.getElementById('kit-otro-nombre').value.trim();
     const kitInventario = document.getElementById('kit-inventario').value.trim();
@@ -1971,7 +2137,6 @@ function agregarAlCarrito() {
     return;
   }
 
-  // ===== AGREGAR PRODUCTO =====
   const productoBase = items.find(i => i.id === productoSeleccionadoId);
   if (!productoBase) {
     mostrarToast('❌ Selecciona un producto');
@@ -2057,7 +2222,7 @@ function renderCarrito() {
   count.textContent = carrito.length;
 
   if (carrito.length === 0) {
-    container.innerHTML = '<div class="empty-state" id="carrito-vacio">No hay productos agregados</div>';
+    container.innerHTML = '<div class="empty-state">No hay productos agregados</div>';
     totalContainer.style.display = 'none';
     btnFinalizar.disabled = true;
     return;
@@ -2161,7 +2326,62 @@ function comprimirImagen(file, calidad = 0.7, maxWidth = 800) {
 }
 
 // ================================================================
-// 14. FINALIZAR ENTREGA
+// 14. FUNCIÓN ENVIAR CORREO MEJORADA
+// ================================================================
+
+function enviarCorreoComprobante(entrega) {
+  const receptores = [{ nombre: entrega.receptorNombre, email: entrega.receptorEmail }];
+  
+  if (receptores.length === 0) return;
+  
+  // Construir lista de productos
+  let productosList = '';
+  let totalUnidades = 0;
+  
+  entrega.detalles.forEach((d, i) => {
+    const nombreProducto = `${i+1}. ${d.nombre}${d.talla ? ' ('+d.talla+')' : ''}`;
+    const cantidad = `${d.cantidad} ${d.unidad}`;
+    productosList += `${nombreProducto} × ${cantidad}\n`;
+    totalUnidades += d.cantidad;
+  });
+  
+  // Datos del que entrega
+  const responsableNombre = entrega.responsableNombre || 'Personal GRRD';
+  const responsableEmail = entrega.responsable || 'personal@grrd.cl';
+  
+  // Datos del receptor
+  const receptorNombre = entrega.receptorNombre || 'No especificado';
+  const receptorRut = entrega.receptorRut || 'No especificado';
+  const receptorEmail = entrega.receptorEmail || 'No especificado';
+  
+  receptores.forEach((receptor) => {
+    const templateParams = {
+      to_email: receptor.email,
+      to_name: receptor.nombre,
+      numero_entrega: entrega.numeroEntrega,
+      fecha: entrega.fecha,
+      observacion: entrega.observacion || 'Ninguna',
+      responsable_nombre: responsableNombre,
+      responsable_email: responsableEmail,
+      receptor_nombre: receptorNombre,
+      receptor_rut: receptorRut,
+      receptor_email: receptorEmail,
+      productos_lista: productosList,
+      total_unidades: totalUnidades
+    };
+    
+    emailjs.send('service_snitcew', 'template_entrega_mejorado', templateParams)
+      .then(() => {
+        console.log(`✅ Correo enviado a ${receptor.nombre} (${receptor.email})`);
+      })
+      .catch((error) => {
+        console.error('Error al enviar correo a', receptor.email, error);
+      });
+  });
+}
+
+// ================================================================
+// 15. FINALIZAR ENTREGA
 // ================================================================
 async function finalizarEntrega() {
   if (!usuarioAutenticado || !usuarioDominioValido) {
@@ -2181,14 +2401,6 @@ async function finalizarEntrega() {
 
   const receptor = receptoresAgregados[0];
   const obs = document.getElementById('salida-obs').value.trim();
-
-  const duplicados = await verificarEntregaDuplicada(receptor.rutLimpio);
-  if (duplicados) {
-    const confirmar = confirm(
-      `⚠️ Este RUT (${receptor.rut}) ya recibió ${duplicados.length} entrega(s) hoy.\n¿Deseas continuar?`
-    );
-    if (!confirmar) return;
-  }
 
   const numEntrega = String(salidas.length + 1).padStart(4, '0');
   const numeroEntrega = `ENT-${numEntrega}`;
@@ -2276,6 +2488,8 @@ async function finalizarEntrega() {
     renderReceptores();
     bloquearCamposReceptor(false);
     document.getElementById('receptor-agregado-msg').style.display = 'none';
+    document.getElementById('historial-container').style.display = 'none';
+    document.getElementById('seccion-productos-tabs').style.display = 'none';
     document.getElementById('foto-input').value = '';
     document.getElementById('foto-preview').innerHTML = '';
     document.getElementById('foto-placeholder').style.display = 'block';
@@ -2291,42 +2505,6 @@ async function finalizarEntrega() {
     mostrarToast('❌ Error al guardar la entrega');
     console.error(error);
   }
-}
-
-// ================================================================
-// 15. ENVÍO DE CORREO
-// ================================================================
-function enviarCorreoComprobante(entrega) {
-  const receptores = [{ nombre: entrega.receptorNombre, email: entrega.receptorEmail }];
-  
-  if (receptores.length === 0) return;
-  
-  const productosList = entrega.detalles.map((d, i) => 
-    `${i+1}. ${d.nombre}${d.talla ? ' ('+d.talla+')' : ''} × ${d.cantidad}`
-  ).join('\n');
-  
-  receptores.forEach((receptor) => {
-    const templateParams = {
-      to_email: receptor.email,
-      to_name: receptor.nombre,
-      from_name: entrega.responsableNombre || 'Personal GRRD',
-      producto: 'Múltiples productos (ver detalle)',
-      cantidad: `${entrega.totalUnidades} unidades totales`,
-      observacion: entrega.observacion || 'Ninguna',
-      fecha: entrega.fecha,
-      numero: entrega.numeroEntrega,
-      tipo: 'Entrega Múltiple',
-      detalles: productosList
-    };
-    
-    emailjs.send('service_snitcew', 'template_x195qwc', templateParams)
-      .then(() => {
-        console.log(`✅ Correo enviado a ${receptor.nombre} (${receptor.email})`);
-      })
-      .catch((error) => {
-        console.error('Error al enviar correo a', receptor.email, error);
-      });
-  });
 }
 
 // ================================================================
@@ -2385,6 +2563,12 @@ function mostrarComprobante(entrega) {
       </div>
 
       <div style="margin: 8px 0;">
+        <div style="font-weight:600; font-size:12px; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:4px;">👤 ENTREGADO POR</div>
+        <div class="ticket-fila"><span class="label">Nombre</span><span class="valor">${entrega.responsableNombre || 'Personal GRRD'}</span></div>
+        <div class="ticket-fila"><span class="label">Email</span><span class="valor">${entrega.responsable || 'personal@grrd.cl'}</span></div>
+      </div>
+
+      <div style="margin: 8px 0;">
         <div style="font-weight:600; font-size:12px; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:4px;">📦 PRODUCTOS ENTREGADOS</div>
         ${productosHTML}
         ${kitInfoHTML}
@@ -2395,11 +2579,6 @@ function mostrarComprobante(entrega) {
       </div>
 
       ${entrega.observacion ? `<div class="ticket-fila"><span class="label">Observación</span><span class="valor">${entrega.observacion}</span></div>` : ''}
-
-      <div style="margin: 8px 0;">
-        <div style="font-weight:600; font-size:12px; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:4px;">👤 ENTREGADO POR</div>
-        <div class="ticket-fila"><span class="label">Nombre</span><span class="valor">${entrega.responsableNombre || 'Personal GRRD'}</span></div>
-      </div>
 
       ${fotosHTML}
 
@@ -2449,7 +2628,7 @@ function cerrarModalComprobante() {
 }
 
 // ================================================================
-// 17. IMPRESIÓN Y PDF CON MÚLTIPLES HOJAS
+// 17. IMPRESIÓN Y PDF
 // ================================================================
 
 function imprimirComprobante() {
@@ -2505,7 +2684,7 @@ function descargarPDFComprobante() {
   const margin = 15;
   let y = margin;
 
-  // ===== HOJA 1: RESUMEN DE ENTREGA =====
+  // ===== HOJA 1: RESUMEN =====
   
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
@@ -2521,9 +2700,10 @@ function descargarPDFComprobante() {
   doc.text(`Fecha: ${entrega.fecha}`, pageW/2, y, { align: 'center' });
   y += 8;
 
+  // RECEPTOR
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
-  doc.text('DATOS DEL RECEPTOR', margin, y);
+  doc.text('👤 RECEPTOR', margin, y);
   y += 5;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
@@ -2534,9 +2714,22 @@ function descargarPDFComprobante() {
   doc.text(`Email: ${entrega.receptorEmail}`, margin, y);
   y += 6;
 
+  // ENTREGADO POR
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
-  doc.text('PRODUCTOS ENTREGADOS', margin, y);
+  doc.text('👤 ENTREGADO POR', margin, y);
+  y += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7);
+  doc.text(`Nombre: ${entrega.responsableNombre || 'Personal GRRD'}`, margin, y);
+  y += 4;
+  doc.text(`Email: ${entrega.responsable || 'personal@grrd.cl'}`, margin, y);
+  y += 6;
+
+  // PRODUCTOS
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.text('📦 PRODUCTOS ENTREGADOS', margin, y);
   y += 5;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
@@ -2570,12 +2763,13 @@ function descargarPDFComprobante() {
   doc.setFontSize(8);
   doc.line(margin, y, pageW - margin, y);
   y += 4;
-  doc.text(`TOTAL UNIDADES: ${entrega.totalUnidades}`, margin, y);
+  doc.text(`TOTAL: ${entrega.totalUnidades} unidades`, margin, y);
   y += 6;
 
+  // OBSERVACIÓN
   if (entrega.observacion) {
     doc.setFont('helvetica', 'bold');
-    doc.text('OBSERVACIÓN:', margin, y);
+    doc.text('📝 OBSERVACIÓN:', margin, y);
     y += 4;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7);
@@ -2583,14 +2777,7 @@ function descargarPDFComprobante() {
     y += 6;
   }
 
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.text('ENTREGADO POR:', margin, y);
-  y += 4;
-  doc.setFont('helvetica', 'normal');
-  doc.text(entrega.responsableNombre || 'Personal GRRD', margin, y);
-  y += 8;
-
+  // FIRMAS
   doc.setFontSize(7);
   doc.text('Entregado por', margin + 20, y);
   doc.text('Recibido por', margin + 80, y);
@@ -2605,8 +2792,6 @@ function descargarPDFComprobante() {
 
   doc.setFontSize(6);
   doc.text('Este comprobante es de carácter informativo y respaldo de entrega.', pageW/2, y, { align: 'center' });
-  y += 4;
-  doc.text(entrega.fecha || '', pageW/2, y, { align: 'center' });
 
   // ===== HOJAS DE FOTOS =====
   if (entrega.fotos && entrega.fotos.length > 0) {
@@ -2614,32 +2799,30 @@ function descargarPDFComprobante() {
     const fotosPorPagina = 4;
     const anchoFoto = (pageW - margin * 3) / 2;
     const altoFoto = anchoFoto * 0.7;
-    const fotos = entrega.fotos;
 
-    while (fotoIndex < fotos.length) {
+    while (fotoIndex < entrega.fotos.length) {
       doc.addPage();
       y = margin;
       
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
       doc.setTextColor(22, 100, 192);
-      doc.text(`REGISTRO FOTOGRÁFICO - Entrega N° ${entrega.numeroEntrega}`, pageW/2, y, { align: 'center' });
+      doc.text(`📷 REGISTRO FOTOGRÁFICO - ${entrega.numeroEntrega}`, pageW/2, y, { align: 'center' });
       y += 6;
       doc.setFontSize(7);
       doc.setTextColor(80);
       doc.text(`Página ${Math.floor(fotoIndex / fotosPorPagina) + 1}`, pageW/2, y, { align: 'center' });
       y += 8;
 
-      const filas = Math.min(2, Math.ceil((fotos.length - fotoIndex) / 2));
+      const filas = Math.min(2, Math.ceil((entrega.fotos.length - fotoIndex) / 2));
       for (let f = 0; f < filas; f++) {
-        const xInicio = margin;
         for (let c = 0; c < 2; c++) {
           const idx = fotoIndex + f * 2 + c;
-          if (idx < fotos.length) {
-            const x = xInicio + c * (anchoFoto + margin);
+          if (idx < entrega.fotos.length) {
+            const x = margin + c * (anchoFoto + margin);
             const yFoto = y + f * (altoFoto + 8);
             try {
-              doc.addImage(fotos[idx], 'JPEG', x, yFoto, anchoFoto, altoFoto);
+              doc.addImage(entrega.fotos[idx], 'JPEG', x, yFoto, anchoFoto, altoFoto);
               doc.setFontSize(6);
               doc.setTextColor(80);
               doc.text(`Foto ${idx+1}`, x + anchoFoto/2, yFoto + altoFoto + 4, { align: 'center' });
