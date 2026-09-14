@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
-<title>Municipalidad de Las Condes - Prueba</title>
+<title>Municipalidad de Las Condes</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -582,7 +582,6 @@ async function obtenerToken() {
   try {
     const account = msalInstance.getAllAccounts()[0];
     if (!account) return null;
-    
     const response = await msalInstance.acquireTokenSilent({
       account: account,
       scopes: ['user.read']
@@ -670,12 +669,12 @@ function inicializarDropdowns() {
     { listId: 'transit-list', inputId: 'transit-trigger', opciones: TRANSIT_OPCIONES },
     { listId: 'ambulancia-list', inputId: 'ambulancia-trigger', opciones: AMBULANCIAS_OPCIONES }
   ];
-  
+
   dropdowns.forEach(({ listId, inputId, opciones }) => {
     const list = document.getElementById(listId);
     const input = document.getElementById(inputId);
     if (!list || !input) return;
-    
+
     opciones.forEach(item => {
       const div = document.createElement('div');
       div.className = 'dropdown-item';
@@ -917,8 +916,57 @@ _________________________________________________________`;
   document.getElementById('modal').style.display = 'flex';
 }
 
+// ==================== MODAL Y LIMPIEZA ====================
 function cerrarModal(limpiar = false) {
   document.getElementById('modal').style.display = 'none';
+  if (limpiar) {
+    limpiarFormularioPostPDF();
+  }
+}
+
+function limpiarFormularioPostPDF() {
+  // Campos de texto
+  document.getElementById('proc-trigger').value = '';
+  document.getElementById('nombre-pdf').value = '';
+  document.getElementById('direccion').value = '';
+  document.getElementById('calzada-trigger').value = '';
+  document.getElementById('pista-trigger').value = '';
+  document.getElementById('transit-trigger').value = '';
+  document.getElementById('ambulancia-trigger').value = '';
+  document.getElementById('ambulancia-otra').value = '';
+  document.getElementById('ambulancia-otra-container').style.display = 'none';
+  document.getElementById('descripcion').value = '';
+  document.getElementById('res-segpub').value = '';
+  document.getElementById('res-carabineros').value = '';
+  document.getElementById('res-bomberos').value = '';
+  document.getElementById('res-profesional-medico').value = '';
+  document.getElementById('res-emergencias-vehiculo').value = 'No';
+  document.getElementById('res-emergencias-operador').value = '';
+  document.getElementById('res-cmu').value = 'No';
+
+  // Chips de categoría
+  document.querySelectorAll('#cat-chips .chip').forEach(c => c.classList.remove('active'));
+
+  // Lesionados
+  document.getElementById('lesionados-container').innerHTML = '';
+  lesionadoCounter = 0;
+
+  // Fotos del registro fotográfico
+  document.getElementById('foto-input').value = '';
+  document.getElementById('preview-fotos').innerHTML = '';
+
+  // Resetear fecha y hora
+  const now = new Date();
+  document.getElementById('fecha').value = now.toISOString().split('T')[0];
+  document.getElementById('hora').value = now.toTimeString().slice(0, 5);
+
+  // Limpiar estilos de error
+  document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+
+  // Scroll al inicio
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  console.log('✅ Formulario limpiado post-PDF');
 }
 
 function copiarInforme() {
@@ -955,7 +1003,7 @@ async function comprimirImagen(file, calidad = 0.7, maxWidth = 800) {
   });
 }
 
-// ==================== GENERAR PDF (SOLO DESCARGA LOCAL) ====================
+// ==================== GENERAR PDF ====================
 async function generarPDF() {
   if (isGeneratingPDF) {
     mostrarToast('⏳ Generando PDF, espere...');
@@ -968,7 +1016,6 @@ async function generarPDF() {
   btn.innerHTML = '<span class="spinner"></span> Generando...';
   btn.disabled = true;
 
-  // ⏰ TIMEOUT GLOBAL: Si algo tarda más de 60s, liberar el botón
   const timeoutGlobal = setTimeout(() => {
     console.warn('⚠️ Timeout global alcanzado. Liberando botón.');
     isGeneratingPDF = false;
@@ -1228,7 +1275,7 @@ async function generarPDF() {
       }
     }
 
-    // ==================== NOMBRE Y DESCARGA LOCAL ====================
+    // ==================== NOMBRE Y DESCARGA ====================
     const account = msalInstance.getAllAccounts()[0];
     let usuario = 'USUARIO';
     if (account && account.username) {
@@ -1244,21 +1291,24 @@ async function generarPDF() {
     const nombreArchivo = `${usuario}_${fechaStr}_${numeroProc}.pdf`;
 
     const pdfBlob = doc.output('blob');
-    
-    // ✅ SOLO DESCARGA LOCAL (sin SharePoint)
+
+    // Descarga local
     const link = document.createElement('a');
     link.href = URL.createObjectURL(pdfBlob);
     link.download = nombreArchivo;
     link.click();
-    
+
     mostrarToast(`📎 PDF descargado: ${nombreArchivo}`);
-    cerrarModal(false);
+
+    // ✅ OPCIÓN A: Cerrar modal Y limpiar formulario
+    cerrarModal(true);
 
   } catch (error) {
     console.error('❌ Error generando PDF:', error);
     mostrarToast('❌ Error al generar el PDF');
+    // ⚠️ En caso de error, NO limpiamos (para no perder datos del usuario)
+    cerrarModal(false);
   } finally {
-    // 🧹 LIMPIAR SIEMPRE
     clearTimeout(timeoutGlobal);
     isGeneratingPDF = false;
     btn.innerHTML = originalText;
