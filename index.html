@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 <title>GRRD · Gestión de Inventario · Las Condes</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -2797,29 +2797,74 @@ function generarPDFInventario() {
 function exportarInventarioExcel() {
     if (!items.length) { mostrarToast('❌ Sin datos'); return; }
 
-    const wb = XLSX.utils.book_new();
-    Object.keys(grupos).forEach(familia => {
-        const prods = items.filter(i => i.familia === familia).map(it => ({
-            'Producto': it.nombre,
-            'Talla': it.talla || '',
-            'Nuevos': it.stock,
-            'Usados': it.stock_usado || 0,
-            'Total': it.stock + (it.stock_usado || 0)
-        })).sort((a, b) => a.Producto.localeCompare(b.Producto));
+    // Mismos colores que usan los PDF, para que se vea consistente
+    const AZUL       = '1664C0';
+    const GRIS_CLARO = 'F5F7FC';
+    const BORDE      = 'E2E8F0';
+    const BLANCO     = 'FFFFFF';
 
-        const ws = XLSX.utils.json_to_sheet(prods);
+    const bordeFino = { style: 'thin', color: { rgb: BORDE } };
+    const estiloBorde = { top: bordeFino, bottom: bordeFino, left: bordeFino, right: bordeFino };
+
+    const estiloEncabezado = {
+        font: { bold: true, color: { rgb: BLANCO }, sz: 10 },
+        fill: { patternType: 'solid', fgColor: { rgb: AZUL } },
+        alignment: { vertical: 'center', horizontal: 'center' },
+        border: estiloBorde
+    };
+
+    function estiloCelda(esPar, alineacion) {
+        return {
+            font: { sz: 10, color: { rgb: '141E2D' } },
+            fill: { patternType: 'solid', fgColor: { rgb: esPar ? GRIS_CLARO : BLANCO } },
+            alignment: { vertical: 'center', horizontal: alineacion || 'left' },
+            border: estiloBorde
+        };
+    }
+
+    const encabezados = ['Producto', 'Talla', 'Nuevos', 'Usados', 'Total'];
+
+    const wb = XLSX.utils.book_new();
+
+    Object.keys(grupos).forEach(familia => {
+        const prods = items
+            .filter(i => i.familia === familia)
+            .sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+        // Fila 1: encabezados con estilo
+        const filaEncabezado = encabezados.map(h => ({ v: h, t: 's', s: estiloEncabezado }));
+        const filas = [filaEncabezado];
+
+        prods.forEach((it, i) => {
+            const par = i % 2 === 1;
+            const total = it.stock + (it.stock_usado || 0);
+            filas.push([
+                { v: it.nombre, t: 's', s: estiloCelda(par, 'left') },
+                { v: it.talla || '—', t: 's', s: estiloCelda(par, 'center') },
+                { v: it.stock, t: 'n', s: estiloCelda(par, 'center') },
+                { v: it.stock_usado || 0, t: 'n', s: estiloCelda(par, 'center') },
+                { v: total, t: 'n', s: estiloCelda(par, 'center') }
+            ]);
+        });
+
+        const ws = XLSX.utils.aoa_to_sheet(filas);
         ws['!cols'] = [{ wch: 45 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }];
+        ws['!rows'] = [{ hpt: 22 }]; // encabezado un poco más alto
+        // Fija la fila de encabezado al hacer scroll
+        ws['!freeze'] = { xSplit: 0, ySplit: 1 };
+        ws['!views'] = [{ state: 'frozen', ySplit: 1 }];
+        // Filtro desplegable en el encabezado
+        if (prods.length) {
+            ws['!autofilter'] = { ref: `A1:E${prods.length + 1}` };
+        }
+
         XLSX.utils.book_append_sheet(wb, ws, familia.substring(0, 31));
     });
 
-    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([wbout], { type: 'application/octet-stream' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `Inventario_${fechaActual()}.xlsx`;
-    link.click();
+    XLSX.writeFile(wb, `Inventario_${fechaActual()}.xlsx`);
     mostrarToast('✅ Excel exportado');
 }
+
 </script>
 </body>
 </html>
