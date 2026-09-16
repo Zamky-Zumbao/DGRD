@@ -797,18 +797,9 @@ const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Vc7-e-AjorgMgj45SmAL5g_Xr0glJjx';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ============================================================
-// USUARIOS AUTORIZADOS
-// ⚠️ Reemplaza estos correos por los EXACTOS que creaste en
-// Supabase → Authentication → Users. Esto solo decide si alguien
-// ve la interfaz de admin o de operador — la protección real de
-// los datos la dan las políticas RLS (rol "authenticated").
-// ============================================================
-const ADMINS_AUTORIZADOS = {
-    'rarriagada@lascondes.cl': { nombre: 'Rodrigo Arriagada' },
-    'nvera@lascondes.cl':      { nombre: 'Nelson Vera' },
-    'efuentes@lascondes.cl':   { nombre: 'Emilio Fuentes' }
-};
+// (La lista de admins ya NO vive aquí — ahora se consulta desde la
+// tabla "perfiles" en Supabase. Para agregar o cambiar un usuario,
+// entra al dashboard de Supabase, nunca más edites este archivo).
 
 // ============================================================
 // ESTADO GLOBAL
@@ -912,19 +903,28 @@ function precargarLogoPDF() {
 // ============================================================
 // LOGIN (Supabase Auth)
 // ============================================================
-function aplicarSesion(session) {
+async function aplicarSesion(session) {
     const email = (session.user.email || '').toLowerCase();
-    const adminInfo = ADMINS_AUTORIZADOS[email];
 
-    if (adminInfo) {
-        rolActual      = 'ADMINISTRADOR';
-        nombreUsuario  = email;
-        nombreCompleto = adminInfo.nombre;
-    } else {
+    // Consultamos el rol/nombre en la tabla "perfiles" (no en el código)
+    const { data: perfil, error: errPerfil } = await sb
+        .from('perfiles')
+        .select('nombre, rol')
+        .eq('id', session.user.id)
+        .single();
+
+    if (errPerfil || !perfil) {
+        // Si el usuario no tiene fila en "perfiles" todavía, lo tratamos
+        // como Operador por defecto (acceso mínimo, seguro por omisión).
         rolActual      = 'OPERADOR';
         nombreUsuario  = email;
         nombreCompleto = email;
+        return;
     }
+
+    rolActual      = perfil.rol;              // 'ADMINISTRADOR' u 'OPERADOR'
+    nombreUsuario  = email;
+    nombreCompleto = perfil.nombre || email;
 }
 
 async function intentarLogin() {
@@ -958,7 +958,7 @@ async function intentarLogin() {
         return;
     }
 
-    aplicarSesion(data.session);
+    await aplicarSesion(data.session);
     document.getElementById('login-overlay').style.display = 'none';
     iniciarApp();
 }
@@ -977,7 +977,7 @@ document.getElementById('login-password').addEventListener('keypress', function(
 (async function restaurarSesion() {
     const { data } = await sb.auth.getSession();
     if (data.session) {
-        aplicarSesion(data.session);
+        await aplicarSesion(data.session);
         document.getElementById('login-overlay').style.display = 'none';
         iniciarApp();
     }
