@@ -20,7 +20,6 @@
   }
   body { font-family: 'Inter', 'Segoe UI', sans-serif; background: var(--gris-fondo); color: var(--texto-oscuro); min-height: 100vh; padding: 0 0 40px 0; }
 
-  /* ===== LOGIN ===== */
   .login-overlay {
     position: fixed; inset: 0;
     background: linear-gradient(135deg, #1664c0 0%, #0f4a8a 100%);
@@ -58,7 +57,6 @@
     padding-top: 16px; border-top: 1px dashed var(--borde);
   }
 
-  /* ===== HEADER ===== */
   .header {
     background: linear-gradient(135deg, var(--azul) 0%, #0f4a8a 100%);
     padding: 10px 16px; position: sticky; top: 0; z-index: 100;
@@ -76,7 +74,6 @@
   .badge-rol.operador { background: #eef2f8; color: var(--texto-gris); }
   .badge-rol.admin { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; }
 
-  /* ===== NAV TABS ===== */
   .nav-tabs {
     display: flex; background: var(--blanco); margin: 10px 14px 0 14px;
     border-radius: 16px 16px 0 0; overflow: hidden; box-shadow: var(--shadow);
@@ -92,7 +89,6 @@
   .nav-tab .icono { font-size: 20px; display: block; margin-bottom: 2px; }
   .nav-tab .label { font-size: 10px; }
 
-  /* ===== SECCIONES ===== */
   .section {
     background: var(--blanco); border-radius: 0 0 20px 20px; margin: 0 14px 10px 14px;
     padding: 14px 16px 20px; box-shadow: var(--shadow); border: 1px solid var(--borde);
@@ -107,7 +103,6 @@
     align-items: center; gap: 8px; border-left: 3px solid var(--azul); padding-left: 10px;
   }
 
-  /* ===== SUB-TABS ===== */
   .subtabs {
     display: flex; gap: 6px; margin-bottom: 14px; background: #f8fafc;
     padding: 4px; border-radius: 12px; border: 1px solid var(--borde);
@@ -120,7 +115,6 @@
   .subtab:hover { background: #eef2f8; }
   .subtab.active { background: var(--azul); color: white; }
 
-  /* ===== FORMULARIOS ===== */
   label { display: block; font-size: 11px; font-weight: 600; color: var(--texto-gris); margin-bottom: 4px; }
   label.required::after { content: " *"; color: var(--rojo); }
   input, select, textarea {
@@ -166,7 +160,6 @@
   .btn-pequeno.gris { background: #eef2f8; color: var(--texto-oscuro); }
   .btn-pequeno:hover { opacity: 0.8; }
 
-  /* ===== TABLAS ===== */
   .tabla-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--borde); margin-top: 8px; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; color: #000 !important; }
   table th {
@@ -187,7 +180,6 @@
     border-radius: 10px; color: #000;
   }
 
-  /* ===== CARRITO ===== */
   .producto-agregado {
     display: flex; justify-content: space-between; align-items: center;
     background: #f8fafc; border: 1px solid var(--borde); border-radius: 10px;
@@ -199,13 +191,11 @@
   .producto-agregado .cantidad { font-weight: 700; font-size: 14px; color: var(--rojo); margin: 0 12px; }
   .producto-agregado .btn-eliminar-prod { background: none; border: none; color: var(--rojo); cursor: pointer; font-size: 16px; padding: 4px 8px; }
 
-  /* ===== RECEPTORES ===== */
   .receptor-card { background: #f8fafc; border: 1px solid var(--borde); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; position: relative; }
   .receptor-card .btn-eliminar { position: absolute; top: 6px; right: 8px; background: none; border: none; color: var(--rojo); cursor: pointer; font-size: 14px; }
   .receptor-card .receptor-nombre { font-weight: 600; font-size: 13px; color: #000; }
   .receptor-card .receptor-email { font-size: 11px; color: var(--texto-gris); }
 
-  /* ===== DROPDOWN ===== */
   .custom-dropdown { position: relative; }
   .dropdown-input { width: 100%; background: #ffffff; border: 1.5px solid var(--borde); border-radius: 12px; font-size: 14px; padding: 9px 12px; outline: none; cursor: pointer; color: #000; }
   .dropdown-input:focus { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(22,100,192,0.12); }
@@ -218,7 +208,6 @@
   .dropdown-item .stock-indicador.critico { background: #fde8e8; color: var(--rojo); animation: pulse 1s infinite; }
   @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.6 } }
 
-  /* ===== TALLAS ===== */
   .selector-tallas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
   .selector-tallas .talla-item {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -236,7 +225,6 @@
   .selector-tallas .talla-item.stock-bajo { border-color: var(--naranja); }
   .selector-tallas .talla-item.stock-bajo.active { background: var(--naranja); border-color: var(--naranja); }
 
-  /* ===== TICKET ===== */
   .ticket { background: #fafcfd; border: 2px dashed var(--azul-claro); border-radius: 16px; padding: 16px; font-size: 11px; font-family: 'Courier New', monospace; margin: 8px 0; }
   .ticket .ticket-header { text-align: center; border-bottom: 1px dashed #aaa; padding-bottom: 8px; margin-bottom: 8px; }
   .ticket .ticket-header h3 { font-size: 13px; color: var(--azul); }
@@ -250,7 +238,6 @@
   .ticket .ticket-productos { margin: 6px 0; }
   .ticket .ticket-productos .prod-item { display: flex; justify-content: space-between; padding: 2px 0; font-size: 10px; border-bottom: 1px dotted #eee; color: #000; }
 
-  /* ===== MENSAJE DESPACHO ===== */
   .despacho-mensaje { background: var(--verde-claro); border-left: 4px solid var(--verde); border-radius: 12px; padding: 16px; margin-top: 12px; display: none; animation: fadeIn 0.5s ease; }
   .despacho-mensaje .titulo { font-weight: 700; color: #1e6b3b; font-size: 15px; display: flex; align-items: center; gap: 8px; }
   .despacho-mensaje .detalle { font-size: 12px; color: #2d5a3d; margin-top: 4px; }
@@ -258,7 +245,6 @@
   .despacho-mensaje .productos-list li { padding: 3px 0; border-bottom: 1px dotted #c8e6c9; display: flex; justify-content: space-between; color: #000; }
   .despacho-mensaje .total { margin-top: 8px; font-weight: 700; font-size: 14px; color: #1a4a2a; padding-top: 8px; border-top: 2px solid #a5d6a7; }
 
-  /* ===== DASHBOARD ===== */
   .resumen-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
   .resumen-card { background: #f8fafc; border-radius: 14px; padding: 10px 8px; text-align: center; border: 1px solid var(--borde); }
   .resumen-card .num { font-size: 22px; font-weight: 800; color: var(--azul); }
@@ -268,7 +254,6 @@
   .resumen-card.naranja .num { color: var(--naranja); }
   .resumen-card.morado .num { color: var(--morado); }
 
-  /* ===== MODAL ===== */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: flex-end; }
   .modal-overlay.visible { display: flex; }
   .modal { background: white; max-height: 92vh; border-radius: 28px 28px 0 0; overflow: auto; padding: 18px 16px 30px; width: 100%; }
@@ -276,7 +261,6 @@
   .modal .modal-header h2 { font-size: 16px; color: #000; }
   .btn-cerrar-modal { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--texto-gris); }
 
-  /* ===== TOAST ===== */
   #toast {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: #1a2634; color: white; padding: 8px 20px; border-radius: 40px;
@@ -287,7 +271,6 @@
 
   .empty-state { text-align: center; color: var(--texto-gris); font-size: 12px; padding: 20px 0; }
 
-  /* ===== BADGES ===== */
   .badge-stock { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
   .badge-stock.critico { background: var(--rojo-claro); color: var(--rojo); }
   .badge-stock.bajo { background: #fff3e0; color: var(--naranja); }
@@ -301,7 +284,6 @@
   .badge-tipo.nuevo { background: #dbeafe; color: #1e40af; }
   .badge-tipo.usado { background: var(--morado-claro); color: var(--morado); }
 
-  /* ===== TRAZABILIDAD ===== */
   .timeline { position: relative; padding-left: 30px; margin-top: 10px; }
   .timeline::before { content: ""; position: absolute; left: 12px; top: 0; bottom: 0; width: 2px; background: var(--borde); }
   .timeline-item { position: relative; padding: 10px 14px; background: #f8fafc; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--borde); }
@@ -314,12 +296,10 @@
   .timeline-item.entrada::before { background: var(--verde); box-shadow: 0 0 0 2px var(--verde); }
   .timeline-item.salida::before { background: var(--rojo); box-shadow: 0 0 0 2px var(--rojo); }
   .timeline-item.devolucion::before { background: var(--morado); box-shadow: 0 0 0 2px var(--morado); }
-  .timeline-item .tl-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #000; margin-bottom: 4px; }
+  .timeline-item .tl-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #000; margin-bottom: 4px; gap: 8px; }
   .timeline-item .tl-fecha { font-size: 10px; color: var(--texto-gris); font-weight: 500; }
-  .timeline-item .tl-detalle { font-size: 11px; color: var(--texto-gris); }
-  .timeline-item .tl-cant { font-weight: 800; font-size: 13px; }
+  .timeline-item .tl-cant { font-weight: 800; font-size: 13px; white-space: nowrap; }
 
-  /* ===== RESPONSIVE ===== */
   @media (max-width: 700px) {
     .resumen-grid { grid-template-columns: 1fr 1fr; }
     .row-2 { grid-template-columns: 1fr; }
@@ -337,26 +317,26 @@
   .acciones-inventario { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
   .acciones-inventario .btn-pequeno { flex: 1; min-width: 100px; text-align: center; padding: 8px 12px; }
 
-  /* Ocultar según rol */
-  .solo-admin { display: none; }
-  body.rol-admin .solo-admin { display: block; }
-  body.rol-admin .solo-admin.inline { display: inline-flex; }
-  body.rol-admin .solo-admin.flex { display: flex; }
+  .solo-admin { display: none !important; }
+  body.rol-admin .solo-admin { display: block !important; }
+  body.rol-admin .nav-tab.solo-admin { display: block !important; }
+  body.rol-admin .section.solo-admin { display: none; }
+  body.rol-admin .section.solo-admin.active { display: block; }
 </style>
 </head>
 <body>
 
-<!-- ===== LOGIN OVERLAY ===== -->
+<!-- ===== LOGIN ===== -->
 <div class="login-overlay" id="login-overlay">
   <div class="login-card">
     <img src="https://i.ibb.co/Z6qxBJQZ/Logo-general-1.png" alt="Municipalidad de Las Condes">
     <h1>Gestión de Inventario GRRD</h1>
     <p>Municipalidad de Las Condes · Depto. Gestión de Riesgos y Desastres</p>
-    <div class="login-error" id="login-error">⛔ Acceso denegado. Solo "OPERADOR" o "ADMINISTRADOR".</div>
-    <input type="text" id="login-input" placeholder="OPERADOR o ADMINISTRADOR" autocomplete="off" autofocus>
+    <div class="login-error" id="login-error">⛔ Ingresa tu nombre de usuario</div>
+    <input type="text" id="login-input" placeholder="Tu nombre de usuario" autocomplete="off" autofocus>
     <button onclick="intentarLogin()">Ingresar</button>
     <div class="login-hint">
-      🔒 Acceso restringido · Personal autorizado<br>
+      🔒 Ingresa tu nombre de usuario para continuar<br>
       <small>El sistema registra quién opera cada movimiento</small>
     </div>
   </div>
@@ -374,8 +354,13 @@
     </div>
     <div class="header-titulo">📦 GESTIÓN DE INVENTARIO</div>
     <div class="header-actions">
-      <span class="badge-rol" id="badge-rol">—</span>
-      <span class="badge-excel" id="excel-status">📊 Cargando...</span>
+      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:3px;">
+        <span id="bienvenida-texto" style="color:white; font-size:10.5px; font-weight:600; opacity:0.95; line-height:1.2;">Bienvenido</span>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span class="badge-excel" id="excel-status">📊 Cargando...</span>
+          <span class="badge-rol" id="badge-rol">—</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -489,7 +474,7 @@
   </div>
 </div>
 
-<!-- ===== TAB 2: ENTRADA DE PRODUCTOS (solo admin) ===== -->
+<!-- ===== TAB 2: ENTRADA DE PRODUCTOS ===== -->
 <div class="section solo-admin" id="tab-entrada">
   <div class="section-label">📥 ENTRADA DE PRODUCTOS</div>
 
@@ -498,7 +483,7 @@
     <div class="subtab" data-subtab="entrada-usados" onclick="cambiarSubtabEntrada('entrada-usados')">♻️ DEVOLUCIÓN USADOS</div>
   </div>
 
-  <!-- SUBTAB: PRODUCTOS NUEVOS -->
+  <!-- SUBTAB NUEVOS -->
   <div id="sub-entrada-nuevos">
     <div class="field">
       <label>📂 Familia de productos</label>
@@ -572,7 +557,7 @@
     </div>
   </div>
 
-  <!-- SUBTAB: DEVOLUCIÓN USADOS -->
+  <!-- SUBTAB USADOS -->
   <div id="sub-entrada-usados" style="display:none;">
     <div class="field">
       <label class="required">🔎 N° de orden de salida</label>
@@ -656,7 +641,7 @@
   <div style="font-size:10px; color:var(--texto-gris); margin-top:6px; text-align:right;" id="inventario-total-items"></div>
 </div>
 
-<!-- ===== TAB 4: AUDITORÍA (solo admin) ===== -->
+<!-- ===== TAB 4: AUDITORÍA ===== -->
 <div class="section solo-admin" id="tab-auditoria">
   <div class="section-label">🔍 AUDITORÍA</div>
 
@@ -666,7 +651,6 @@
     <div class="subtab" data-subtab="aud-trazabilidad" onclick="cambiarSubtabAuditoria('aud-trazabilidad')">📊 Trazabilidad</div>
   </div>
 
-  <!-- SUBTAB: SALIDAS -->
   <div id="sub-aud-salidas">
     <div class="filtros-inventario">
       <input type="text" id="filtro-salidas" placeholder="🔍 Buscar por código, receptor, responsable..." oninput="renderAuditoriaSalidas()">
@@ -697,10 +681,9 @@
     <div style="font-size:10px; color:var(--texto-gris); margin-top:6px; text-align:right;" id="aud-salidas-total"></div>
   </div>
 
-  <!-- SUBTAB: ENTRADAS -->
   <div id="sub-aud-entradas" style="display:none;">
     <div class="filtros-inventario">
-      <input type="text" id="filtro-entradas" placeholder="🔍 Buscar por producto, proveedor, guía..." oninput="renderAuditoriaEntradas()">
+      <input type="text" id="filtro-entradas" placeholder="🔍 Buscar producto, proveedor, guía..." oninput="renderAuditoriaEntradas()">
       <select id="filtro-entradas-tipo" onchange="renderAuditoriaEntradas()">
         <option value="">Todos los tipos</option>
         <option value="nuevo">🆕 Nuevos</option>
@@ -728,7 +711,6 @@
     <div style="font-size:10px; color:var(--texto-gris); margin-top:6px; text-align:right;" id="aud-entradas-total"></div>
   </div>
 
-  <!-- SUBTAB: TRAZABILIDAD -->
   <div id="sub-aud-trazabilidad" style="display:none;">
     <div class="field">
       <label class="required">🔎 Buscar producto para ver su trazabilidad</label>
@@ -764,7 +746,7 @@
   </div>
 </div>
 
-<!-- ===== MODAL COMPROBANTE ===== -->
+<!-- ===== MODALES ===== -->
 <div class="modal-overlay" id="modal-comprobante">
   <div class="modal">
     <div class="modal-header">
@@ -780,7 +762,6 @@
   </div>
 </div>
 
-<!-- ===== MODAL ANULAR ===== -->
 <div class="modal-overlay" id="modal-anular">
   <div class="modal">
     <div class="modal-header">
@@ -813,9 +794,20 @@ const SUPABASE_KEY = 'sb_publishable_Vc7-e-AjorgMgj45SmAL5g_Xr0glJjx';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ============================================================
+// USUARIOS AUTORIZADOS
+// ============================================================
+const ADMINS_AUTORIZADOS = {
+    'RARRIAGADA': { nombre: 'Rodrigo Arriagada', rol: 'ADMINISTRADOR' },
+    'NVERA':      { nombre: 'Nelson Vera',       rol: 'ADMINISTRADOR' },
+    'EFUENTES':   { nombre: 'Emilio Fuentes',    rol: 'ADMINISTRADOR' }
+};
+
+// ============================================================
 // ESTADO GLOBAL
 // ============================================================
-let rolActual = null;       // 'OPERADOR' | 'ADMINISTRADOR' | null
+let rolActual = null;
+let nombreUsuario = '';       // Clave interna (RARRIAGADA, JUAN...)
+let nombreCompleto = '';      // Nombre bonito para mostrar
 let items = [];
 let grupos = {};
 let salidas = [];
@@ -833,8 +825,8 @@ let carritoEntrada = [];
 let salidaRegistrada = false;
 let entradaRegistrada = false;
 let logoImageData = null;
-let salidaDevolucionActual = null;   // salida cargada para devolución
-let registroAAnular = null;          // {tipo: 'salida'|'entrada', id}
+let salidaDevolucionActual = null;
+let registroAAnular = null;
 
 // ============================================================
 // HELPERS
@@ -915,16 +907,27 @@ function intentarLogin() {
     const input = document.getElementById('login-input').value.trim().toUpperCase();
     const error = document.getElementById('login-error');
 
-    if (input === 'OPERADOR' || input === 'ADMINISTRADOR') {
-        rolActual = input;
-        error.style.display = 'none';
-        document.getElementById('login-overlay').style.display = 'none';
-        iniciarApp();
-    } else {
+    if (!input) {
+        error.textContent = '⛔ Ingresa tu nombre de usuario';
         error.style.display = 'block';
-        document.getElementById('login-input').value = '';
-        document.getElementById('login-input').focus();
+        return;
     }
+
+    const adminInfo = ADMINS_AUTORIZADOS[input];
+
+    if (adminInfo) {
+        rolActual      = 'ADMINISTRADOR';
+        nombreUsuario  = input;
+        nombreCompleto = adminInfo.nombre;
+    } else {
+        rolActual      = 'OPERADOR';
+        nombreUsuario  = input;
+        nombreCompleto = input;
+    }
+
+    error.style.display = 'none';
+    document.getElementById('login-overlay').style.display = 'none';
+    iniciarApp();
 }
 
 document.getElementById('login-input').addEventListener('keypress', function(e) {
@@ -935,11 +938,12 @@ document.getElementById('login-input').addEventListener('keypress', function(e) 
 // INICIO APP
 // ============================================================
 async function iniciarApp() {
-    // Aplicar rol en body
     document.body.classList.toggle('rol-admin', esAdmin());
 
-    // Badge del header
+    // Bienvenida + badge
     const badge = document.getElementById('badge-rol');
+    const bienvenida = document.getElementById('bienvenida-texto');
+
     if (esAdmin()) {
         badge.className = 'badge-rol admin';
         badge.textContent = '👑 ADMINISTRADOR';
@@ -947,11 +951,10 @@ async function iniciarApp() {
         badge.className = 'badge-rol operador';
         badge.textContent = '👤 OPERADOR';
     }
+    bienvenida.textContent = `Bienvenido, ${nombreCompleto}`;
 
-    // Fecha por defecto en entrada
     document.getElementById('entrada-fecha').value = fechaInputHoy();
 
-    // Cargar todo
     mostrarToast('⏳ Conectando con Supabase...');
     precargarLogoPDF();
 
@@ -980,11 +983,11 @@ async function iniciarApp() {
     ocultarMensajeDespacho();
     habilitarFormulario(true);
 
-    mostrarToast(`📊 ${items.length} artículos · Sesión: ${rolActual}`);
+    mostrarToast(`📊 ${items.length} artículos · ${nombreCompleto}`);
 }
 
 // ============================================================
-// CARGA DESDE SUPABASE
+// CARGA
 // ============================================================
 async function cargarProductos() {
     const { data, error } = await sb
@@ -992,11 +995,7 @@ async function cargarProductos() {
         .select('id, nombre, familia, talla, stock, stock_usado')
         .order('nombre', { ascending: true });
 
-    if (error) {
-        console.error('Error cargando productos:', error);
-        mostrarToast('❌ Error al cargar productos');
-        return false;
-    }
+    if (error) { console.error(error); return false; }
 
     items = data.map(p => {
         const sinTalla = !p.talla || p.talla === 'uni' || p.talla === 'S/N';
@@ -1030,7 +1029,7 @@ async function cargarProductos() {
 async function cargarSalidasDB() {
     const { data, error } = await sb.from('salidas')
         .select('*').order('fecha', { ascending: false }).limit(1000);
-    if (error) { console.error(error); salidas = []; return; }
+    if (error) { salidas = []; return; }
     salidas = data.map(s => ({
         id: s.id,
         codigo: s.codigo,
@@ -1049,7 +1048,7 @@ async function cargarSalidasDB() {
 async function cargarEntradasDB() {
     const { data, error } = await sb.from('entradas')
         .select('*').order('fecha', { ascending: false }).limit(1000);
-    if (error) { console.error(error); entradas = []; return; }
+    if (error) { entradas = []; return; }
     entradas = data.map(e => ({
         id: e.id,
         loteId: e.lote_id,
@@ -1072,7 +1071,7 @@ async function cargarEntradasDB() {
 async function cargarRecepcionesDB() {
     const { data, error } = await sb.from('recepciones')
         .select('*').order('fecha', { ascending: false }).limit(200);
-    if (error) { console.error(error); recepciones = []; return; }
+    if (error) { recepciones = []; return; }
     recepciones = data.map(r => ({
         id: r.lote_id,
         productos: r.productos || [],
@@ -1085,7 +1084,7 @@ async function cargarRecepcionesDB() {
 }
 
 // ============================================================
-// RENDER GLOBAL
+// RENDER
 // ============================================================
 function renderizarTodo() {
     renderTabs();
@@ -1100,9 +1099,6 @@ function renderizarTodo() {
     actualizarStockCritico();
 }
 
-// ============================================================
-// NAVEGACIÓN
-// ============================================================
 function cambiarTab(tabId) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
@@ -1117,7 +1113,6 @@ function cambiarTab(tabId) {
 function cambiarSubtabEntrada(subtabId) {
     document.querySelectorAll('#tab-entrada .subtab').forEach(s => s.classList.remove('active'));
     document.querySelector(`#tab-entrada .subtab[data-subtab="${subtabId}"]`).classList.add('active');
-
     document.getElementById('sub-entrada-nuevos').style.display = subtabId === 'entrada-nuevos' ? 'block' : 'none';
     document.getElementById('sub-entrada-usados').style.display = subtabId === 'entrada-usados' ? 'block' : 'none';
 }
@@ -1125,23 +1120,17 @@ function cambiarSubtabEntrada(subtabId) {
 function cambiarSubtabAuditoria(subtabId) {
     document.querySelectorAll('#tab-auditoria .subtab').forEach(s => s.classList.remove('active'));
     document.querySelector(`#tab-auditoria .subtab[data-subtab="${subtabId}"]`).classList.add('active');
-
     document.getElementById('sub-aud-salidas').style.display = subtabId === 'aud-salidas' ? 'block' : 'none';
     document.getElementById('sub-aud-entradas').style.display = subtabId === 'aud-entradas' ? 'block' : 'none';
     document.getElementById('sub-aud-trazabilidad').style.display = subtabId === 'aud-trazabilidad' ? 'block' : 'none';
-
     if (subtabId === 'aud-trazabilidad') poblarDropdownTrazabilidad();
 }
 
-// ============================================================
-// TABS DE FAMILIAS
-// ============================================================
 function renderTabs() {
     const container = document.getElementById('tabs-familias');
     const familiasKeys = Object.keys(grupos);
     if (!familiasKeys.length) { container.innerHTML = '<div style="color:var(--texto-gris); font-size:12px; padding:8px;">Sin grupos</div>'; return; }
     if (!familiaSeleccionada || !familiasKeys.includes(familiaSeleccionada)) familiaSeleccionada = familiasKeys[0];
-
     container.innerHTML = familiasKeys.map(familia => `
         <div style="flex:0 0 auto; padding:6px 14px; border-radius:30px; border:1.5px solid var(--borde); background:${familia === familiaSeleccionada ? 'var(--azul)' : '#f8fafc'}; font-size:11px; font-weight:600; cursor:pointer; transition:0.2s; color:${familia === familiaSeleccionada ? 'white' : 'var(--texto-gris)'}; white-space:nowrap;" onclick="seleccionarFamilia('${familia}')">
             ${grupos[familia].icono} ${familia}
@@ -1154,7 +1143,6 @@ function renderTabsEntrada() {
     const familiasKeys = Object.keys(grupos);
     if (!familiasKeys.length) { container.innerHTML = ''; return; }
     if (!familiaEntradaSeleccionada || !familiasKeys.includes(familiaEntradaSeleccionada)) familiaEntradaSeleccionada = familiasKeys[0];
-
     container.innerHTML = familiasKeys.map(familia => `
         <div style="flex:0 0 auto; padding:6px 14px; border-radius:30px; border:1.5px solid var(--borde); background:${familia === familiaEntradaSeleccionada ? 'var(--azul)' : '#f8fafc'}; font-size:11px; font-weight:600; cursor:pointer; transition:0.2s; color:${familia === familiaEntradaSeleccionada ? 'white' : 'var(--texto-gris)'}; white-space:nowrap;" onclick="seleccionarFamiliaEntrada('${familia}')">
             ${grupos[familia].icono} ${familia}
@@ -1163,7 +1151,7 @@ function renderTabsEntrada() {
 }
 
 function seleccionarFamilia(familia) {
-    if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida actual'); return; }
+    if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida'); return; }
     familiaSeleccionada = familia;
     renderTabs();
     poblarDropdownProductos();
@@ -1179,13 +1167,13 @@ function seleccionarFamiliaEntrada(familia) {
 }
 
 // ============================================================
-// DROPDOWN PRODUCTOS (SALIDA)
+// DROPDOWN PRODUCTOS
 // ============================================================
 function poblarDropdownProductos() {
     const list = document.getElementById('prod-list');
     const input = document.getElementById('prod-trigger');
     list.innerHTML = '';
-    if (!items.length) { list.innerHTML = '<div class="dropdown-item">No hay productos</div>'; return; }
+    if (!items.length) { list.innerHTML = '<div class="dropdown-item">Sin productos</div>'; return; }
 
     const productosFiltrados = items.filter(i => i.familia === familiaSeleccionada);
     if (!productosFiltrados.length) { list.innerHTML = '<div class="dropdown-item">Sin productos</div>'; return; }
@@ -1207,13 +1195,13 @@ function poblarDropdownProductos() {
         let stockClass = 'normal';
         let stockLabel = `${stockTotal} uds.`;
         if (stockTotal === 0) { stockClass = 'critico'; stockLabel = '❌ Agotado'; }
-        else if (stockTotal <= 3) { stockClass = 'critico'; stockLabel = `⚠️ ${stockTotal} uds.`; }
-        else if (stockTotal <= 5) { stockClass = 'bajo'; stockLabel = `🟡 ${stockTotal} uds.`; }
+        else if (stockTotal <= 3) { stockClass = 'critico'; stockLabel = `⚠️ ${stockTotal}`; }
+        else if (stockTotal <= 5) { stockClass = 'bajo'; stockLabel = `🟡 ${stockTotal}`; }
 
         div.innerHTML = `<span>${nombre} ${tieneTallas ? '📏' : ''}</span><span class="stock-indicador ${stockClass}">${stockLabel}</span>`;
 
         div.onclick = () => {
-            if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida actual'); return; }
+            if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida'); return; }
             input.value = nombre;
             list.style.display = 'none';
             productoSeleccionadoId = grupo[0].id;
@@ -1223,7 +1211,7 @@ function poblarDropdownProductos() {
     });
 
     input.onclick = function() {
-        if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida actual'); return; }
+        if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida'); return; }
         if (list.style.display === 'block') list.style.display = 'none';
         else { list.style.display = 'block'; poblarDropdownProductos(); }
     };
@@ -1239,14 +1227,11 @@ function filtrarDropdownProductos(texto) {
     list.style.display = 'block';
 }
 
-// ============================================================
-// DROPDOWN PRODUCTOS (ENTRADA)
-// ============================================================
 function poblarDropdownEntrada() {
     const list = document.getElementById('prod-list-entrada');
     const input = document.getElementById('prod-trigger-entrada');
     list.innerHTML = '';
-    if (!items.length) { list.innerHTML = '<div class="dropdown-item">No hay productos</div>'; return; }
+    if (!items.length) { list.innerHTML = '<div class="dropdown-item">Sin productos</div>'; return; }
 
     const productosFiltrados = items.filter(i => i.familia === familiaEntradaSeleccionada);
     if (!productosFiltrados.length) { list.innerHTML = '<div class="dropdown-item">Sin productos</div>'; return; }
@@ -1291,9 +1276,6 @@ function filtrarDropdownEntrada(texto) {
     list.style.display = 'block';
 }
 
-// ============================================================
-// SELECCIÓN PRODUCTO (SALIDA)
-// ============================================================
 function mostrarProductoSeleccionado(nombre) {
     const container = document.getElementById('producto-seleccionado-container');
     const selectorContainer = document.getElementById('selector-tallas-container');
@@ -1308,12 +1290,11 @@ function mostrarProductoSeleccionado(nombre) {
     if (tieneTallas && itemsProducto.length > 0) {
         selectorContainer.style.display = 'block';
         selector.innerHTML = '';
-        const tallasOrdenadas = itemsProducto.filter(i => i.talla).sort((a, b) => {
+        itemsProducto.filter(i => i.talla).sort((a, b) => {
             const aN = parseFloat(a.talla), bN = parseFloat(b.talla);
             if (!isNaN(aN) && !isNaN(bN)) return aN - bN;
             return a.talla.localeCompare(b.talla);
-        });
-        tallasOrdenadas.forEach(item => {
+        }).forEach(item => {
             const div = document.createElement('div');
             div.className = 'talla-item';
             div.dataset.talla = item.talla;
@@ -1338,7 +1319,7 @@ function mostrarProductoSeleccionado(nombre) {
         if (itemUnico) {
             productoSeleccionadoId = itemUnico.id;
             document.getElementById('salida-cantidad').max = itemUnico.stock;
-            document.getElementById('prod-stock-disponible').textContent = `Stock disponible: ${itemUnico.stock} unidades`;
+            document.getElementById('prod-stock-disponible').textContent = `Stock: ${itemUnico.stock} unidades`;
         }
     }
 }
@@ -1352,7 +1333,7 @@ function seleccionarTallaProducto(item) {
     document.getElementById('talla-seleccionada-info').textContent = `✅ Talla ${item.talla} · Stock: ${item.stock}`;
     document.getElementById('salida-cantidad').max = item.stock;
     document.getElementById('salida-cantidad').value = '';
-    document.getElementById('prod-stock-disponible').textContent = `Stock: ${item.stock} unidades (talla ${item.talla})`;
+    document.getElementById('prod-stock-disponible').textContent = `Stock: ${item.stock} (talla ${item.talla})`;
 }
 
 function limpiarSeleccionProducto() {
@@ -1364,9 +1345,6 @@ function limpiarSeleccionProducto() {
     document.getElementById('selector-tallas-container').style.display = 'none';
 }
 
-// ============================================================
-// SELECCIÓN PRODUCTO (ENTRADA)
-// ============================================================
 function mostrarProductoEntrada(nombre) {
     const container = document.getElementById('producto-entrada-container');
     const selectorContainer = document.getElementById('selector-tallas-entrada-container');
@@ -1424,23 +1402,23 @@ function limpiarSeleccionEntrada() {
 }
 
 // ============================================================
-// CARRITO SALIDA
+// CARRITOS
 // ============================================================
 function agregarProductoAlCarrito() {
-    if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida actual'); return; }
+    if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida'); return; }
     const cantidad = parseInt(document.getElementById('salida-cantidad').value);
     if (!productoSeleccionadoId) { mostrarToast('❌ Selecciona un producto'); return; }
     if (isNaN(cantidad) || cantidad <= 0) { mostrarToast('❌ Cantidad inválida'); return; }
 
     const itemSeleccionado = items.find(i => i.id === productoSeleccionadoId);
     if (!itemSeleccionado) { mostrarToast('❌ Producto no encontrado'); return; }
-    if (cantidad > itemSeleccionado.stock) { mostrarToast(`❌ Stock insuficiente (disponible: ${itemSeleccionado.stock})`); return; }
+    if (cantidad > itemSeleccionado.stock) { mostrarToast(`❌ Stock insuficiente (${itemSeleccionado.stock})`); return; }
 
     const existe = carrito.find(p => p.productoId === itemSeleccionado.id);
     if (existe) {
-        const nuevaCant = existe.cantidad + cantidad;
-        if (nuevaCant > itemSeleccionado.stock) { mostrarToast(`❌ Stock insuficiente`); return; }
-        existe.cantidad = nuevaCant;
+        const nc = existe.cantidad + cantidad;
+        if (nc > itemSeleccionado.stock) { mostrarToast(`❌ Stock insuficiente`); return; }
+        existe.cantidad = nc;
     } else {
         carrito.push({
             productoId: itemSeleccionado.id,
@@ -1478,31 +1456,28 @@ function renderCarrito() {
     `).join('');
 }
 
-// ============================================================
-// CARRITO ENTRADA
-// ============================================================
 function agregarProductoAlCarritoEntrada() {
-    if (entradaRegistrada) { mostrarToast('⚠️ Finaliza la entrada actual'); return; }
+    if (entradaRegistrada) { mostrarToast('⚠️ Finaliza la entrada'); return; }
     const cantidad = parseInt(document.getElementById('entrada-cantidad').value);
     if (!productoSeleccionadoId) { mostrarToast('❌ Selecciona un producto'); return; }
     if (isNaN(cantidad) || cantidad <= 0) { mostrarToast('❌ Cantidad inválida'); return; }
 
-    const itemSeleccionado = items.find(i => i.id === productoSeleccionadoId);
-    if (!itemSeleccionado) { mostrarToast('❌ Producto no encontrado'); return; }
+    const it = items.find(i => i.id === productoSeleccionadoId);
+    if (!it) { mostrarToast('❌ Producto no encontrado'); return; }
 
-    const existe = carritoEntrada.find(p => p.productoId === itemSeleccionado.id);
+    const existe = carritoEntrada.find(p => p.productoId === it.id);
     if (existe) existe.cantidad += cantidad;
     else carritoEntrada.push({
-        productoId: itemSeleccionado.id,
-        nombre: itemSeleccionado.nombre,
-        talla: itemSeleccionado.talla,
+        productoId: it.id,
+        nombre: it.nombre,
+        talla: it.talla,
         cantidad: cantidad,
-        stockActual: itemSeleccionado.stock
+        stockActual: it.stock
     });
 
     renderCarritoEntrada();
     limpiarSeleccionEntrada();
-    mostrarToast(`✅ ${cantidad} × ${itemSeleccionado.nombre}`);
+    mostrarToast(`✅ ${cantidad} × ${it.nombre}`);
 }
 
 function eliminarProductoDelCarritoEntrada(index) {
@@ -1532,7 +1507,7 @@ function renderCarritoEntrada() {
 // RECEPTORES
 // ============================================================
 function agregarReceptor() {
-    if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida actual'); return; }
+    if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida'); return; }
     const nombre = document.getElementById('receptor-nombre').value.trim();
     const email = document.getElementById('receptor-email').value.trim();
     const error = document.getElementById('receptor-error');
@@ -1588,7 +1563,7 @@ async function registrarSalida() {
     const { data: salidaInsertada, error: errSalida } = await sb
         .from('salidas')
         .insert({
-            responsable: rolActual,
+            responsable: nombreUsuario,
             observacion: obs,
             receptores: receptoresAgregados.map(r => ({ nombre: r.nombre, email: r.email })),
             productos: productosEntregados
@@ -1614,7 +1589,7 @@ async function registrarSalida() {
         productos: productosEntregados,
         receptores: receptoresAgregados.map(r => ({ nombre: r.nombre, email: r.email })),
         observacion: obs,
-        responsable: rolActual,
+        responsable: nombreUsuario,
         fecha: formatearFecha(salidaInsertada.fecha),
         timestamp: new Date(salidaInsertada.fecha).getTime()
     };
@@ -1662,11 +1637,11 @@ function nuevaSalida() {
     ocultarMensajeDespacho();
     habilitarFormulario(true);
     poblarDropdownProductos();
-    mostrarToast('🔄 Listo para nueva salida');
+    mostrarToast('🔄 Lista para nueva salida');
 }
 
 // ============================================================
-// REGISTRAR ENTRADA (productos nuevos)
+// REGISTRAR ENTRADA
 // ============================================================
 async function registrarEntrada() {
     if (entradaRegistrada) { mostrarToast('⚠️ Ya registrada'); return; }
@@ -1678,7 +1653,6 @@ async function registrarEntrada() {
     const observacion = document.getElementById('entrada-obs').value.trim();
     const loteId = uuid();
 
-    // Fecha (si es distinta a hoy, ajustamos el timestamp)
     let fechaISO = new Date().toISOString();
     if (fechaInput) {
         const [y, m, d] = fechaInput.split('-');
@@ -1690,6 +1664,8 @@ async function registrarEntrada() {
         productoId: p.productoId, nombre: p.nombre, talla: p.talla, cantidad: p.cantidad
     }));
 
+    const obsFinal = [guia ? 'Guía/Factura: ' + guia : '', observacion].filter(Boolean).join(' · ') || null;
+
     const filas = productosIngresados.map(p => ({
         lote_id: loteId,
         producto_id: p.productoId,
@@ -1697,8 +1673,8 @@ async function registrarEntrada() {
         talla: p.talla,
         cantidad: p.cantidad,
         proveedor: proveedor || 'No especificado',
-        observacion: [guia ? 'Guía/Factura: ' + guia : '', observacion].filter(Boolean).join(' · ') || null,
-        responsable: rolActual,
+        observacion: obsFinal,
+        responsable: nombreUsuario,
         tipo: 'nuevo',
         fecha: fechaISO
     }));
@@ -1709,8 +1685,8 @@ async function registrarEntrada() {
     await sb.from('recepciones').insert({
         lote_id: loteId,
         proveedor: proveedor || 'No especificado',
-        observacion: [guia ? 'Guía/Factura: ' + guia : '', observacion].filter(Boolean).join(' · ') || null,
-        responsable: rolActual,
+        observacion: obsFinal,
+        responsable: nombreUsuario,
         productos: productosIngresados,
         fecha: fechaISO
     });
@@ -1729,8 +1705,8 @@ async function registrarEntrada() {
         id: loteId,
         productos: productosIngresados,
         proveedor: proveedor || 'No especificado',
-        observacion: [guia ? 'Guía/Factura: ' + guia : '', observacion].filter(Boolean).join(' · '),
-        responsable: rolActual,
+        observacion: obsFinal,
+        responsable: nombreUsuario,
         fecha: formatearFecha(fechaISO),
         timestamp: new Date(fechaISO).getTime()
     };
@@ -1783,32 +1759,21 @@ function habilitarFormularioEntrada(h) {
 }
 
 // ============================================================
-// DEVOLUCIÓN DE USADOS
+// DEVOLUCIÓN USADOS
 // ============================================================
 async function buscarSalidaParaDevolucion() {
     const codigo = document.getElementById('dev-codigo').value.trim();
-    if (!codigo) { mostrarToast('❌ Ingresa el código de salida'); return; }
+    if (!codigo) { mostrarToast('❌ Ingresa el código'); return; }
 
-    // Buscar en la lista local primero
     let salida = salidas.find(s => s.codigo === codigo && !s.anulado);
 
-    // Si no está, buscar en Supabase
     if (!salida) {
         const { data, error } = await sb
-            .from('salidas')
-            .select('*')
-            .eq('codigo', codigo)
-            .eq('anulado', false)
-            .maybeSingle();
-
-        if (error || !data) {
-            mostrarToast('❌ Salida no encontrada o anulada');
-            return;
-        }
-
+            .from('salidas').select('*')
+            .eq('codigo', codigo).eq('anulado', false).maybeSingle();
+        if (error || !data) { mostrarToast('❌ Salida no encontrada o anulada'); return; }
         salida = {
-            id: data.id,
-            codigo: data.codigo,
+            id: data.id, codigo: data.codigo,
             fecha: formatearFecha(data.fecha),
             timestamp: new Date(data.fecha).getTime(),
             responsable: data.responsable,
@@ -1821,7 +1786,6 @@ async function buscarSalidaParaDevolucion() {
 
     salidaDevolucionActual = salida;
 
-    // Mostrar info de la salida
     document.getElementById('dev-info-salida').style.display = 'block';
     document.getElementById('dev-salida-titulo').textContent = `📤 SALIDA ${salida.codigo}`;
     const receptoresTxt = salida.receptores.map(r => r.nombre).join(', ');
@@ -1832,13 +1796,11 @@ async function buscarSalidaParaDevolucion() {
         ${salida.observacion ? '<br>📝 Obs: ' + salida.observacion : ''}
     `;
 
-    // Calcular devoluciones previas desde Supabase (función RPC)
     const { data: pendientes, error: errPend } = await sb
         .rpc('pendientes_de_salida', { p_codigo: codigo });
 
     if (errPend) { console.error(errPend); mostrarToast('❌ Error al obtener pendientes'); return; }
 
-    // Mostrar tabla
     document.getElementById('dev-tabla-container').style.display = 'block';
     const tbody = document.getElementById('dev-tbody');
 
@@ -1869,13 +1831,14 @@ async function registrarDevolucion() {
     const filas = document.querySelectorAll('#dev-tbody tr[data-pid]');
     const productos = [];
     let totalUnidades = 0;
+    let error = false;
 
     filas.forEach(tr => {
         const input = tr.querySelector('input');
         const cant = parseInt(input.value) || 0;
         if (cant > 0) {
             const max = parseInt(input.dataset.pendiente);
-            if (cant > max) { mostrarToast(`❌ Excede pendiente de ${input.dataset.nombre}`); return; }
+            if (cant > max) { mostrarToast(`❌ Excede pendiente de ${input.dataset.nombre}`); error = true; return; }
             productos.push({
                 productoId: tr.dataset.pid,
                 nombre: input.dataset.nombre,
@@ -1886,27 +1849,25 @@ async function registrarDevolucion() {
         }
     });
 
+    if (error) return;
     if (!productos.length) { mostrarToast('❌ Ingresa al menos una cantidad'); return; }
-    if (totalUnidades === 0) { mostrarToast('❌ Devolución vacía'); return; }
 
     const observacion = document.getElementById('dev-obs').value.trim();
 
-    const { data, error } = await sb.rpc('registrar_devolucion', {
+    const { error: errRPC } = await sb.rpc('registrar_devolucion', {
         p_codigo_salida: salidaDevolucionActual.codigo,
         p_productos: productos,
-        p_responsable: rolActual,
+        p_responsable: nombreUsuario,
         p_observacion: observacion || null
     });
 
-    if (error) { console.error(error); mostrarToast('❌ ' + (error.message || 'Error al registrar')); return; }
+    if (errRPC) { console.error(errRPC); mostrarToast('❌ ' + (errRPC.message || 'Error')); return; }
 
-    // Actualizar stock_usado en memoria
     for (const p of productos) {
         const it = items.find(i => i.id === p.productoId);
         if (it) it.stock_usado = (it.stock_usado || 0) + p.cantidad;
     }
 
-    // Mensaje de éxito
     const msg = document.getElementById('dev-mensaje');
     document.getElementById('dev-mensaje-detalle').innerHTML = `
         📅 ${fechaHoraActual()} · Salida origen: <strong>${salidaDevolucionActual.codigo}</strong> del ${salidaDevolucionActual.fecha}
@@ -1917,9 +1878,8 @@ async function registrarDevolucion() {
     document.getElementById('dev-mensaje-total').textContent = `♻️ Total: ${productos.length} prod · ${totalUnidades} ud al stock usado`;
     msg.style.display = 'block';
 
-    mostrarToast(`✅ Devolución registrada: ${totalUnidades} unidades`);
+    mostrarToast(`✅ Devolución registrada: ${totalUnidades} ud`);
 
-    // Actualizar vistas
     await Promise.all([cargarSalidasDB(), cargarEntradasDB()]);
     renderInventario();
     actualizarStockCritico();
@@ -1934,7 +1894,7 @@ function nuevaDevolucion() {
     document.getElementById('dev-tabla-container').style.display = 'none';
     document.getElementById('dev-mensaje').style.display = 'none';
     document.getElementById('dev-obs').value = '';
-    mostrarToast('🔄 Busca otra salida para devolver');
+    mostrarToast('🔄 Busca otra salida');
 }
 
 // ============================================================
@@ -1947,7 +1907,6 @@ function renderInventario() {
     const filtroFamilia = document.getElementById('filtro-familia').value;
     const filtroStock = document.getElementById('filtro-stock').value;
 
-    // Headers según rol
     if (esAdmin()) {
         thead.innerHTML = `<tr>
             <th>Producto</th><th>Talla</th>
@@ -1964,7 +1923,6 @@ function renderInventario() {
         </tr>`;
     }
 
-    // Filtro familia dinámico
     const sel = document.getElementById('filtro-familia');
     const cur = sel.value;
     sel.innerHTML = '<option value="">Todas las familias</option>';
@@ -1994,8 +1952,8 @@ function renderInventario() {
         let stockClass = '';
         let badge = '';
         if (i.stock === 0) { stockClass = 'stock-critico'; badge = '<span class="badge-stock critico">❌ Agotado</span>'; }
-        else if (i.stock <= 3) { stockClass = 'stock-critico'; badge = `<span class="badge-stock critico">⚠️ ${i.stock} crítico</span>`; }
-        else if (i.stock <= 5) { badge = `<span class="badge-stock bajo">🟡 ${i.stock} bajo</span>`; }
+        else if (i.stock <= 3) { stockClass = 'stock-critico'; badge = `<span class="badge-stock critico">⚠️ ${i.stock}</span>`; }
+        else if (i.stock <= 5) { badge = `<span class="badge-stock bajo">🟡 ${i.stock}</span>`; }
         else { badge = `<span class="badge-stock normal">✅ ${i.stock}</span>`; }
 
         if (esAdmin()) {
@@ -2024,7 +1982,7 @@ function renderInventario() {
 function filtrarInventario() { renderInventario(); }
 
 // ============================================================
-// AUDITORÍA — SALIDAS
+// AUDITORÍA SALIDAS
 // ============================================================
 function renderAuditoriaSalidas() {
     const tbody = document.getElementById('aud-salidas-tbody');
@@ -2038,13 +1996,10 @@ function renderAuditoriaSalidas() {
         }
         if (estadoFiltro === 'anulada' && !s.anulado) return false;
         if (estadoFiltro !== 'anulada' && s.anulado) return false;
-        // Calcular devoluciones para estado
         if (['parcial', 'completa', 'activa'].includes(estadoFiltro)) {
             const totalDesp = s.productos.reduce((a, p) => a + p.cantidad, 0);
-            const devuelto = entradas
-                .filter(e => e.salida_origen_id === s.id && !e.anulado)
-                .reduce((a, e) => a + e.cantidad, 0);
-            if (estadoFiltro === 'activa' && (devuelto > 0)) return false;
+            const devuelto = entradas.filter(e => e.salida_origen_id === s.id && !e.anulado).reduce((a, e) => a + e.cantidad, 0);
+            if (estadoFiltro === 'activa' && devuelto > 0) return false;
             if (estadoFiltro === 'parcial' && (devuelto === 0 || devuelto >= totalDesp)) return false;
             if (estadoFiltro === 'completa' && devuelto < totalDesp) return false;
         }
@@ -2059,14 +2014,12 @@ function renderAuditoriaSalidas() {
 
     tbody.innerHTML = lista.map(s => {
         const totalUnid = s.productos.reduce((a, p) => a + p.cantidad, 0);
-        const devuelto = entradas
-            .filter(e => e.salida_origen_id === s.id && !e.anulado)
-            .reduce((a, e) => a + e.cantidad, 0);
+        const devuelto = entradas.filter(e => e.salida_origen_id === s.id && !e.anulado).reduce((a, e) => a + e.cantidad, 0);
 
         let estadoBadge = '<span class="badge-estado activa">Activa</span>';
         if (s.anulado) estadoBadge = '<span class="badge-estado anulada">Anulada</span>';
         else if (devuelto >= totalUnid && totalUnid > 0) estadoBadge = '<span class="badge-estado completa">✅ Completa</span>';
-        else if (devuelto > 0) estadoBadge = `<span class="badge-estado parcial">♻️ Parcial (${devuelto}/${totalUnid})</span>`;
+        else if (devuelto > 0) estadoBadge = `<span class="badge-estado parcial">♻️ Parcial ${devuelto}/${totalUnid}</span>`;
 
         const receptoresTxt = s.receptores.map(r => r.nombre).join(', ') || 'N/E';
 
@@ -2078,9 +2031,9 @@ function renderAuditoriaSalidas() {
             <td style="text-align:center; font-weight:700;">${totalUnid}</td>
             <td style="text-align:center;">${estadoBadge}</td>
             <td style="text-align:center;">
-                <button class="btn-pequeno azul" onclick="verSalidaDesdeAuditoria('${s.id}')">👁️ Ver</button>
-                <button class="btn-pequeno verde" onclick="pdfSalidaDesdeAuditoria('${s.id}')">📄 PDF</button>
-                ${!s.anulado && devuelto === 0 ? `<button class="btn-pequeno rojo" onclick="abrirModalAnular('salida', '${s.id}', '${s.codigo}')">🚫 Anular</button>` : ''}
+                <button class="btn-pequeno azul" onclick="verSalidaDesdeAuditoria('${s.id}')">👁️</button>
+                <button class="btn-pequeno verde" onclick="pdfSalidaDesdeAuditoria('${s.id}')">📄</button>
+                ${!s.anulado && devuelto === 0 ? `<button class="btn-pequeno rojo" onclick="abrirModalAnular('salida', '${s.id}', '${s.codigo}')">🚫</button>` : ''}
             </td>
         </tr>`;
     }).join('');
@@ -2101,7 +2054,7 @@ function pdfSalidaDesdeAuditoria(id) {
 }
 
 // ============================================================
-// AUDITORÍA — ENTRADAS
+// AUDITORÍA ENTRADAS
 // ============================================================
 function renderAuditoriaEntradas() {
     const tbody = document.getElementById('aud-entradas-tbody');
@@ -2130,8 +2083,8 @@ function renderAuditoriaEntradas() {
 
         let origen = e.proveedor || 'N/E';
         if (e.tipo === 'usado' && e.salida_origen_id) {
-            const salidaOrigen = salidas.find(s => s.id === e.salida_origen_id);
-            origen = salidaOrigen ? `De SALIDA ${salidaOrigen.codigo}` : 'Devolución';
+            const sOrigen = salidas.find(s => s.id === e.salida_origen_id);
+            origen = sOrigen ? `De SALIDA ${sOrigen.codigo}` : 'Devolución';
         }
 
         return `<tr class="${e.anulado ? 'anulado' : ''}">
@@ -2144,7 +2097,7 @@ function renderAuditoriaEntradas() {
             <td style="font-size:11px;">${e.responsable || 'N/E'}</td>
             <td style="text-align:center;">${e.anulado ? '<span class="badge-estado anulada">Anulada</span>' : '<span class="badge-estado activa">OK</span>'}</td>
             <td style="text-align:center;">
-                ${!e.anulado && e.tipo === 'nuevo' ? `<button class="btn-pequeno rojo" onclick="abrirModalAnular('entrada', '${e.id}', '${e.nombre}')">🚫 Anular</button>` : '—'}
+                ${!e.anulado && e.tipo === 'nuevo' ? `<button class="btn-pequeno rojo" onclick="abrirModalAnular('entrada', '${e.id}', '${e.nombre}')">🚫</button>` : '—'}
             </td>
         </tr>`;
     }).join('');
@@ -2153,7 +2106,7 @@ function renderAuditoriaEntradas() {
 }
 
 // ============================================================
-// AUDITORÍA — TRAZABILIDAD
+// TRAZABILIDAD
 // ============================================================
 function poblarDropdownTrazabilidad() {
     const list = document.getElementById('traz-list');
@@ -2177,12 +2130,8 @@ function poblarDropdownTrazabilidad() {
         div.onclick = () => {
             input.value = nombre;
             list.style.display = 'none';
-            if (grupo.length === 1) {
-                mostrarTrazabilidad(grupo[0].id);
-            } else {
-                // Con tallas: mostrar sub-lista
-                mostrarVariantesTrazabilidad(grupo);
-            }
+            if (grupo.length === 1) mostrarTrazabilidad(grupo[0].id);
+            else mostrarVariantesTrazabilidad(grupo);
         };
         list.appendChild(div);
     });
@@ -2220,7 +2169,7 @@ function mostrarVariantesTrazabilidad(grupo) {
     list.style.display = 'block';
 }
 
-async function mostrarTrazabilidad(productoId) {
+function mostrarTrazabilidad(productoId) {
     const it = items.find(i => i.id === productoId);
     if (!it) { mostrarToast('❌ Producto no encontrado'); return; }
 
@@ -2230,7 +2179,6 @@ async function mostrarTrazabilidad(productoId) {
     document.getElementById('traz-stock-nuevo').textContent = it.stock;
     document.getElementById('traz-stock-usado').textContent = it.stock_usado || 0;
 
-    // Traer entradas
     const entradasProd = entradas.filter(e => e.productoId === productoId && !e.anulado);
     const salidasProd = [];
     salidas.forEach(s => {
@@ -2238,9 +2186,7 @@ async function mostrarTrazabilidad(productoId) {
         s.productos.forEach(p => {
             if (p.productoId === productoId) {
                 salidasProd.push({
-                    codigo: s.codigo,
-                    fecha: s.fecha,
-                    timestamp: s.timestamp,
+                    codigo: s.codigo, fecha: s.fecha, timestamp: s.timestamp,
                     cantidad: p.cantidad,
                     receptores: s.receptores.map(r => r.nombre).join(', '),
                     responsable: s.responsable
@@ -2252,7 +2198,6 @@ async function mostrarTrazabilidad(productoId) {
     const totalDesp = salidasProd.reduce((a, s) => a + s.cantidad, 0);
     document.getElementById('traz-total-desp').textContent = totalDesp;
 
-    // Construir timeline mezclado y ordenado por timestamp
     const eventos = [];
 
     entradasProd.forEach(e => {
@@ -2270,9 +2215,7 @@ async function mostrarTrazabilidad(productoId) {
 
     salidasProd.forEach(s => {
         eventos.push({
-            tipo: 'salida',
-            fecha: s.fecha,
-            timestamp: s.timestamp,
+            tipo: 'salida', fecha: s.fecha, timestamp: s.timestamp,
             cantidad: s.cantidad,
             detalle: `📤 Salida ${s.codigo} · Receptores: ${s.receptores}`,
             responsable: s.responsable
@@ -2303,7 +2246,7 @@ async function mostrarTrazabilidad(productoId) {
 }
 
 // ============================================================
-// ANULACIÓN
+// ANULAR
 // ============================================================
 function abrirModalAnular(tipo, id, ref) {
     registroAAnular = { tipo, id, ref };
@@ -2323,19 +2266,17 @@ async function confirmarAnulacion() {
     if (!motivo) { mostrarToast('❌ Ingresa un motivo'); return; }
 
     const { tipo, id } = registroAAnular;
-
     const fn = tipo === 'salida' ? 'anular_salida' : 'anular_entrada';
     const params = tipo === 'salida'
-        ? { p_salida_id: id, p_motivo: motivo, p_usuario: rolActual }
-        : { p_entrada_id: id, p_motivo: motivo, p_usuario: rolActual };
+        ? { p_salida_id: id, p_motivo: motivo, p_usuario: nombreUsuario }
+        : { p_entrada_id: id, p_motivo: motivo, p_usuario: nombreUsuario };
 
     const { error } = await sb.rpc(fn, params);
-    if (error) { console.error(error); mostrarToast('❌ ' + (error.message || 'Error al anular')); return; }
+    if (error) { console.error(error); mostrarToast('❌ ' + (error.message || 'Error')); return; }
 
     mostrarToast('✅ Movimiento anulado');
     cerrarModalAnular();
 
-    // Recargar
     await Promise.all([cargarProductos(), cargarSalidasDB(), cargarEntradasDB()]);
     renderInventario();
     actualizarDashboard();
@@ -2368,7 +2309,7 @@ function actualizarStockCritico() {
 }
 
 // ============================================================
-// COMPROBANTE MODAL
+// COMPROBANTE
 // ============================================================
 function mostrarComprobante(salida) {
     const modal = document.getElementById('modal-comprobante');
@@ -2438,11 +2379,11 @@ function imprimirComprobante() {
 }
 
 // ============================================================
-// PDF BASE
+// PDFs
 // ============================================================
 function generarComprobantePDFBase(config) {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
     const margin = 16;
@@ -2452,24 +2393,20 @@ function generarComprobantePDFBase(config) {
     const grisClaro = [245, 247, 252];
     const bordeGris = [226, 232, 240];
 
-    const alturaHeader = 32;
     doc.setFillColor(...azul);
-    doc.rect(0, 0, pageW, alturaHeader, 'F');
+    doc.rect(0, 0, pageW, 32, 'F');
     doc.setFillColor(...azulOscuro);
-    doc.rect(0, alturaHeader - 1.5, pageW, 1.5, 'F');
+    doc.rect(0, 30.5, pageW, 1.5, 'F');
 
-    if (logoImageData) {
-        try { doc.addImage(logoImageData, 'PNG', margin, 6, 20, 20); } catch (e) {}
-    }
-
-    const xTexto = logoImageData ? margin + 26 : margin;
+    if (logoImageData) { try { doc.addImage(logoImageData, 'PNG', margin, 6, 20, 20); } catch (e) {} }
+    const xT = logoImageData ? margin + 26 : margin;
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(13);
-    doc.text('MUNICIPALIDAD DE LAS CONDES', xTexto, 14);
+    doc.text('MUNICIPALIDAD DE LAS CONDES', xT, 14);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
-    doc.text('Depto. Gestión de Riesgos y Desastres', xTexto, 20);
+    doc.text('Depto. Gestión de Riesgos y Desastres', xT, 20);
 
     doc.setFillColor(255, 255, 255);
     doc.roundedRect(pageW - margin - 58, 8, 58, 16, 2, 2, 'F');
@@ -2481,27 +2418,27 @@ function generarComprobantePDFBase(config) {
     doc.text('N° ' + config.numero, pageW - margin - 29, 21, { align: 'center' });
 
     doc.setTextColor(0, 0, 0);
-    let y = alturaHeader + 10;
-    const alturaFilaDatos = 7;
-    const alturaBoxDatos = 6 + config.filasInfo.length * alturaFilaDatos;
+    let y = 42;
+    const filaH = 7;
+    const boxH = 6 + config.filasInfo.length * filaH;
     doc.setFillColor(...grisClaro);
     doc.setDrawColor(...bordeGris);
-    doc.roundedRect(margin, y, pageW - margin * 2, alturaBoxDatos, 2, 2, 'FD');
+    doc.roundedRect(margin, y, pageW - margin * 2, boxH, 2, 2, 'FD');
 
-    let yDatos = y + 8;
+    let yD = y + 8;
     config.filasInfo.forEach(([label, value]) => {
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9);
         doc.setTextColor(...grisTexto);
-        doc.text(label + ':', margin + 5, yDatos);
+        doc.text(label + ':', margin + 5, yD);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(20, 30, 45);
         const txt = doc.splitTextToSize(String(value), pageW - margin * 2 - 55);
-        doc.text(txt[0], margin + 45, yDatos);
-        yDatos += alturaFilaDatos;
+        doc.text(txt[0], margin + 45, yD);
+        yD += filaH;
     });
 
-    y = y + alturaBoxDatos + 10;
+    y = y + boxH + 10;
 
     doc.setDrawColor(...azul);
     doc.setLineWidth(0.8);
@@ -2581,11 +2518,10 @@ function descargarPDFComprobante() {
     if (!ultimoComprobante) { mostrarToast('❌ Sin comprobante'); return; }
     const s = ultimoComprobante;
     const receptoresTxt = s.receptores.map(r => r.nombre + (r.email ? ' (' + r.email + ')' : '')).join(', ');
-
     const filas = [
         ['Fecha', s.fecha || fechaHoraActual()],
         ['Recibe', receptoresTxt],
-        ['Entregado por', s.responsable || rolActual]
+        ['Entregado por', s.responsable || nombreUsuario]
     ];
     if (s.observacion) filas.push(['Observación', s.observacion]);
 
@@ -2598,7 +2534,6 @@ function descargarPDFComprobante() {
         firmaIzqLabel: 'Entregado por',
         firmaDerLabel: 'Recibido por'
     });
-
     doc.save(`Salida_${s.codigo || s.id}.pdf`);
     mostrarToast('✅ PDF descargado');
 }
@@ -2609,7 +2544,7 @@ function descargarPDFEntrada() {
     const filas = [
         ['Fecha', r.fecha || fechaHoraActual()],
         ['Proveedor', r.proveedor || 'N/E'],
-        ['Recibido por', r.responsable || rolActual]
+        ['Recibido por', r.responsable || nombreUsuario]
     ];
     if (r.observacion) filas.push(['Observación', r.observacion]);
 
@@ -2622,7 +2557,6 @@ function descargarPDFEntrada() {
         firmaIzqLabel: 'Proveedor',
         firmaDerLabel: 'Recibido por'
     });
-
     doc.save(`Ingreso_${r.id.substring(0, 8)}.pdf`);
     mostrarToast('✅ PDF descargado');
 }
@@ -2655,7 +2589,6 @@ function generarPDFInventario() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
     doc.text('INVENTARIO', pageW - margin - 29, 14, { align: 'center' });
-    doc.setFontSize(9);
     doc.text(fechaActual(), pageW - margin - 29, 21, { align: 'center' });
 
     let y = 42;
@@ -2666,8 +2599,7 @@ function generarPDFInventario() {
     doc.text('DETALLE DE PRODUCTOS', margin, y);
     y += 6;
 
-    const conStock = items.filter(i => i.stock > 0 || (i.stock_usado || 0) > 0)
-        .sort((a, b) => a.nombre.localeCompare(b.nombre));
+    const conStock = items.filter(i => i.stock > 0 || (i.stock_usado || 0) > 0).sort((a, b) => a.nombre.localeCompare(b.nombre));
 
     doc.setFillColor(...azul);
     doc.rect(margin, y, pageW - margin * 2, 8, 'F');
@@ -2684,7 +2616,20 @@ function generarPDFInventario() {
     doc.setFontSize(9);
     let par = false;
     conStock.forEach(it => {
-        if (y > pageH - 25) { doc.addPage(); y = 16; doc.setFillColor(...azul); doc.rect(margin, y, pageW - margin * 2, 8, 'F'); doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.text('Producto', margin + 4, y + 5.5); doc.text('Talla', pageW - margin - 60, y + 5.5, { align: 'center' }); doc.text('Nuevos', pageW - margin - 35, y + 5.5, { align: 'center' }); doc.text('Usados', pageW - margin - 10, y + 5.5, { align: 'center' }); y += 8; doc.setFont('helvetica', 'normal'); }
+        if (y > pageH - 25) {
+            doc.addPage(); y = 16;
+            doc.setFillColor(...azul);
+            doc.rect(margin, y, pageW - margin * 2, 8, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(9);
+            doc.text('Producto', margin + 4, y + 5.5);
+            doc.text('Talla', pageW - margin - 60, y + 5.5, { align: 'center' });
+            doc.text('Nuevos', pageW - margin - 35, y + 5.5, { align: 'center' });
+            doc.text('Usados', pageW - margin - 10, y + 5.5, { align: 'center' });
+            y += 8;
+            doc.setFont('helvetica', 'normal');
+        }
         if (par) { doc.setFillColor(...grisClaro); doc.rect(margin, y, pageW - margin * 2, 7, 'F'); }
         doc.setDrawColor(...bordeGris);
         doc.rect(margin, y, pageW - margin * 2, 7);
