@@ -41,6 +41,10 @@
     margin-bottom: 12px; outline: none; transition: 0.2s;
   }
   .login-card input:focus { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(22,100,192,0.15); }
+  .login-card input.campo-normal {
+    text-transform: none; letter-spacing: normal; font-weight: 500; text-align: left;
+  }
+  .login-card button:disabled { opacity: 0.6; cursor: not-allowed; }
   .login-card button {
     width: 100%; padding: 14px; background: var(--azul); color: white;
     border: none; border-radius: 12px; font-size: 15px; font-weight: 700;
@@ -332,11 +336,12 @@
     <img src="https://i.ibb.co/Z6qxBJQZ/Logo-general-1.png" alt="Municipalidad de Las Condes">
     <h1>Gestión de Inventario GRRD</h1>
     <p>Municipalidad de Las Condes · Depto. Gestión de Riesgos y Desastres</p>
-    <div class="login-error" id="login-error">⛔ Ingresa tu nombre de usuario</div>
-    <input type="text" id="login-input" placeholder="Tu nombre de usuario" autocomplete="off" autofocus>
-    <button onclick="intentarLogin()">Ingresar</button>
+    <div class="login-error" id="login-error">⛔ Revisa tu correo y contraseña</div>
+    <input type="email" id="login-email" class="campo-normal" placeholder="tu.correo@lascondes.cl" autocomplete="username" autofocus>
+    <input type="password" id="login-password" class="campo-normal" placeholder="Contraseña" autocomplete="current-password">
+    <button id="login-btn" onclick="intentarLogin()">Ingresar</button>
     <div class="login-hint">
-      🔒 Ingresa tu nombre de usuario para continuar<br>
+      🔒 Ingresa con tu cuenta autorizada<br>
       <small>El sistema registra quién opera cada movimiento</small>
     </div>
   </div>
@@ -359,6 +364,7 @@
         <div style="display:flex; gap:6px; align-items:center;">
           <span class="badge-excel" id="excel-status">📊 Cargando...</span>
           <span class="badge-rol" id="badge-rol">—</span>
+          <button onclick="cerrarSesion()" title="Cerrar sesión" style="background:rgba(255,255,255,0.15); border:none; color:white; font-size:10px; font-weight:700; padding:4px 10px; border-radius:20px; cursor:pointer;">Salir</button>
         </div>
       </div>
     </div>
@@ -793,11 +799,15 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ============================================================
 // USUARIOS AUTORIZADOS
+// ⚠️ Reemplaza estos correos por los EXACTOS que creaste en
+// Supabase → Authentication → Users. Esto solo decide si alguien
+// ve la interfaz de admin o de operador — la protección real de
+// los datos la dan las políticas RLS (rol "authenticated").
 // ============================================================
 const ADMINS_AUTORIZADOS = {
-    'RARRIAGADA': { nombre: 'Rodrigo Arriagada', rol: 'ADMINISTRADOR' },
-    'NVERA':      { nombre: 'Nelson Vera',       rol: 'ADMINISTRADOR' },
-    'EFUENTES':   { nombre: 'Emilio Fuentes',    rol: 'ADMINISTRADOR' }
+    'rarriagada@lascondes.cl': { nombre: 'Rodrigo Arriagada' },
+    'nvera@lascondes.cl':      { nombre: 'Nelson Vera' },
+    'efuentes@lascondes.cl':   { nombre: 'Emilio Fuentes' }
 };
 
 // ============================================================
@@ -900,38 +910,78 @@ function precargarLogoPDF() {
 }
 
 // ============================================================
-// LOGIN
+// LOGIN (Supabase Auth)
 // ============================================================
-function intentarLogin() {
-    const input = document.getElementById('login-input').value.trim().toUpperCase();
-    const error = document.getElementById('login-error');
+function aplicarSesion(session) {
+    const email = (session.user.email || '').toLowerCase();
+    const adminInfo = ADMINS_AUTORIZADOS[email];
 
-    if (!input) {
-        error.textContent = '⛔ Ingresa tu nombre de usuario';
+    if (adminInfo) {
+        rolActual      = 'ADMINISTRADOR';
+        nombreUsuario  = email;
+        nombreCompleto = adminInfo.nombre;
+    } else {
+        rolActual      = 'OPERADOR';
+        nombreUsuario  = email;
+        nombreCompleto = email;
+    }
+}
+
+async function intentarLogin() {
+    const emailInput = document.getElementById('login-email');
+    const passInput  = document.getElementById('login-password');
+    const btn        = document.getElementById('login-btn');
+    const error      = document.getElementById('login-error');
+
+    const email    = emailInput.value.trim();
+    const password = passInput.value;
+
+    if (!email || !password) {
+        error.textContent = '⛔ Ingresa tu correo y contraseña';
         error.style.display = 'block';
         return;
     }
 
-    const adminInfo = ADMINS_AUTORIZADOS[input];
+    btn.disabled = true;
+    btn.textContent = 'Ingresando...';
+    error.style.display = 'none';
 
-    if (adminInfo) {
-        rolActual      = 'ADMINISTRADOR';
-        nombreUsuario  = input;
-        nombreCompleto = adminInfo.nombre;
-    } else {
-        rolActual      = 'OPERADOR';
-        nombreUsuario  = input;
-        nombreCompleto = input;
+    const { data, error: errLogin } = await sb.auth.signInWithPassword({ email, password });
+
+    btn.disabled = false;
+    btn.textContent = 'Ingresar';
+
+    if (errLogin || !data.session) {
+        error.textContent = '⛔ Correo o contraseña incorrectos';
+        error.style.display = 'block';
+        passInput.value = '';
+        return;
     }
 
-    error.style.display = 'none';
+    aplicarSesion(data.session);
     document.getElementById('login-overlay').style.display = 'none';
     iniciarApp();
 }
 
-document.getElementById('login-input').addEventListener('keypress', function(e) {
+async function cerrarSesion() {
+    await sb.auth.signOut();
+    location.reload();
+}
+
+document.getElementById('login-password').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') intentarLogin();
 });
+
+// Si ya había una sesión activa (recarga de página), la reutilizamos
+// en vez de pedir login de nuevo.
+(async function restaurarSesion() {
+    const { data } = await sb.auth.getSession();
+    if (data.session) {
+        aplicarSesion(data.session);
+        document.getElementById('login-overlay').style.display = 'none';
+        iniciarApp();
+    }
+})();
 
 // ============================================================
 // INICIO
