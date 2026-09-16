@@ -385,7 +385,7 @@
   </div>
 </div>
 
-<!-- ===== TAB 1: SALIDA DE PRODUCTOS ===== -->
+<!-- ===== TAB 1: SALIDA ===== -->
 <div class="section active" id="tab-salida">
   <div class="section-label">📤 SALIDA DE PRODUCTOS</div>
 
@@ -469,12 +469,12 @@
     <div class="detalle" id="despacho-detalle"></div>
     <ul class="productos-list" id="despacho-productos"></ul>
     <div class="total" id="despacho-total"></div>
-    <button class="btn-verde" onclick="nuevaSalida()" style="margin-top:10px;">➕ Nueva Salida</button>
-    <button class="btn-secundario" onclick="descargarPDFComprobante()" style="margin-top:6px;">📄 PDF Despacho</button>
+    <button class="btn-verde" onclick="nuevaSalidaManual()" style="margin-top:10px;">➕ Nueva Salida</button>
+    <button class="btn-secundario" onclick="descargarPDFComprobante(false)" style="margin-top:6px;">📄 PDF Despacho</button>
   </div>
 </div>
 
-<!-- ===== TAB 2: ENTRADA DE PRODUCTOS ===== -->
+<!-- ===== TAB 2: ENTRADA ===== -->
 <div class="section solo-admin" id="tab-entrada">
   <div class="section-label">📥 ENTRADA DE PRODUCTOS</div>
 
@@ -483,7 +483,6 @@
     <div class="subtab" data-subtab="entrada-usados" onclick="cambiarSubtabEntrada('entrada-usados')">♻️ DEVOLUCIÓN USADOS</div>
   </div>
 
-  <!-- SUBTAB NUEVOS -->
   <div id="sub-entrada-nuevos">
     <div class="field">
       <label>📂 Familia de productos</label>
@@ -552,12 +551,11 @@
       <div class="detalle" id="entrada-detalle"></div>
       <ul class="productos-list" id="entrada-productos-lista"></ul>
       <div class="total" id="entrada-total"></div>
-      <button class="btn-verde" onclick="nuevaEntrada()" style="margin-top:10px;">➕ Nueva Entrada</button>
+      <button class="btn-verde" onclick="nuevaEntradaManual()" style="margin-top:10px;">➕ Nueva Entrada</button>
       <button class="btn-secundario" onclick="descargarPDFEntrada()" style="margin-top:6px;">📄 PDF Respaldo</button>
     </div>
   </div>
 
-  <!-- SUBTAB USADOS -->
   <div id="sub-entrada-usados" style="display:none;">
     <div class="field">
       <label class="required">🔎 N° de orden de salida</label>
@@ -750,13 +748,13 @@
 <div class="modal-overlay" id="modal-comprobante">
   <div class="modal">
     <div class="modal-header">
-      <h2>🧾 Comprobante</h2>
+      <h2 id="comprobante-titulo">🧾 Comprobante</h2>
       <button class="btn-cerrar-modal" onclick="cerrarModalComprobante()">✕</button>
     </div>
     <div id="ticket-content" class="ticket"></div>
-    <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+    <div id="comprobante-acciones" style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
       <button class="btn-primario" style="flex:1;" onclick="imprimirComprobante()">🖨️ Imprimir</button>
-      <button class="btn-primario" style="flex:1; background:var(--verde);" onclick="descargarPDFComprobante()">📄 PDF</button>
+      <button class="btn-primario" style="flex:1; background:var(--verde);" onclick="pdfComprobanteDesdeModal()">📄 PDF</button>
       <button class="btn-secundario" style="flex:1;" onclick="cerrarModalComprobante()">Cerrar</button>
     </div>
   </div>
@@ -787,7 +785,7 @@
 
 <script>
 // ============================================================
-// CONFIG SUPABASE
+// CONFIG
 // ============================================================
 const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Vc7-e-AjorgMgj45SmAL5g_Xr0glJjx';
@@ -806,8 +804,8 @@ const ADMINS_AUTORIZADOS = {
 // ESTADO GLOBAL
 // ============================================================
 let rolActual = null;
-let nombreUsuario = '';       // Clave interna (RARRIAGADA, JUAN...)
-let nombreCompleto = '';      // Nombre bonito para mostrar
+let nombreUsuario = '';
+let nombreCompleto = '';
 let items = [];
 let grupos = {};
 let salidas = [];
@@ -816,6 +814,7 @@ let recepciones = [];
 let productoSeleccionadoId = null;
 let tallaSeleccionada = null;
 let ultimoComprobante = null;
+let comprobanteModo = 'salida';   // 'salida' | 'auditoria'
 let ultimaRecepcion = null;
 let familiaSeleccionada = '';
 let familiaEntradaSeleccionada = '';
@@ -935,12 +934,11 @@ document.getElementById('login-input').addEventListener('keypress', function(e) 
 });
 
 // ============================================================
-// INICIO APP
+// INICIO
 // ============================================================
 async function iniciarApp() {
     document.body.classList.toggle('rol-admin', esAdmin());
 
-    // Bienvenida + badge
     const badge = document.getElementById('badge-rol');
     const bienvenida = document.getElementById('bienvenida-texto');
 
@@ -1000,13 +998,10 @@ async function cargarProductos() {
     items = data.map(p => {
         const sinTalla = !p.talla || p.talla === 'uni' || p.talla === 'S/N';
         return {
-            id: p.id,
-            nombre: p.nombre,
-            familia: p.familia,
+            id: p.id, nombre: p.nombre, familia: p.familia,
             talla: sinTalla ? null : p.talla,
             tieneTalla: !sinTalla,
-            stock: p.stock,
-            stock_usado: p.stock_usado || 0
+            stock: p.stock, stock_usado: p.stock_usado || 0
         };
     });
 
@@ -1027,12 +1022,10 @@ async function cargarProductos() {
 }
 
 async function cargarSalidasDB() {
-    const { data, error } = await sb.from('salidas')
-        .select('*').order('fecha', { ascending: false }).limit(1000);
+    const { data, error } = await sb.from('salidas').select('*').order('fecha', { ascending: false }).limit(1000);
     if (error) { salidas = []; return; }
     salidas = data.map(s => ({
-        id: s.id,
-        codigo: s.codigo,
+        id: s.id, codigo: s.codigo,
         fecha: formatearFecha(s.fecha),
         timestamp: new Date(s.fecha).getTime(),
         responsable: s.responsable,
@@ -1046,19 +1039,13 @@ async function cargarSalidasDB() {
 }
 
 async function cargarEntradasDB() {
-    const { data, error } = await sb.from('entradas')
-        .select('*').order('fecha', { ascending: false }).limit(1000);
+    const { data, error } = await sb.from('entradas').select('*').order('fecha', { ascending: false }).limit(1000);
     if (error) { entradas = []; return; }
     entradas = data.map(e => ({
-        id: e.id,
-        loteId: e.lote_id,
-        productoId: e.producto_id,
-        nombre: e.nombre,
-        talla: e.talla,
-        cantidad: e.cantidad,
-        proveedor: e.proveedor,
-        observacion: e.observacion,
-        responsable: e.responsable,
+        id: e.id, loteId: e.lote_id,
+        productoId: e.producto_id, nombre: e.nombre, talla: e.talla,
+        cantidad: e.cantidad, proveedor: e.proveedor,
+        observacion: e.observacion, responsable: e.responsable,
         tipo: e.tipo || 'nuevo',
         salida_origen_id: e.salida_origen_id,
         fecha: formatearFecha(e.fecha),
@@ -1069,14 +1056,11 @@ async function cargarEntradasDB() {
 }
 
 async function cargarRecepcionesDB() {
-    const { data, error } = await sb.from('recepciones')
-        .select('*').order('fecha', { ascending: false }).limit(200);
+    const { data, error } = await sb.from('recepciones').select('*').order('fecha', { ascending: false }).limit(200);
     if (error) { recepciones = []; return; }
     recepciones = data.map(r => ({
-        id: r.lote_id,
-        productos: r.productos || [],
-        proveedor: r.proveedor,
-        observacion: r.observacion,
+        id: r.lote_id, productos: r.productos || [],
+        proveedor: r.proveedor, observacion: r.observacion,
         responsable: r.responsable,
         fecha: formatearFecha(r.fecha),
         timestamp: new Date(r.fecha).getTime()
@@ -1104,7 +1088,6 @@ function cambiarTab(tabId) {
     document.getElementById(tabId).classList.add('active');
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     document.querySelector(`.nav-tab[data-tab="${tabId}"]`).classList.add('active');
-
     if (tabId === 'tab-inventario') { renderInventario(); actualizarStockCritico(); }
     if (tabId === 'tab-salida') actualizarDashboard();
     if (tabId === 'tab-auditoria') { renderAuditoriaSalidas(); renderAuditoriaEntradas(); }
@@ -1167,7 +1150,7 @@ function seleccionarFamiliaEntrada(familia) {
 }
 
 // ============================================================
-// DROPDOWN PRODUCTOS
+// DROPDOWNS
 // ============================================================
 function poblarDropdownProductos() {
     const list = document.getElementById('prod-list');
@@ -1199,7 +1182,6 @@ function poblarDropdownProductos() {
         else if (stockTotal <= 5) { stockClass = 'bajo'; stockLabel = `🟡 ${stockTotal}`; }
 
         div.innerHTML = `<span>${nombre} ${tieneTallas ? '📏' : ''}</span><span class="stock-indicador ${stockClass}">${stockLabel}</span>`;
-
         div.onclick = () => {
             if (salidaRegistrada) { mostrarToast('⚠️ Finaliza la salida'); return; }
             input.value = nombre;
@@ -1219,9 +1201,8 @@ function poblarDropdownProductos() {
 
 function filtrarDropdownProductos(texto) {
     const list = document.getElementById('prod-list');
-    const items_list = list.querySelectorAll('.dropdown-item');
     const t = texto.toLowerCase().trim();
-    items_list.forEach(item => {
+    list.querySelectorAll('.dropdown-item').forEach(item => {
         item.style.display = item.textContent.toLowerCase().includes(t) ? 'flex' : 'none';
     });
     list.style.display = 'block';
@@ -1250,7 +1231,6 @@ function poblarDropdownEntrada() {
         const div = document.createElement('div');
         div.className = 'dropdown-item';
         div.innerHTML = `<span>${nombre} ${tieneTallas ? '📏' : ''}</span><span style="font-size:10px; color:var(--texto-gris);">Stock: ${stockTotal}</span>`;
-
         div.onclick = () => {
             input.value = nombre;
             list.style.display = 'none';
@@ -1268,9 +1248,8 @@ function poblarDropdownEntrada() {
 
 function filtrarDropdownEntrada(texto) {
     const list = document.getElementById('prod-list-entrada');
-    const items_list = list.querySelectorAll('.dropdown-item');
     const t = texto.toLowerCase().trim();
-    items_list.forEach(item => {
+    list.querySelectorAll('.dropdown-item').forEach(item => {
         item.style.display = item.textContent.toLowerCase().includes(t) ? 'flex' : 'none';
     });
     list.style.display = 'block';
@@ -1410,27 +1389,24 @@ function agregarProductoAlCarrito() {
     if (!productoSeleccionadoId) { mostrarToast('❌ Selecciona un producto'); return; }
     if (isNaN(cantidad) || cantidad <= 0) { mostrarToast('❌ Cantidad inválida'); return; }
 
-    const itemSeleccionado = items.find(i => i.id === productoSeleccionadoId);
-    if (!itemSeleccionado) { mostrarToast('❌ Producto no encontrado'); return; }
-    if (cantidad > itemSeleccionado.stock) { mostrarToast(`❌ Stock insuficiente (${itemSeleccionado.stock})`); return; }
+    const item = items.find(i => i.id === productoSeleccionadoId);
+    if (!item) { mostrarToast('❌ Producto no encontrado'); return; }
+    if (cantidad > item.stock) { mostrarToast(`❌ Stock insuficiente (${item.stock})`); return; }
 
-    const existe = carrito.find(p => p.productoId === itemSeleccionado.id);
+    const existe = carrito.find(p => p.productoId === item.id);
     if (existe) {
         const nc = existe.cantidad + cantidad;
-        if (nc > itemSeleccionado.stock) { mostrarToast(`❌ Stock insuficiente`); return; }
+        if (nc > item.stock) { mostrarToast(`❌ Stock insuficiente`); return; }
         existe.cantidad = nc;
     } else {
         carrito.push({
-            productoId: itemSeleccionado.id,
-            nombre: itemSeleccionado.nombre,
-            talla: itemSeleccionado.talla,
-            cantidad: cantidad,
-            stockDisponible: itemSeleccionado.stock
+            productoId: item.id, nombre: item.nombre, talla: item.talla,
+            cantidad: cantidad, stockDisponible: item.stock
         });
     }
     renderCarrito();
     limpiarSeleccionProducto();
-    mostrarToast(`✅ ${cantidad} × ${itemSeleccionado.nombre}${itemSeleccionado.talla ? ' (' + itemSeleccionado.talla + ')' : ''}`);
+    mostrarToast(`✅ ${cantidad} × ${item.nombre}${item.talla ? ' (' + item.talla + ')' : ''}`);
 }
 
 function eliminarProductoDelCarrito(index) {
@@ -1468,11 +1444,8 @@ function agregarProductoAlCarritoEntrada() {
     const existe = carritoEntrada.find(p => p.productoId === it.id);
     if (existe) existe.cantidad += cantidad;
     else carritoEntrada.push({
-        productoId: it.id,
-        nombre: it.nombre,
-        talla: it.talla,
-        cantidad: cantidad,
-        stockActual: it.stock
+        productoId: it.id, nombre: it.nombre, talla: it.talla,
+        cantidad: cantidad, stockActual: it.stock
     });
 
     renderCarritoEntrada();
@@ -1602,7 +1575,7 @@ async function registrarSalida() {
     actualizarDashboard();
     poblarDropdownProductos();
     renderInventario();
-    mostrarComprobante(ultimoComprobante);
+    abrirComprobante(ultimoComprobante, 'salida');
 }
 
 function mostrarMensajeDespacho(productos, receptores) {
@@ -1627,16 +1600,26 @@ function habilitarFormulario(h) {
     document.querySelectorAll('#tab-salida input, #tab-salida select, #tab-salida textarea, #tab-salida .btn-verde').forEach(el => el.disabled = !h);
 }
 
-function nuevaSalida() {
+// ============================================================
+// LIMPIAR FLUJO SALIDA (manual o automático tras PDF)
+// ============================================================
+function limpiarFormularioSalida() {
     carrito = [];
     renderCarrito();
     receptoresAgregados = [];
     renderReceptores();
     document.getElementById('salida-obs').value = '';
+    document.getElementById('receptor-nombre').value = '';
+    document.getElementById('receptor-email').value = '';
+    document.getElementById('receptor-error').style.display = 'none';
     limpiarSeleccionProducto();
     ocultarMensajeDespacho();
     habilitarFormulario(true);
     poblarDropdownProductos();
+}
+
+function nuevaSalidaManual() {
+    limpiarFormularioSalida();
     mostrarToast('🔄 Lista para nueva salida');
 }
 
@@ -1739,7 +1722,7 @@ function mostrarComprobanteEntradaUltima() {
     descargarPDFEntrada();
 }
 
-function nuevaEntrada() {
+function limpiarFormularioEntrada() {
     carritoEntrada = [];
     renderCarritoEntrada();
     document.getElementById('entrada-mensaje').style.display = 'none';
@@ -1751,6 +1734,10 @@ function nuevaEntrada() {
     entradaRegistrada = false;
     habilitarFormularioEntrada(true);
     poblarDropdownEntrada();
+}
+
+function nuevaEntradaManual() {
+    limpiarFormularioEntrada();
     mostrarToast('🔄 Lista para nueva entrada');
 }
 
@@ -1766,10 +1753,8 @@ async function buscarSalidaParaDevolucion() {
     if (!codigo) { mostrarToast('❌ Ingresa el código'); return; }
 
     let salida = salidas.find(s => s.codigo === codigo && !s.anulado);
-
     if (!salida) {
-        const { data, error } = await sb
-            .from('salidas').select('*')
+        const { data, error } = await sb.from('salidas').select('*')
             .eq('codigo', codigo).eq('anulado', false).maybeSingle();
         if (error || !data) { mostrarToast('❌ Salida no encontrada o anulada'); return; }
         salida = {
@@ -1831,14 +1816,14 @@ async function registrarDevolucion() {
     const filas = document.querySelectorAll('#dev-tbody tr[data-pid]');
     const productos = [];
     let totalUnidades = 0;
-    let error = false;
+    let errorFlag = false;
 
     filas.forEach(tr => {
         const input = tr.querySelector('input');
         const cant = parseInt(input.value) || 0;
         if (cant > 0) {
             const max = parseInt(input.dataset.pendiente);
-            if (cant > max) { mostrarToast(`❌ Excede pendiente de ${input.dataset.nombre}`); error = true; return; }
+            if (cant > max) { mostrarToast(`❌ Excede pendiente de ${input.dataset.nombre}`); errorFlag = true; return; }
             productos.push({
                 productoId: tr.dataset.pid,
                 nombre: input.dataset.nombre,
@@ -1849,7 +1834,7 @@ async function registrarDevolucion() {
         }
     });
 
-    if (error) return;
+    if (errorFlag) return;
     if (!productos.length) { mostrarToast('❌ Ingresa al menos una cantidad'); return; }
 
     const observacion = document.getElementById('dev-obs').value.trim();
@@ -2043,14 +2028,14 @@ function renderAuditoriaSalidas() {
 
 function verSalidaDesdeAuditoria(id) {
     const s = salidas.find(x => x.id === id);
-    if (s) mostrarComprobante(s);
+    if (s) abrirComprobante(s, 'auditoria');
 }
 
 function pdfSalidaDesdeAuditoria(id) {
     const s = salidas.find(x => x.id === id);
     if (!s) return;
     ultimoComprobante = s;
-    descargarPDFComprobante();
+    descargarPDFComprobante(true);   // true = modo auditoría, no limpia
 }
 
 // ============================================================
@@ -2144,9 +2129,8 @@ function poblarDropdownTrazabilidad() {
 
 function filtrarDropdownTrazabilidad(texto) {
     const list = document.getElementById('traz-list');
-    const items_list = list.querySelectorAll('.dropdown-item');
     const t = texto.toLowerCase().trim();
-    items_list.forEach(item => {
+    list.querySelectorAll('.dropdown-item').forEach(item => {
         item.style.display = item.textContent.toLowerCase().includes(t) ? 'flex' : 'none';
     });
     list.style.display = 'block';
@@ -2309,12 +2293,19 @@ function actualizarStockCritico() {
 }
 
 // ============================================================
-// COMPROBANTE
+// COMPROBANTE — CON MODO
 // ============================================================
-function mostrarComprobante(salida) {
+function abrirComprobante(salida, modo) {
+    // modo: 'salida' (limpiar después) | 'auditoria' (no limpiar)
+    comprobanteModo = modo || 'salida';
     const modal = document.getElementById('modal-comprobante');
     const content = document.getElementById('ticket-content');
+    const titulo = document.getElementById('comprobante-titulo');
     const receptoresTxt = salida.receptores.map(r => r.nombre + ' (' + r.email + ')').join(', ');
+
+    titulo.textContent = comprobanteModo === 'auditoria'
+        ? `🧾 Comprobante · Salida ${salida.codigo}`
+        : '🧾 Comprobante de Salida';
 
     let productosHTML = salida.productos.map(p => `
         <div class="prod-item">
@@ -2351,11 +2342,18 @@ function mostrarComprobante(salida) {
 
 function mostrarComprobanteUltima() {
     if (!salidas.length) { mostrarToast('❌ Sin salidas'); return; }
-    mostrarComprobante(salidas[0]);
+    abrirComprobante(salidas[0], 'salida');
 }
 
 function cerrarModalComprobante() {
     document.getElementById('modal-comprobante').classList.remove('visible');
+}
+
+function pdfComprobanteDesdeModal() {
+    // Se llama desde el botón "PDF" del modal
+    // Si es modo salida → descarga y limpia
+    // Si es modo auditoría → solo descarga
+    descargarPDFComprobante(comprobanteModo === 'auditoria');
 }
 
 function imprimirComprobante() {
@@ -2375,11 +2373,17 @@ function imprimirComprobante() {
     </style></head><body><div class="ticket">${content}</div>
     <script>window.onload=function(){window.print();}<\/script></body></html>`);
     w.document.close();
-    cerrarModalComprobante();
+
+    // Si venimos del flujo de salida, limpiamos al cerrar
+    if (comprobanteModo === 'salida') {
+        cerrarModalComprobante();
+        limpiarFormularioSalida();
+        mostrarToast('✅ Impreso · Formulario reiniciado');
+    }
 }
 
 // ============================================================
-// PDFs
+// PDF BASE
 // ============================================================
 function generarComprobantePDFBase(config) {
     const { jsPDF } = window.jspdf;
@@ -2514,7 +2518,10 @@ function generarComprobantePDFBase(config) {
     return doc;
 }
 
-function descargarPDFComprobante() {
+// ============================================================
+// DESCARGA PDF — CON MODO (separación de flujos)
+// ============================================================
+function descargarPDFComprobante(desdeAuditoria = false) {
     if (!ultimoComprobante) { mostrarToast('❌ Sin comprobante'); return; }
     const s = ultimoComprobante;
     const receptoresTxt = s.receptores.map(r => r.nombre + (r.email ? ' (' + r.email + ')' : '')).join(', ');
@@ -2535,7 +2542,16 @@ function descargarPDFComprobante() {
         firmaDerLabel: 'Recibido por'
     });
     doc.save(`Salida_${s.codigo || s.id}.pdf`);
-    mostrarToast('✅ PDF descargado');
+
+    if (desdeAuditoria) {
+        // Flujo auditoría: solo descarga, NO tocamos el formulario de salida
+        mostrarToast('✅ PDF descargado');
+    } else {
+        // Flujo salida normal: limpiamos todo y dejamos listo para otra
+        mostrarToast('✅ PDF descargado · Formulario reiniciado');
+        cerrarModalComprobante();
+        limpiarFormularioSalida();
+    }
 }
 
 function descargarPDFEntrada() {
@@ -2561,6 +2577,9 @@ function descargarPDFEntrada() {
     mostrarToast('✅ PDF descargado');
 }
 
+// ============================================================
+// PDF INVENTARIO
+// ============================================================
 function generarPDFInventario() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4' });
