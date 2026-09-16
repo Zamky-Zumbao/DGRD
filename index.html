@@ -537,9 +537,17 @@
       </div>
     </div>
 
-    <div class="field">
-      <label>Proveedor</label>
-      <input type="text" id="entrada-proveedor" placeholder="Nombre del proveedor">
+    <div class="row-2">
+      <div class="field">
+        <label>Proveedor</label>
+        <input type="text" id="entrada-proveedor" list="lista-proveedores" placeholder="Escribe o elige un proveedor" autocomplete="off" onchange="autocompletarRutProveedor()">
+        <datalist id="lista-proveedores"></datalist>
+      </div>
+      <div class="field">
+        <label>RUT del proveedor</label>
+        <input type="text" id="entrada-proveedor-rut" list="lista-proveedores-rut" placeholder="Ej: 76.543.210-1" autocomplete="off">
+        <datalist id="lista-proveedores-rut"></datalist>
+      </div>
     </div>
 
     <div class="field">
@@ -1012,7 +1020,7 @@ async function iniciarApp() {
         return;
     }
 
-    await Promise.all([cargarSalidasDB(), cargarEntradasDB(), cargarRecepcionesDB()]);
+    await Promise.all([cargarSalidasDB(), cargarEntradasDB(), cargarRecepcionesDB(), cargarProveedores()]);
 
     const familiasKeys = Object.keys(grupos);
     if (familiasKeys.length > 0) {
@@ -1094,7 +1102,7 @@ async function cargarEntradasDB() {
     entradas = data.map(e => ({
         id: e.id, loteId: e.lote_id,
         productoId: e.producto_id, nombre: e.nombre, talla: e.talla,
-        cantidad: e.cantidad, proveedor: e.proveedor,
+        cantidad: e.cantidad, proveedor: e.proveedor, proveedorRut: e.proveedor_rut,
         observacion: e.observacion, responsable: e.responsable,
         tipo: e.tipo || 'nuevo',
         salida_origen_id: e.salida_origen_id,
@@ -1110,11 +1118,72 @@ async function cargarRecepcionesDB() {
     if (error) { recepciones = []; return; }
     recepciones = data.map(r => ({
         id: r.lote_id, productos: r.productos || [],
-        proveedor: r.proveedor, observacion: r.observacion,
+        proveedor: r.proveedor, proveedorRut: r.proveedor_rut, observacion: r.observacion,
         responsable: r.responsable,
         fecha: formatearFecha(r.fecha),
         timestamp: new Date(r.fecha).getTime()
     }));
+}
+
+// ============================================================
+// PROVEEDORES
+// ============================================================
+let proveedoresCache = [];   // [{ nombre, rut }]
+
+async function cargarProveedores() {
+    const { data, error } = await sb
+        .from('proveedores')
+        .select('nombre, rut')
+        .eq('activo', true)
+        .order('nombre', { ascending: true });
+
+    if (error) { console.error(error); return; }
+
+    proveedoresCache = data;
+
+    const datalistNombre = document.getElementById('lista-proveedores');
+    if (datalistNombre) {
+        datalistNombre.innerHTML = proveedoresCache.map(p => {
+            const etiqueta = p.rut ? ` (${p.rut})` : '';
+            return `<option value="${escaparHtml(p.nombre)}" label="${escaparHtml(p.nombre + etiqueta)}"></option>`;
+        }).join('');
+    }
+
+    const datalistRut = document.getElementById('lista-proveedores-rut');
+    if (datalistRut) {
+        datalistRut.innerHTML = proveedoresCache.filter(p => p.rut).map(p =>
+            `<option value="${escaparHtml(p.rut)}" label="${escaparHtml(p.rut + ' — ' + p.nombre)}"></option>`
+        ).join('');
+    }
+}
+
+function escaparHtml(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// Si el proveedor (por nombre) coincide con uno ya guardado y trae RUT,
+// autocompleta el campo RUT para que no lo tengan que tipear de nuevo.
+function autocompletarRutProveedor() {
+    const nombre = document.getElementById('entrada-proveedor').value.trim().toLowerCase();
+    const rutInput = document.getElementById('entrada-proveedor-rut');
+    if (!nombre || rutInput.value.trim()) return; // no pisar un RUT ya escrito
+    const encontrado = proveedoresCache.find(p => p.nombre.toLowerCase() === nombre);
+    if (encontrado && encontrado.rut) rutInput.value = encontrado.rut;
+}
+
+// Si el proveedor no existe todavía (por RUT), lo guarda para que
+// aparezca sugerido la próxima vez. No bloquea la entrada si falla.
+async function guardarProveedorSiEsNuevo(nombre, rut) {
+    if (!nombre) return;
+
+    const rutLimpio = (rut || '').trim();
+    const yaExiste = rutLimpio
+        ? proveedoresCache.some(p => (p.rut || '').toLowerCase() === rutLimpio.toLowerCase())
+        : proveedoresCache.some(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+    if (yaExiste) return;
+
+    const { error } = await sb.from('proveedores').insert({ nombre, rut: rutLimpio || null }).select().single();
+    if (!error) await cargarProveedores();
 }
 
 // ============================================================
@@ -1683,6 +1752,7 @@ async function registrarEntrada() {
     const fechaInput = document.getElementById('entrada-fecha').value;
     const guia = document.getElementById('entrada-guia').value.trim();
     const proveedor = document.getElementById('entrada-proveedor').value.trim();
+    const proveedorRut = document.getElementById('entrada-proveedor-rut').value.trim();
     const observacion = document.getElementById('entrada-obs').value.trim();
     const loteId = uuid();
 
@@ -1706,6 +1776,7 @@ async function registrarEntrada() {
         talla: p.talla,
         cantidad: p.cantidad,
         proveedor: proveedor || 'No especificado',
+        proveedor_rut: proveedorRut || null,
         observacion: obsFinal,
         responsable: nombreUsuario,
         tipo: 'nuevo',
@@ -1715,9 +1786,12 @@ async function registrarEntrada() {
     const { error: errEntradas } = await sb.from('entradas').insert(filas);
     if (errEntradas) { console.error(errEntradas); mostrarToast('❌ Error al registrar'); return; }
 
+    await guardarProveedorSiEsNuevo(proveedor, proveedorRut);
+
     await sb.from('recepciones').insert({
         lote_id: loteId,
         proveedor: proveedor || 'No especificado',
+        proveedor_rut: proveedorRut || null,
         observacion: obsFinal,
         responsable: nombreUsuario,
         productos: productosIngresados,
@@ -1738,6 +1812,7 @@ async function registrarEntrada() {
         id: loteId,
         productos: productosIngresados,
         proveedor: proveedor || 'No especificado',
+        proveedorRut: proveedorRut || null,
         observacion: obsFinal,
         responsable: nombreUsuario,
         fecha: formatearFecha(fechaISO),
@@ -1780,6 +1855,7 @@ function limpiarFormularioEntrada() {
     document.getElementById('entrada-fecha').value = fechaInputHoy();
     document.getElementById('entrada-guia').value = '';
     document.getElementById('entrada-proveedor').value = '';
+    document.getElementById('entrada-proveedor-rut').value = '';
     document.getElementById('entrada-obs').value = '';
     entradaRegistrada = false;
     habilitarFormularioEntrada(true);
@@ -2610,6 +2686,7 @@ function descargarPDFEntrada() {
     const filas = [
         ['Fecha', r.fecha || fechaHoraActual()],
         ['Proveedor', r.proveedor || 'N/E'],
+        ['RUT Proveedor', r.proveedorRut || 'N/E'],
         ['Recibido por', r.responsable || nombreUsuario]
     ];
     if (r.observacion) filas.push(['Observación', r.observacion]);
