@@ -93,12 +93,13 @@
   .nav-tab .icono { font-size: 20px; display: block; margin-bottom: 2px; }
   .nav-tab .label { font-size: 10px; }
 
+  /* ==== SECCIONES ==== */
   .section {
     background: var(--blanco); border-radius: 0 0 20px 20px; margin: 0 14px 10px 14px;
     padding: 14px 16px 20px; box-shadow: var(--shadow); border: 1px solid var(--borde);
     border-top: none; display: none;
   }
-  .section.active { display: block; animation: fadeIn 0.3s ease; }
+  .section.active { display: block !important; animation: fadeIn 0.3s ease; }
   @keyframes fadeIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
 
   .section-label {
@@ -161,6 +162,7 @@
   .btn-pequeno.verde { background: var(--verde); color: white; }
   .btn-pequeno.rojo { background: var(--rojo); color: white; }
   .btn-pequeno.morado { background: var(--morado); color: white; }
+  .btn-pequeno.naranja { background: var(--naranja); color: white; }
   .btn-pequeno.gris { background: #eef2f8; color: var(--texto-oscuro); }
   .btn-pequeno:hover { opacity: 0.8; }
 
@@ -211,6 +213,11 @@
   .dropdown-item .stock-indicador.normal { background: var(--verde-claro); color: var(--verde); }
   .dropdown-item .stock-indicador.critico { background: #fde8e8; color: var(--rojo); animation: pulse 1s infinite; }
   @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.6 } }
+  .dropdown-item.crear-nuevo {
+    background: linear-gradient(135deg, #fff7e6, #fef3c7);
+    color: #b45309; font-weight: 700; border-top: 2px solid #fcd34d;
+  }
+  .dropdown-item.crear-nuevo:hover { background: #fde68a; }
 
   .selector-tallas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
   .selector-tallas .talla-item {
@@ -321,11 +328,21 @@
   .acciones-inventario { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
   .acciones-inventario .btn-pequeno { flex: 1; min-width: 100px; text-align: center; padding: 8px 12px; }
 
+  /* ============================================================
+     REGLAS DE VISIBILIDAD
+     ============================================================ */
   .solo-admin { display: none !important; }
-  body.rol-admin .solo-admin { display: block !important; }
   body.rol-admin .nav-tab.solo-admin { display: block !important; }
-  body.rol-admin .section.solo-admin { display: none; }
-  body.rol-admin .section.solo-admin.active { display: block; }
+  body.rol-admin #tab-entrada,
+  body.rol-admin #tab-auditoria { display: none; }
+  body.rol-admin #tab-entrada.active,
+  body.rol-admin #tab-auditoria.active { display: block !important; }
+
+  /* Cualquier sección sin .active queda oculta, sin importar el rol */
+  body .section:not(.active) { display: none !important; }
+
+  /* Caja Chica: items en dropdown */
+  .dropdown-item.crear-nuevo { padding: 10px 12px; }
 </style>
 </head>
 <body>
@@ -375,11 +392,11 @@
 <div class="nav-tabs" id="navTabs">
   <div class="nav-tab active" data-tab="tab-salida" onclick="cambiarTab('tab-salida')">
     <span class="icono">📤</span>
-    <span class="label">SALIDA DE PRODUCTOS</span>
+    <span class="label">SALIDA</span>
   </div>
   <div class="nav-tab solo-admin" data-tab="tab-entrada" onclick="cambiarTab('tab-entrada')">
     <span class="icono">📥</span>
-    <span class="label">ENTRADA DE PRODUCTOS</span>
+    <span class="label">ENTRADA</span>
   </div>
   <div class="nav-tab" data-tab="tab-inventario" onclick="cambiarTab('tab-inventario')">
     <span class="icono">📊</span>
@@ -498,9 +515,10 @@
     <div class="field">
       <label class="required">Buscar producto</label>
       <div class="custom-dropdown">
-        <input type="text" id="prod-trigger-entrada" class="dropdown-input" placeholder="Escribe para buscar..." oninput="filtrarDropdownEntrada(this.value)">
+        <input type="text" id="prod-trigger-entrada" class="dropdown-input" placeholder="Escribe para buscar o crear..." oninput="filtrarDropdownEntrada(this.value)">
         <div class="dropdown-list" id="prod-list-entrada"></div>
       </div>
+      <button class="btn-secundario" onclick="abrirModalCrearArticulo()" style="margin-top:6px;">➕ Crear artículo nuevo</button>
     </div>
 
     <div id="producto-entrada-container" style="display:none; background:#f0f5ff; border-radius:12px; padding:10px 14px; margin-bottom:12px; border:1px solid var(--azul-claro);">
@@ -528,25 +546,47 @@
 
     <div class="row-2">
       <div class="field">
-        <label>📅 Fecha del ingreso</label>
+        <label id="label-entrada-fecha">📅 Fecha del ingreso</label>
         <input type="date" id="entrada-fecha">
       </div>
       <div class="field">
-        <label>📄 N° de guía / factura</label>
+        <label id="label-entrada-guia">📄 N° de guía / factura</label>
         <input type="text" id="entrada-guia" placeholder="Ej: 12345 o F-99887">
       </div>
     </div>
 
     <div class="row-2">
       <div class="field">
-        <label>Proveedor</label>
+        <label id="label-entrada-proveedor">Proveedor</label>
         <input type="text" id="entrada-proveedor" list="lista-proveedores" placeholder="Escribe o elige un proveedor" autocomplete="off" onchange="autocompletarRutProveedor()">
         <datalist id="lista-proveedores"></datalist>
       </div>
       <div class="field">
-        <label>RUT del proveedor</label>
+        <label id="label-entrada-rut">RUT del proveedor</label>
         <input type="text" id="entrada-proveedor-rut" list="lista-proveedores-rut" placeholder="Ej: 76.543.210-1" autocomplete="off">
         <datalist id="lista-proveedores-rut"></datalist>
+      </div>
+    </div>
+
+    <!-- Campos extra solo para Caja Chica -->
+    <div id="cc-extra-entrada" style="display:none; background:#fff7e6; border:1px solid #fcd34d; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+      <div style="font-size:11px; font-weight:700; color:#b45309; margin-bottom:8px;">💰 DATOS ESPECÍFICOS DE CAJA CHICA</div>
+      <div class="row-2">
+        <div class="field">
+          <label>Tipo de documento</label>
+          <select id="cc-extra-tipo-doc">
+            <option value="Boleta">Boleta</option>
+            <option value="Factura">Factura</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Local comercial</label>
+          <input type="text" id="cc-extra-local" placeholder="Ej: Sucursal Providencia">
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label class="required">¿Quién realizó la compra?</label>
+        <input type="text" id="cc-extra-realizado-por" placeholder="Nombre de quien compró">
       </div>
     </div>
 
@@ -791,6 +831,45 @@
   </div>
 </div>
 
+<!-- ===== MODAL CREAR ARTÍCULO ===== -->
+<div class="modal-overlay" id="modal-crear-articulo">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>➕ Crear artículo nuevo</h2>
+      <button class="btn-cerrar-modal" onclick="cerrarModalCrearArticulo()">✕</button>
+    </div>
+    <div style="background:#fff7e6; border:1px solid #fcd34d; border-radius:10px; padding:10px; margin-bottom:12px; font-size:11px; color:#b45309; font-weight:600;">
+      ⚠️ Solo administradores pueden crear artículos. Se agregará al catálogo de la familia seleccionada.
+    </div>
+    <div class="field">
+      <label class="required">Familia</label>
+      <select id="crear-familia">
+        <option value="Vestuario de Emergencia">🧥 Vestuario de Emergencia</option>
+        <option value="Maquinaria y Equipos">🔧 Maquinaria y Equipos</option>
+        <option value="Kit de Emergencia">🧰 Kit de Emergencia</option>
+        <option value="Caja Chica">💰 Caja Chica</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="required">Nombre del artículo</label>
+      <input type="text" id="crear-nombre" placeholder="Ej: Casco de seguridad">
+    </div>
+    <div class="field">
+      <label>Talla / Medida (opcional)</label>
+      <input type="text" id="crear-talla" placeholder="Ej: M, L, XL, 42, único">
+    </div>
+    <div class="field">
+      <label>Stock inicial</label>
+      <input type="number" id="crear-stock" min="0" value="0" placeholder="0">
+    </div>
+    <div id="crear-error" style="color:var(--rojo); font-size:11px; margin-bottom:10px; display:none; font-weight:600;"></div>
+    <div class="row-2" style="gap:8px;">
+      <button class="btn-primario" onclick="confirmarCrearArticulo()">✅ Crear artículo</button>
+      <button class="btn-secundario" onclick="cerrarModalCrearArticulo()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <footer style="text-align:center; color:var(--texto-gris); font-size:9px; padding:16px; opacity:0.7;">
@@ -804,10 +883,6 @@
 const SUPABASE_URL = 'https://pmcmcbyxqynzhkachyiz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Vc7-e-AjorgMgj45SmAL5g_Xr0glJjx';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// (La lista de admins ya NO vive aquí — ahora se consulta desde la
-// tabla "perfiles" en Supabase. Para agregar o cambiar un usuario,
-// entra al dashboard de Supabase, nunca más edites este archivo).
 
 // ============================================================
 // ESTADO GLOBAL
@@ -823,7 +898,7 @@ let recepciones = [];
 let productoSeleccionadoId = null;
 let tallaSeleccionada = null;
 let ultimoComprobante = null;
-let comprobanteModo = 'salida';   // 'salida' | 'auditoria'
+let comprobanteModo = 'salida';
 let ultimaRecepcion = null;
 let familiaSeleccionada = '';
 let familiaEntradaSeleccionada = '';
@@ -835,6 +910,12 @@ let entradaRegistrada = false;
 let logoImageData = null;
 let salidaDevolucionActual = null;
 let registroAAnular = null;
+
+// Caja Chica
+let ccArticulos = [];
+
+const FAMILIA_CAJA_CHICA = 'Caja Chica';
+const ORDEN_FAMILIAS = ['Vestuario de Emergencia', 'Maquinaria y Equipos', 'Kit de Emergencia', 'Caja Chica'];
 
 // ============================================================
 // HELPERS
@@ -886,7 +967,7 @@ function mostrarToast(msg) {
 }
 
 function getStockCritico() {
-    return items.filter(i => i.stock <= 3 && i.stock > 0).length;
+    return items.filter(i => i.familia !== FAMILIA_CAJA_CHICA && i.stock <= 3 && i.stock > 0).length;
 }
 
 function esAdmin() { return rolActual === 'ADMINISTRADOR'; }
@@ -908,13 +989,15 @@ function precargarLogoPDF() {
     img.src = 'https://i.ibb.co/Z6qxBJQZ/Logo-general-1.png';
 }
 
+function esFamiliaCajaChica(familia) {
+    return familia === FAMILIA_CAJA_CHICA;
+}
+
 // ============================================================
-// LOGIN (Supabase Auth)
+// LOGIN
 // ============================================================
 async function aplicarSesion(session) {
     const email = (session.user.email || '').toLowerCase();
-
-    // Consultamos el rol/nombre en la tabla "perfiles" (no en el código)
     const { data: perfil, error: errPerfil } = await sb
         .from('perfiles')
         .select('nombre, rol')
@@ -922,15 +1005,12 @@ async function aplicarSesion(session) {
         .single();
 
     if (errPerfil || !perfil) {
-        // Si el usuario no tiene fila en "perfiles" todavía, lo tratamos
-        // como Operador por defecto (acceso mínimo, seguro por omisión).
         rolActual      = 'OPERADOR';
         nombreUsuario  = email;
         nombreCompleto = email;
         return;
     }
-
-    rolActual      = perfil.rol;              // 'ADMINISTRADOR' u 'OPERADOR'
+    rolActual      = perfil.rol;
     nombreUsuario  = email;
     nombreCompleto = perfil.nombre || email;
 }
@@ -980,8 +1060,6 @@ document.getElementById('login-password').addEventListener('keypress', function(
     if (e.key === 'Enter') intentarLogin();
 });
 
-// Si ya había una sesión activa (recarga de página), la reutilizamos
-// en vez de pedir login de nuevo.
 (async function restaurarSesion() {
     const { data } = await sb.auth.getSession();
     if (data.session) {
@@ -1014,6 +1092,7 @@ async function iniciarApp() {
     mostrarToast('⏳ Conectando con Supabase...');
     precargarLogoPDF();
 
+    await cargarArticulosCajaChica();
     const ok = await cargarProductos();
     if (!ok) {
         mostrarToast('❌ No se pudo conectar a Supabase');
@@ -1022,7 +1101,7 @@ async function iniciarApp() {
 
     await Promise.all([cargarSalidasDB(), cargarEntradasDB(), cargarRecepcionesDB(), cargarProveedores()]);
 
-    const familiasKeys = Object.keys(grupos);
+    const familiasKeys = obtenerFamiliasOrdenadas();
     if (familiasKeys.length > 0) {
         familiaSeleccionada = familiasKeys[0];
         familiaEntradaSeleccionada = familiasKeys[0];
@@ -1043,7 +1122,7 @@ async function iniciarApp() {
 }
 
 // ============================================================
-// CARGA
+// CARGA DE DATOS
 // ============================================================
 async function cargarProductos() {
     const { data, error } = await sb
@@ -1059,20 +1138,34 @@ async function cargarProductos() {
             id: p.id, nombre: p.nombre, familia: p.familia,
             talla: sinTalla ? null : p.talla,
             tieneTalla: !sinTalla,
-            stock: p.stock, stock_usado: p.stock_usado || 0
+            stock: p.stock, stock_usado: p.stock_usado || 0,
+            esCajaChica: false
         };
+    });
+
+    ccArticulos.forEach(a => {
+        items.push({
+            id: a.id,
+            nombre: a.nombre,
+            familia: FAMILIA_CAJA_CHICA,
+            talla: null,
+            tieneTalla: false,
+            stock: a.stock,
+            stock_usado: 0,
+            esCajaChica: true
+        });
     });
 
     grupos = {};
     const iconos = {
         'Vestuario de Emergencia': '🧥',
         'Maquinaria y Equipos':    '🔧',
-        'Kit de Emergencia':       '🧰'
+        'Kit de Emergencia':       '🧰',
+        'Caja Chica':              '💰'
     };
-    items.forEach(it => {
-        if (!grupos[it.familia]) {
-            grupos[it.familia] = { icono: iconos[it.familia] || '📦', productos: [] };
-        }
+
+    ORDEN_FAMILIAS.forEach(f => {
+        grupos[f] = { icono: iconos[f] || '📦', productos: [] };
     });
 
     document.getElementById('excel-status').textContent = `📊 ${items.length} artículos`;
@@ -1125,10 +1218,16 @@ async function cargarRecepcionesDB() {
     }));
 }
 
+async function cargarArticulosCajaChica() {
+    const { data, error } = await sb.from('caja_chica_articulos').select('*').order('nombre', { ascending: true });
+    if (error) { console.error('Error cargando caja chica:', error); ccArticulos = []; return; }
+    ccArticulos = data;
+}
+
 // ============================================================
 // PROVEEDORES
 // ============================================================
-let proveedoresCache = [];   // [{ nombre, rut }]
+let proveedoresCache = [];
 
 async function cargarProveedores() {
     const { data, error } = await sb
@@ -1161,21 +1260,16 @@ function escaparHtml(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-// Si el proveedor (por nombre) coincide con uno ya guardado y trae RUT,
-// autocompleta el campo RUT para que no lo tengan que tipear de nuevo.
 function autocompletarRutProveedor() {
     const nombre = document.getElementById('entrada-proveedor').value.trim().toLowerCase();
     const rutInput = document.getElementById('entrada-proveedor-rut');
-    if (!nombre || rutInput.value.trim()) return; // no pisar un RUT ya escrito
+    if (!nombre || rutInput.value.trim()) return;
     const encontrado = proveedoresCache.find(p => p.nombre.toLowerCase() === nombre);
     if (encontrado && encontrado.rut) rutInput.value = encontrado.rut;
 }
 
-// Si el proveedor no existe todavía (por RUT), lo guarda para que
-// aparezca sugerido la próxima vez. No bloquea la entrada si falla.
 async function guardarProveedorSiEsNuevo(nombre, rut) {
     if (!nombre) return;
-
     const rutLimpio = (rut || '').trim();
     const yaExiste = rutLimpio
         ? proveedoresCache.some(p => (p.rut || '').toLowerCase() === rutLimpio.toLowerCase())
@@ -1184,6 +1278,24 @@ async function guardarProveedorSiEsNuevo(nombre, rut) {
 
     const { error } = await sb.from('proveedores').insert({ nombre, rut: rutLimpio || null }).select().single();
     if (!error) await cargarProveedores();
+}
+
+// ============================================================
+// ORDEN DE FAMILIAS
+// ============================================================
+function obtenerFamiliasOrdenadas() {
+    const existentes = Object.keys(grupos);
+    const ordenadas = [];
+
+    ORDEN_FAMILIAS.forEach(f => {
+        if (existentes.includes(f)) ordenadas.push(f);
+    });
+
+    existentes.forEach(f => {
+        if (!ordenadas.includes(f)) ordenadas.push(f);
+    });
+
+    return ordenadas;
 }
 
 // ============================================================
@@ -1200,6 +1312,7 @@ function renderizarTodo() {
     renderReceptores();
     renderInventario();
     actualizarStockCritico();
+    actualizarCamposEntradaPorFamilia();
 }
 
 function cambiarTab(tabId) {
@@ -1228,28 +1341,51 @@ function cambiarSubtabAuditoria(subtabId) {
     if (subtabId === 'aud-trazabilidad') poblarDropdownTrazabilidad();
 }
 
+// ============================================================
+// TABS DE FAMILIA
+// ============================================================
 function renderTabs() {
     const container = document.getElementById('tabs-familias');
-    const familiasKeys = Object.keys(grupos);
+    const familiasKeys = obtenerFamiliasOrdenadas();
     if (!familiasKeys.length) { container.innerHTML = '<div style="color:var(--texto-gris); font-size:12px; padding:8px;">Sin grupos</div>'; return; }
     if (!familiaSeleccionada || !familiasKeys.includes(familiaSeleccionada)) familiaSeleccionada = familiasKeys[0];
-    container.innerHTML = familiasKeys.map(familia => `
-        <div style="flex:0 0 auto; padding:6px 14px; border-radius:30px; border:1.5px solid var(--borde); background:${familia === familiaSeleccionada ? 'var(--azul)' : '#f8fafc'}; font-size:11px; font-weight:600; cursor:pointer; transition:0.2s; color:${familia === familiaSeleccionada ? 'white' : 'var(--texto-gris)'}; white-space:nowrap;" onclick="seleccionarFamilia('${familia}')">
-            ${grupos[familia].icono} ${familia}
-        </div>
-    `).join('');
+    container.innerHTML = familiasKeys.map(familia => {
+        const activa = familia === familiaSeleccionada;
+        const esCC = esFamiliaCajaChica(familia);
+        const bg = esCC
+            ? (activa ? '#f59e0b' : '#fff7e6')
+            : (activa ? 'var(--azul)' : '#f8fafc');
+        const color = esCC
+            ? (activa ? 'white' : '#b45309')
+            : (activa ? 'white' : 'var(--texto-gris)');
+        return `
+            <div style="flex:0 0 auto; padding:6px 14px; border-radius:30px; border:1.5px solid ${esCC ? '#fcd34d' : 'var(--borde)'}; background:${bg}; font-size:11px; font-weight:600; cursor:pointer; transition:0.2s; color:${color}; white-space:nowrap;" onclick="seleccionarFamilia('${familia}')">
+                ${grupos[familia].icono} ${familia}
+            </div>
+        `;
+    }).join('');
 }
 
 function renderTabsEntrada() {
     const container = document.getElementById('tabs-familias-entrada');
-    const familiasKeys = Object.keys(grupos);
+    const familiasKeys = obtenerFamiliasOrdenadas();
     if (!familiasKeys.length) { container.innerHTML = ''; return; }
     if (!familiaEntradaSeleccionada || !familiasKeys.includes(familiaEntradaSeleccionada)) familiaEntradaSeleccionada = familiasKeys[0];
-    container.innerHTML = familiasKeys.map(familia => `
-        <div style="flex:0 0 auto; padding:6px 14px; border-radius:30px; border:1.5px solid var(--borde); background:${familia === familiaEntradaSeleccionada ? 'var(--azul)' : '#f8fafc'}; font-size:11px; font-weight:600; cursor:pointer; transition:0.2s; color:${familia === familiaEntradaSeleccionada ? 'white' : 'var(--texto-gris)'}; white-space:nowrap;" onclick="seleccionarFamiliaEntrada('${familia}')">
-            ${grupos[familia].icono} ${familia}
-        </div>
-    `).join('');
+    container.innerHTML = familiasKeys.map(familia => {
+        const activa = familia === familiaEntradaSeleccionada;
+        const esCC = esFamiliaCajaChica(familia);
+        const bg = esCC
+            ? (activa ? '#f59e0b' : '#fff7e6')
+            : (activa ? 'var(--azul)' : '#f8fafc');
+        const color = esCC
+            ? (activa ? 'white' : '#b45309')
+            : (activa ? 'white' : 'var(--texto-gris)');
+        return `
+            <div style="flex:0 0 auto; padding:6px 14px; border-radius:30px; border:1.5px solid ${esCC ? '#fcd34d' : 'var(--borde)'}; background:${bg}; font-size:11px; font-weight:600; cursor:pointer; transition:0.2s; color:${color}; white-space:nowrap;" onclick="seleccionarFamiliaEntrada('${familia}')">
+                ${grupos[familia].icono} ${familia}
+            </div>
+        `;
+    }).join('');
 }
 
 function seleccionarFamilia(familia) {
@@ -1266,6 +1402,36 @@ function seleccionarFamiliaEntrada(familia) {
     renderTabsEntrada();
     poblarDropdownEntrada();
     limpiarSeleccionEntrada();
+    actualizarCamposEntradaPorFamilia();
+}
+
+// ============================================================
+// CAMPOS ESPECIALES DE CAJA CHICA EN ENTRADA
+// ============================================================
+function actualizarCamposEntradaPorFamilia() {
+    const esCC = esFamiliaCajaChica(familiaEntradaSeleccionada);
+
+    const labelFecha = document.getElementById('label-entrada-fecha');
+    const labelGuia = document.getElementById('label-entrada-guia');
+    const labelProv = document.getElementById('label-entrada-proveedor');
+    const labelRut = document.getElementById('label-entrada-rut');
+    const inputGuia = document.getElementById('entrada-guia');
+
+    if (esCC) {
+        labelFecha.innerHTML = '📅 Fecha de compra';
+        labelGuia.innerHTML = '📄 N° Boleta / Factura';
+        labelProv.innerHTML = '🏢 Proveedor / Local';
+        labelRut.innerHTML = '🪪 RUT Proveedor (opcional)';
+        inputGuia.placeholder = 'Ej: B-001234';
+        document.getElementById('cc-extra-entrada').style.display = 'block';
+    } else {
+        labelFecha.innerHTML = '📅 Fecha del ingreso';
+        labelGuia.innerHTML = '📄 N° de guía / factura';
+        labelProv.innerHTML = 'Proveedor';
+        labelRut.innerHTML = 'RUT del proveedor';
+        inputGuia.placeholder = 'Ej: 12345 o F-99887';
+        document.getElementById('cc-extra-entrada').style.display = 'none';
+    }
 }
 
 // ============================================================
@@ -1278,7 +1444,7 @@ function poblarDropdownProductos() {
     if (!items.length) { list.innerHTML = '<div class="dropdown-item">Sin productos</div>'; return; }
 
     const productosFiltrados = items.filter(i => i.familia === familiaSeleccionada);
-    if (!productosFiltrados.length) { list.innerHTML = '<div class="dropdown-item">Sin productos</div>'; return; }
+    if (!productosFiltrados.length) { list.innerHTML = '<div class="dropdown-item">Sin productos en esta familia</div>'; return; }
 
     const nombresUnicos = {};
     productosFiltrados.forEach(i => {
@@ -1331,33 +1497,50 @@ function poblarDropdownEntrada() {
     const list = document.getElementById('prod-list-entrada');
     const input = document.getElementById('prod-trigger-entrada');
     list.innerHTML = '';
-    if (!items.length) { list.innerHTML = '<div class="dropdown-item">Sin productos</div>'; return; }
+    if (!items.length) {
+        list.innerHTML = '<div class="dropdown-item">Sin productos. Usa "Crear artículo nuevo".</div>';
+        return;
+    }
 
     const productosFiltrados = items.filter(i => i.familia === familiaEntradaSeleccionada);
-    if (!productosFiltrados.length) { list.innerHTML = '<div class="dropdown-item">Sin productos</div>'; return; }
+    if (!productosFiltrados.length) {
+        list.innerHTML = '<div class="dropdown-item">Sin productos en esta familia</div>';
+    } else {
+        const nombresUnicos = {};
+        productosFiltrados.forEach(i => {
+            if (!nombresUnicos[i.nombre]) nombresUnicos[i.nombre] = [];
+            nombresUnicos[i.nombre].push(i);
+        });
 
-    const nombresUnicos = {};
-    productosFiltrados.forEach(i => {
-        if (!nombresUnicos[i.nombre]) nombresUnicos[i.nombre] = [];
-        nombresUnicos[i.nombre].push(i);
-    });
+        Object.keys(nombresUnicos).sort().forEach(nombre => {
+            const grupo = nombresUnicos[nombre];
+            const stockTotal = grupo.reduce((sum, i) => sum + i.stock, 0);
+            const tieneTallas = grupo.some(i => i.tieneTalla && i.talla);
 
-    Object.keys(nombresUnicos).sort().forEach(nombre => {
-        const grupo = nombresUnicos[nombre];
-        const stockTotal = grupo.reduce((sum, i) => sum + i.stock, 0);
-        const tieneTallas = grupo.some(i => i.tieneTalla && i.talla);
+            const div = document.createElement('div');
+            div.className = 'dropdown-item';
+            div.innerHTML = `<span>${nombre} ${tieneTallas ? '📏' : ''}</span><span style="font-size:10px; color:var(--texto-gris);">Stock: ${stockTotal}</span>`;
+            div.onclick = () => {
+                input.value = nombre;
+                list.style.display = 'none';
+                productoSeleccionadoId = grupo[0].id;
+                mostrarProductoEntrada(nombre);
+            };
+            list.appendChild(div);
+        });
+    }
 
-        const div = document.createElement('div');
-        div.className = 'dropdown-item';
-        div.innerHTML = `<span>${nombre} ${tieneTallas ? '📏' : ''}</span><span style="font-size:10px; color:var(--texto-gris);">Stock: ${stockTotal}</span>`;
-        div.onclick = () => {
-            input.value = nombre;
+    // Opción de crear artículo (solo admin)
+    if (esAdmin()) {
+        const divCrear = document.createElement('div');
+        divCrear.className = 'dropdown-item crear-nuevo';
+        divCrear.innerHTML = '<span>➕ Crear artículo nuevo en esta familia</span>';
+        divCrear.onclick = () => {
             list.style.display = 'none';
-            productoSeleccionadoId = grupo[0].id;
-            mostrarProductoEntrada(nombre);
+            abrirModalCrearArticulo(input.value.trim());
         };
-        list.appendChild(div);
-    });
+        list.appendChild(divCrear);
+    }
 
     input.onclick = function() {
         if (list.style.display === 'block') list.style.display = 'none';
@@ -1368,9 +1551,20 @@ function poblarDropdownEntrada() {
 function filtrarDropdownEntrada(texto) {
     const list = document.getElementById('prod-list-entrada');
     const t = texto.toLowerCase().trim();
+    let hayVisibles = 0;
     list.querySelectorAll('.dropdown-item').forEach(item => {
-        item.style.display = item.textContent.toLowerCase().includes(t) ? 'flex' : 'none';
+        if (item.classList.contains('crear-nuevo')) return;
+        const visible = item.textContent.toLowerCase().includes(t);
+        item.style.display = visible ? 'flex' : 'none';
+        if (visible) hayVisibles++;
     });
+
+    // Si no hay resultados y es admin, mostrar solo la opción de crear
+    if (hayVisibles === 0 && t.length >= 2 && esAdmin()) {
+        list.querySelectorAll('.dropdown-item.crear-nuevo').forEach(el => el.style.display = 'flex');
+    } else {
+        list.querySelectorAll('.dropdown-item.crear-nuevo').forEach(el => el.style.display = 'flex');
+    }
     list.style.display = 'block';
 }
 
@@ -1500,6 +1694,108 @@ function limpiarSeleccionEntrada() {
 }
 
 // ============================================================
+// CREAR ARTÍCULO NUEVO (solo admin)
+// ============================================================
+function abrirModalCrearArticulo(nombrePrellenado) {
+    if (!esAdmin()) { mostrarToast('❌ Solo administradores'); return; }
+
+    document.getElementById('crear-familia').value = familiaEntradaSeleccionada || 'Vestuario de Emergencia';
+    document.getElementById('crear-nombre').value = nombrePrellenado || '';
+    document.getElementById('crear-talla').value = '';
+    document.getElementById('crear-stock').value = '0';
+    document.getElementById('crear-error').style.display = 'none';
+    document.getElementById('modal-crear-articulo').classList.add('visible');
+    setTimeout(() => document.getElementById('crear-nombre').focus(), 100);
+}
+
+function cerrarModalCrearArticulo() {
+    document.getElementById('modal-crear-articulo').classList.remove('visible');
+}
+
+async function confirmarCrearArticulo() {
+    if (!esAdmin()) { mostrarToast('❌ Solo administradores'); return; }
+
+    const familia = document.getElementById('crear-familia').value;
+    const nombre = document.getElementById('crear-nombre').value.trim();
+    const tallaRaw = document.getElementById('crear-talla').value.trim();
+    const stockInicial = parseInt(document.getElementById('crear-stock').value) || 0;
+    const errorDiv = document.getElementById('crear-error');
+
+    if (!nombre) {
+        errorDiv.textContent = '⚠️ El nombre es obligatorio';
+        errorDiv.style.display = 'block';
+        return;
+    }
+
+    // Validar duplicado en la misma familia
+    const yaExiste = items.some(i =>
+        i.nombre.toLowerCase() === nombre.toLowerCase() &&
+        i.familia === familia &&
+        (!tallaRaw || i.talla === tallaRaw)
+    );
+    if (yaExiste) {
+        errorDiv.textContent = `⚠️ Ya existe "${nombre}" en ${familia}${tallaRaw ? ' con talla ' + tallaRaw : ''}`;
+        errorDiv.style.display = 'block';
+        return;
+    }
+
+    errorDiv.style.display = 'none';
+
+    try {
+        let nuevoId;
+
+        if (familia === FAMILIA_CAJA_CHICA) {
+            // Insertar en caja_chica_articulos
+            const { data, error } = await sb
+                .from('caja_chica_articulos')
+                .insert({ nombre, stock: stockInicial })
+                .select()
+                .single();
+            if (error) throw error;
+            nuevoId = data.id;
+            await cargarArticulosCajaChica();
+        } else {
+            // Insertar en productos
+            const tallaFinal = tallaRaw || 'uni';
+            const { data, error } = await sb
+                .from('productos')
+                .insert({
+                    nombre,
+                    familia,
+                    talla: tallaFinal,
+                    stock: stockInicial,
+                    stock_usado: 0
+                })
+                .select()
+                .single();
+            if (error) throw error;
+            nuevoId = data.id;
+        }
+
+        // Recargar items
+        await cargarProductos();
+        renderTabs();
+        renderTabsEntrada();
+        poblarDropdownEntrada();
+        renderInventario();
+
+        cerrarModalCrearArticulo();
+        mostrarToast(`✅ Artículo "${nombre}" creado en ${familia}${tallaRaw ? ' (Talla ' + tallaRaw + ')' : ''}`);
+
+        // Seleccionar automáticamente el artículo recién creado en entrada
+        if (familia === familiaEntradaSeleccionada) {
+            document.getElementById('prod-trigger-entrada').value = nombre;
+            productoSeleccionadoId = nuevoId;
+            mostrarProductoEntrada(nombre);
+        }
+    } catch (e) {
+        console.error(e);
+        errorDiv.textContent = '❌ Error al crear: ' + (e.message || 'desconocido');
+        errorDiv.style.display = 'block';
+    }
+}
+
+// ============================================================
 // CARRITOS
 // ============================================================
 function agregarProductoAlCarrito() {
@@ -1520,7 +1816,8 @@ function agregarProductoAlCarrito() {
     } else {
         carrito.push({
             productoId: item.id, nombre: item.nombre, talla: item.talla,
-            cantidad: cantidad, stockDisponible: item.stock
+            cantidad: cantidad, stockDisponible: item.stock,
+            esCajaChica: item.esCajaChica
         });
     }
     renderCarrito();
@@ -1542,7 +1839,7 @@ function renderCarrito() {
     container.innerHTML = carrito.map((p, i) => `
         <div class="producto-agregado">
             <div class="info">
-                <div class="nombre">${p.nombre}</div>
+                <div class="nombre">${p.nombre} ${p.esCajaChica ? '💰' : ''}</div>
                 <div class="detalle">${p.talla ? 'Talla ' + p.talla + ' · ' : ''}Disp: ${p.stockDisponible}</div>
             </div>
             <div class="cantidad">${p.cantidad}</div>
@@ -1564,7 +1861,8 @@ function agregarProductoAlCarritoEntrada() {
     if (existe) existe.cantidad += cantidad;
     else carritoEntrada.push({
         productoId: it.id, nombre: it.nombre, talla: it.talla,
-        cantidad: cantidad, stockActual: it.stock
+        cantidad: cantidad, stockActual: it.stock,
+        esCajaChica: it.esCajaChica
     });
 
     renderCarritoEntrada();
@@ -1586,7 +1884,7 @@ function renderCarritoEntrada() {
     container.innerHTML = carritoEntrada.map((p, i) => `
         <div class="producto-agregado">
             <div class="info">
-                <div class="nombre">${p.nombre}</div>
+                <div class="nombre">${p.nombre} ${p.esCajaChica ? '💰' : ''}</div>
                 <div class="detalle">${p.talla ? 'Talla ' + p.talla + ' · ' : ''}Stock: ${p.stockActual}</div>
             </div>
             <div class="cantidad" style="color:var(--verde);">+${p.cantidad}</div>
@@ -1649,7 +1947,8 @@ async function registrarSalida() {
 
     const obs = document.getElementById('salida-obs').value.trim();
     const productosEntregados = carrito.map(p => ({
-        productoId: p.productoId, nombre: p.nombre, talla: p.talla, cantidad: p.cantidad
+        productoId: p.productoId, nombre: p.nombre, talla: p.talla, cantidad: p.cantidad,
+        esCajaChica: p.esCajaChica || false
     }));
 
     const { data: salidaInsertada, error: errSalida } = await sb
@@ -1666,12 +1965,19 @@ async function registrarSalida() {
     if (errSalida) { console.error(errSalida); mostrarToast('❌ Error al registrar'); return; }
 
     for (const p of productosEntregados) {
-        const { data: nuevoStock, error: errStock } = await sb.rpc('descontar_stock', {
-            p_id: p.productoId, p_cant: p.cantidad
-        });
-        if (!errStock) {
-            const it = items.find(i => i.id === p.productoId);
-            if (it) it.stock = nuevoStock;
+        const it = items.find(i => i.id === p.productoId);
+        if (!it) continue;
+
+        if (it.esCajaChica) {
+            const { data: nuevoStock, error: errCC } = await sb.rpc('descontar_stock_caja_chica', {
+                p_id: p.productoId, p_cant: p.cantidad
+            });
+            if (!errCC && nuevoStock !== undefined) it.stock = nuevoStock;
+        } else {
+            const { data: nuevoStock, error: errStock } = await sb.rpc('descontar_stock', {
+                p_id: p.productoId, p_cant: p.cantidad
+            });
+            if (!errStock) it.stock = nuevoStock;
         }
     }
 
@@ -1719,9 +2025,6 @@ function habilitarFormulario(h) {
     document.querySelectorAll('#tab-salida input, #tab-salida select, #tab-salida textarea, #tab-salida .btn-verde').forEach(el => el.disabled = !h);
 }
 
-// ============================================================
-// LIMPIAR FLUJO SALIDA (manual o automático tras PDF)
-// ============================================================
 function limpiarFormularioSalida() {
     carrito = [];
     renderCarrito();
@@ -1749,13 +2052,72 @@ async function registrarEntrada() {
     if (entradaRegistrada) { mostrarToast('⚠️ Ya registrada'); return; }
     if (!carritoEntrada.length) { mostrarToast('❌ Sin productos'); return; }
 
+    const esCC = esFamiliaCajaChica(familiaEntradaSeleccionada);
+
     const fechaInput = document.getElementById('entrada-fecha').value;
     const guia = document.getElementById('entrada-guia').value.trim();
     const proveedor = document.getElementById('entrada-proveedor').value.trim();
     const proveedorRut = document.getElementById('entrada-proveedor-rut').value.trim();
     const observacion = document.getElementById('entrada-obs').value.trim();
-    const loteId = uuid();
 
+    // ---- CAJA CHICA ----
+    if (esCC) {
+        const local = document.getElementById('cc-extra-local').value.trim();
+        const tipoDoc = document.getElementById('cc-extra-tipo-doc').value;
+        const numDoc = guia;
+        const realizadoPor = document.getElementById('cc-extra-realizado-por').value.trim();
+
+        if (!fechaInput) { mostrarToast('❌ Ingresa la fecha de compra'); return; }
+        if (!proveedor) { mostrarToast('❌ Ingresa el proveedor'); return; }
+        if (!realizadoPor) { mostrarToast('❌ Ingresa quién realizó la compra'); return; }
+
+        for (const p of carritoEntrada) {
+            const { error: errMov } = await sb.from('caja_chica_movimientos').insert({
+                articulo_id: p.productoId,
+                cantidad: p.cantidad,
+                proveedor: proveedor,
+                local_comercial: local,
+                tipo_documento: tipoDoc,
+                numero_documento: numDoc,
+                fecha_compra: fechaInput,
+                realizado_por: realizadoPor,
+                observacion: observacion || null
+            });
+            if (errMov) { console.error(errMov); mostrarToast('❌ Error al registrar movimiento de caja chica'); return; }
+
+            const { data: nuevoStock, error: errStock } = await sb.rpc('sumar_stock_caja_chica', {
+                p_id: p.productoId, p_cant: p.cantidad
+            });
+            if (!errStock) {
+                const it = items.find(i => i.id === p.productoId);
+                if (it) it.stock = nuevoStock;
+                const art = ccArticulos.find(a => a.id === p.productoId);
+                if (art) art.stock = nuevoStock;
+            }
+        }
+
+        await guardarProveedorSiEsNuevo(proveedor, proveedorRut);
+
+        const c = document.getElementById('entrada-mensaje');
+        document.getElementById('entrada-detalle').textContent = `💰 CAJA CHICA · 📅 ${fechaInput} · Prov: ${proveedor}${local ? ' · ' + local : ''} · Realizó: ${realizadoPor}`;
+        document.getElementById('entrada-productos-lista').innerHTML = carritoEntrada.map(p =>
+            `<li><span>${p.nombre}</span><span class="cant">+${p.cantidad} ud.</span></li>`
+        ).join('');
+        const total = carritoEntrada.reduce((s, p) => s + p.cantidad, 0);
+        document.getElementById('entrada-total').textContent = `📦 Total: ${carritoEntrada.length} prod · ${total} ud`;
+        c.style.display = 'block';
+        entradaRegistrada = true;
+        habilitarFormularioEntrada(false);
+
+        mostrarToast(`✅ Caja Chica: ${carritoEntrada.length} prod · ${total} ud`);
+        renderInventario();
+        actualizarDashboard();
+        poblarDropdownEntrada();
+        return;
+    }
+
+    // ---- ENTRADA NORMAL ----
+    const loteId = uuid();
     let fechaISO = new Date().toISOString();
     if (fechaInput) {
         const [y, m, d] = fechaInput.split('-');
@@ -1857,6 +2219,8 @@ function limpiarFormularioEntrada() {
     document.getElementById('entrada-proveedor').value = '';
     document.getElementById('entrada-proveedor-rut').value = '';
     document.getElementById('entrada-obs').value = '';
+    document.getElementById('cc-extra-local').value = '';
+    document.getElementById('cc-extra-realizado-por').value = '';
     entradaRegistrada = false;
     habilitarFormularioEntrada(true);
     poblarDropdownEntrada();
@@ -2020,7 +2384,7 @@ function renderInventario() {
 
     if (esAdmin()) {
         thead.innerHTML = `<tr>
-            <th>Producto</th><th>Talla</th>
+            <th>Producto</th><th>Familia</th><th>Talla</th>
             <th style="text-align:right;">Nuevos</th>
             <th style="text-align:right; color:var(--morado) !important;">Usados</th>
             <th style="text-align:right;">Total</th>
@@ -2028,7 +2392,7 @@ function renderInventario() {
         </tr>`;
     } else {
         thead.innerHTML = `<tr>
-            <th>Producto</th><th>Talla</th>
+            <th>Producto</th><th>Familia</th><th>Talla</th>
             <th style="text-align:right;">Stock</th>
             <th style="text-align:center;">Estado</th>
         </tr>`;
@@ -2037,7 +2401,7 @@ function renderInventario() {
     const sel = document.getElementById('filtro-familia');
     const cur = sel.value;
     sel.innerHTML = '<option value="">Todas las familias</option>';
-    Object.keys(grupos).forEach(f => sel.innerHTML += `<option value="${f}">${f}</option>`);
+    obtenerFamiliasOrdenadas().forEach(f => sel.innerHTML += `<option value="${f}">${grupos[f]?.icono || '📦'} ${f}</option>`);
     sel.value = cur;
 
     let filtrados = items.filter(i => {
@@ -2053,7 +2417,7 @@ function renderInventario() {
     filtrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
     if (!filtrados.length) {
-        const cols = esAdmin() ? 6 : 4;
+        const cols = esAdmin() ? 7 : 5;
         tbody.innerHTML = `<tr><td colspan="${cols}" style="text-align:center; padding:20px; color:var(--texto-gris);">Sin productos</td></tr>`;
         document.getElementById('inventario-total-items').textContent = '0 productos';
         return;
@@ -2067,10 +2431,14 @@ function renderInventario() {
         else if (i.stock <= 5) { badge = `<span class="badge-stock bajo">🟡 ${i.stock}</span>`; }
         else { badge = `<span class="badge-stock normal">✅ ${i.stock}</span>`; }
 
+        const famIcon = grupos[i.familia]?.icono || '📦';
+        const famBadge = `<span style="font-size:10px;">${famIcon} ${i.familia}</span>`;
+
         if (esAdmin()) {
             const total = i.stock + (i.stock_usado || 0);
             return `<tr class="${stockClass}">
                 <td><strong>${i.nombre}</strong></td>
+                <td>${famBadge}</td>
                 <td>${i.talla || '—'}</td>
                 <td style="text-align:right; font-weight:${i.stock <= 3 ? '800' : '400'}; color:${i.stock <= 3 ? 'var(--rojo)' : '#000'};">${i.stock}</td>
                 <td style="text-align:right; color:var(--morado); font-weight:700;">${i.stock_usado || 0}</td>
@@ -2080,6 +2448,7 @@ function renderInventario() {
         } else {
             return `<tr class="${stockClass}">
                 <td><strong>${i.nombre}</strong></td>
+                <td>${famBadge}</td>
                 <td>${i.talla || '—'}</td>
                 <td style="text-align:right; font-weight:${i.stock <= 3 ? '800' : '400'}; color:${i.stock <= 3 ? 'var(--rojo)' : '#000'};">${i.stock}</td>
                 <td style="text-align:center;">${badge}</td>
@@ -2161,7 +2530,7 @@ function pdfSalidaDesdeAuditoria(id) {
     const s = salidas.find(x => x.id === id);
     if (!s) return;
     ultimoComprobante = s;
-    descargarPDFComprobante(true);   // true = modo auditoría, no limpia
+    descargarPDFComprobante(true);
 }
 
 // ============================================================
@@ -2387,7 +2756,9 @@ async function confirmarAnulacion() {
     mostrarToast('✅ Movimiento anulado');
     cerrarModalAnular();
 
-    await Promise.all([cargarProductos(), cargarSalidasDB(), cargarEntradasDB()]);
+    await cargarArticulosCajaChica();
+    await cargarProductos();
+    await Promise.all([cargarSalidasDB(), cargarEntradasDB()]);
     renderInventario();
     actualizarDashboard();
     actualizarStockCritico();
@@ -2419,10 +2790,9 @@ function actualizarStockCritico() {
 }
 
 // ============================================================
-// COMPROBANTE — CON MODO
+// COMPROBANTE
 // ============================================================
 function abrirComprobante(salida, modo) {
-    // modo: 'salida' (limpiar después) | 'auditoria' (no limpiar)
     comprobanteModo = modo || 'salida';
     const modal = document.getElementById('modal-comprobante');
     const content = document.getElementById('ticket-content');
@@ -2435,7 +2805,7 @@ function abrirComprobante(salida, modo) {
 
     let productosHTML = salida.productos.map(p => `
         <div class="prod-item">
-            <span>${p.nombre}${p.talla ? ' (' + p.talla + ')' : ''}</span>
+            <span>${p.nombre}${p.talla ? ' (' + p.talla + ')' : ''} ${p.esCajaChica ? '💰' : ''}</span>
             <span>${p.cantidad}</span>
         </div>
     `).join('');
@@ -2476,9 +2846,6 @@ function cerrarModalComprobante() {
 }
 
 function pdfComprobanteDesdeModal() {
-    // Se llama desde el botón "PDF" del modal
-    // Si es modo salida → descarga y limpia
-    // Si es modo auditoría → solo descarga
     descargarPDFComprobante(comprobanteModo === 'auditoria');
 }
 
@@ -2500,7 +2867,6 @@ function imprimirComprobante() {
     <script>window.onload=function(){window.print();}<\/script></body></html>`);
     w.document.close();
 
-    // Si venimos del flujo de salida, limpiamos al cerrar
     if (comprobanteModo === 'salida') {
         cerrarModalComprobante();
         limpiarFormularioSalida();
@@ -2644,9 +3010,6 @@ function generarComprobantePDFBase(config) {
     return doc;
 }
 
-// ============================================================
-// DESCARGA PDF — CON MODO (separación de flujos)
-// ============================================================
 function descargarPDFComprobante(desdeAuditoria = false) {
     if (!ultimoComprobante) { mostrarToast('❌ Sin comprobante'); return; }
     const s = ultimoComprobante;
@@ -2670,10 +3033,8 @@ function descargarPDFComprobante(desdeAuditoria = false) {
     doc.save(`Salida_${s.codigo || s.id}.pdf`);
 
     if (desdeAuditoria) {
-        // Flujo auditoría: solo descarga, NO tocamos el formulario de salida
         mostrarToast('✅ PDF descargado');
     } else {
-        // Flujo salida normal: limpiamos todo y dejamos listo para otra
         mostrarToast('✅ PDF descargado · Formulario reiniciado');
         cerrarModalComprobante();
         limpiarFormularioSalida();
@@ -2704,9 +3065,6 @@ function descargarPDFEntrada() {
     mostrarToast('✅ PDF descargado');
 }
 
-// ============================================================
-// PDF INVENTARIO
-// ============================================================
 function generarPDFInventario() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4' });
@@ -2797,7 +3155,6 @@ function generarPDFInventario() {
 function exportarInventarioExcel() {
     if (!items.length) { mostrarToast('❌ Sin datos'); return; }
 
-    // Mismos colores que usan los PDF, para que se vea consistente
     const AZUL       = '1664C0';
     const GRIS_CLARO = 'F5F7FC';
     const BORDE      = 'E2E8F0';
@@ -2823,7 +3180,6 @@ function exportarInventarioExcel() {
     }
 
     const encabezados = ['Producto', 'Talla', 'Nuevos', 'Usados', 'Total'];
-
     const wb = XLSX.utils.book_new();
 
     Object.keys(grupos).forEach(familia => {
@@ -2831,7 +3187,8 @@ function exportarInventarioExcel() {
             .filter(i => i.familia === familia)
             .sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-        // Fila 1: encabezados con estilo
+        if (!prods.length) return;
+
         const filaEncabezado = encabezados.map(h => ({ v: h, t: 's', s: estiloEncabezado }));
         const filas = [filaEncabezado];
 
@@ -2849,11 +3206,9 @@ function exportarInventarioExcel() {
 
         const ws = XLSX.utils.aoa_to_sheet(filas);
         ws['!cols'] = [{ wch: 45 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }];
-        ws['!rows'] = [{ hpt: 22 }]; // encabezado un poco más alto
-        // Fija la fila de encabezado al hacer scroll
+        ws['!rows'] = [{ hpt: 22 }];
         ws['!freeze'] = { xSplit: 0, ySplit: 1 };
         ws['!views'] = [{ state: 'frozen', ySplit: 1 }];
-        // Filtro desplegable en el encabezado
         if (prods.length) {
             ws['!autofilter'] = { ref: `A1:E${prods.length + 1}` };
         }
@@ -2864,7 +3219,6 @@ function exportarInventarioExcel() {
     XLSX.writeFile(wb, `Inventario_${fechaActual()}.xlsx`);
     mostrarToast('✅ Excel exportado');
 }
-
 </script>
 </body>
 </html>
